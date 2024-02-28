@@ -15,7 +15,7 @@ import { fileURLToPath, URL } from 'node:url'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    VueRouter(),
+    VueRouter({ extensions: ['.vue', '.tsx',] }),
     Layouts(),
     Vue({
       template: { transformAssetUrls },
@@ -28,7 +28,9 @@ export default defineConfig({
         configFile: 'src/styles/settings.scss',
       },
     }),
-    Components(),
+    Components({
+      dts: true
+    }),
     Fonts({
       google: {
         families: [{

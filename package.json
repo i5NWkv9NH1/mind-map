@@ -1,19 +1,27 @@
 {
-  "name": "@sora/image-editor",
+  "name": "@sora/nodemap",
+  "author": "sora",
+  "description": "A Mind Map Application Build with simple-mind-map and Vuetify.js",
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "dev": "cross-env NODE_OPTIONS='--no-warnings' vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
-    "lint": "eslint . --fix --ignore-path .gitignore"
+    "lint": "eslint . --fix --ignore-path .gitignore",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@mdi/font": "7.0.96",
     "@vueuse/core": "^10.9.0",
     "core-js": "^3.34.0",
+    "dom-to-image": "^2.6.0",
+    "file-saver": "^2.0.5",
     "highlight.js": "^11.9.0",
+    "jsmind": "^0.8.2",
     "lodash": "^4.17.21",
     "roboto-fontface": "*",
+    "simple-mind-map": "^0.9.7",
     "uuid": "^9.0.1",
     "vue": "^3.3.0",
     "vuedraggable": "next",
@@ -23,6 +31,7 @@
     "@antfu/eslint-config": "^2.6.4",
     "@babel/types": "^7.23.0",
     "@iconify/json": "^2.2.187",
+    "@types/file-saver": "^2.0.7",
     "@types/lodash": "^4.14.202",
     "@types/node": "^20.10.0",
     "@types/uuid": "^9.0.8",
