@@ -1,1 +1,1 @@
-export * from './ThemeSwitch'
+export { default as Toolbar } from './Toolbar.vue'

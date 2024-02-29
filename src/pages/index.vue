@@ -1,27 +1,43 @@
 <script setup lang="ts">
-import { ThemeSwitch } from '@/widgets'
-import { ref, } from 'vue'
-import MindMap from 'simple-mind-map'
-import { onMounted } from 'vue'
+import { onMounted, ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+import { MindMapNode } from '@/@types';
+import { ON_BAKC_FORWARD, ON_NODE_ACTIVE } from '@/helpers';
+import { useAppStore } from '@/store/app';
+import { Toolbar } from '@/widgets'
+import { VCapolLog } from '@/directives'
 
 const mindMapEl = ref<HTMLElement>()
-const mindMap = ref<MindMap>()
+const initMindMapData = ref({
+  "data": {
+    "text": "根节点"
+  },
+  "children": []
+})
+const { initMindMap } = useAppStore()
+const { mindMap, activeNodes, isStart, isEnd } = storeToRefs(useAppStore())
 
 onMounted(() => {
-  mindMap.value = new MindMap({
-    // el: document.querySelector('#node-map'),
-    el: mindMapEl.value,
-    data: {
-      "data": {
-        "text": "根节点"
-      },
-      "children": []
-    }
-  })
+  if (mindMapEl.value) {
+    // # 初始化
+    initMindMap({
+      el: mindMapEl.value, data: initMindMapData.value
+    })
+    // # 监听事件
+    mindMap.value?.on(ON_NODE_ACTIVE, (node: MindMapNode, activeNodeList: MindMapNode[]) => {
+      activeNodes.value = activeNodeList
+    })
+    mindMap.value?.on(ON_BAKC_FORWARD, (index: number, len: number) => {
+      isStart.value = index <= 0
+      isEnd.value = index >= len - 1
+    })
+  }
 })
+
 </script>
 
 <template>
+  <Toolbar />
   <div id="mind-map-container">
     <div
       id="mind-map"
@@ -45,4 +61,5 @@ onMounted(() => {
     width: 100%;
     height: 100%;
   }
-}</style>
+}
+</style>
