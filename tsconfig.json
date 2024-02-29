@@ -22,7 +22,8 @@
       ]
     },
     "types": [
-      "vuetify"
+      "vuetify",
+      "simple-mind-map"
     ]
   },
   "include": [

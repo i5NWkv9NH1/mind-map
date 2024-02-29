@@ -29,6 +29,12 @@ export const useAppStore = defineStore('app', () => {
   // # state
   // # mind map
   const mindMap = ref<MindMap>()
+  const mindMapData = reactive({
+    "data": {
+      "text": "根节点"
+    },
+    "children": []
+  })
   const activeNodes = shallowRef<MindMapNode[]>()
   const mindMapMode = ref<MindMapMode>('edit')
   const isStart = ref(true)
@@ -118,7 +124,7 @@ export const useAppStore = defineStore('app', () => {
 
   return {
     // # state
-    mindMap, activeNodes, isStart, isEnd, mindMapMode,
+    mindMap, mindMapData, activeNodes, isStart, isEnd, mindMapMode,
     uploadImageDialog, tagDialog, linkDialog, noteDialog, panel,
     // # actions
     initMindMap, undo, redo, setMode, insertNode, insertChildNode, removeNode, createSummary, createcreateAssociativeLine,

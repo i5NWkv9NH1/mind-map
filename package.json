@@ -21,6 +21,7 @@
     "jsmind": "^0.8.2",
     "lodash": "^4.17.21",
     "roboto-fontface": "*",
+    "roughjs": "^4.6.6",
     "simple-mind-map": "^0.9.7",
     "uuid": "^9.0.1",
     "vue": "^3.3.0",
