@@ -42,8 +42,8 @@ const mindMapActions = ref<MapAction[]>([
 <template>
   <VToolbar
     id="toolbar"
-    rounded="lg"
-    border
+    elevation="8"
+    extension-height="64"
   >
     <VBtn
       v-for="item in nodeActions"

@@ -2,6 +2,7 @@
 import { MindMapMode, MindMapNode, MindMapOptions } from '@/@types'
 import { COMMAND_ADD_GENERALIZATION, COMMAND_BACK, COMMAND_FORWARD, COMMAND_INSERT_CHILD_NODE, COMMAND_INSERT_NODE, COMMAND_REMOVE_NODE } from '@/helpers'
 import { booleanLiteral, react } from '@babel/types'
+import { useDark } from '@vueuse/core'
 import { isEmpty } from 'lodash'
 import { defineStore } from 'pinia'
 import MindMap from 'simple-mind-map'
@@ -9,6 +10,7 @@ import { reactive } from 'vue'
 import { computed } from 'vue'
 import { shallowRef, watch } from 'vue'
 import { ref } from 'vue'
+import { useTheme } from 'vuetify/lib/framework.mjs'
 
 export type Dialog = {
   status: boolean
@@ -21,15 +23,22 @@ export type UploadImageDialog = Dialog & {
 export type LinkDialog = Dialog & {}
 export type NoteDialog = Dialog & {}
 export type TagDialog = Dialog & {}
+export type SearchDialog = Dialog & {}
 export type Panel = {
   current: number | null
 }
 
 export const useAppStore = defineStore('app', () => {
   // # state
+  const isDark = useDark()
+  const theme = computed(() => isDark.value ? 'dark' : 'light')
+  const vuetify = useTheme()
+  watch(isDark, () => {
+    vuetify.global.name.value = theme.value
+  }, { immediate: true })
   // # mind map
   const mindMap = ref<MindMap>()
-  const mindMapData = reactive({
+  const mindMapData = ref({
     "data": {
       "text": "根节点"
     },
@@ -37,25 +46,33 @@ export const useAppStore = defineStore('app', () => {
   })
   const activeNodes = shallowRef<MindMapNode[]>()
   const mindMapMode = ref<MindMapMode>('edit')
+  const isReadOnly = computed(() => mindMapMode.value === 'readonly')
+  const words = computed(() => 2111)
+  const nodes = computed(() => 121)
+  const isShowMiniMap = ref<boolean>(false)
+  const useLeftKeySelectionRightKeyDrag = ref<boolean>(false)
   const isStart = ref(true)
   const isEnd = ref(true)
   // # dialogs
-  const uploadImageDialog = reactive<UploadImageDialog>({
+  const uploadImageDialog = ref<UploadImageDialog>({
     status: false,
     src: '',
     file: null,
   })
-  const linkDialog = reactive<LinkDialog>({
+  const linkDialog = ref<LinkDialog>({
     status: false
   })
-  const noteDialog = reactive<NoteDialog>({
+  const noteDialog = ref<NoteDialog>({
     status: false
   })
-  const tagDialog = reactive<TagDialog>({
+  const tagDialog = ref<TagDialog>({
+    status: false
+  })
+  const searchDialog = ref<SearchDialog>({
     status: false
   })
   // # sidebar panels
-  const panel = reactive<Panel>({
+  const panel = ref<Panel>({
     current: null
   })
 
@@ -106,26 +123,27 @@ export const useAppStore = defineStore('app', () => {
   }
   // # dialogs
   function toggleImageDialog(value = true) {
-    uploadImageDialog.status = value
+    uploadImageDialog.value.status = value
   }
   function toggleLinkDialog(value = true) {
-    linkDialog.status = value
+    linkDialog.value.status = value
   }
   function toggleNoteDialog(value = true) {
-    noteDialog.status = value
+    noteDialog.value.status = value
   }
   function toggleTagDialog(value = true) {
-    tagDialog.status = value
+    tagDialog.value.status = value
   }
   // # panels
   function togglePanel(value: number | null = null) {
-    panel.current = value
+    panel.value.current = value
   }
 
   return {
     // # state
-    mindMap, mindMapData, activeNodes, isStart, isEnd, mindMapMode,
-    uploadImageDialog, tagDialog, linkDialog, noteDialog, panel,
+    mindMap, mindMapData, activeNodes, isStart, isEnd, mindMapMode, useLeftKeySelectionRightKeyDrag, isShowMiniMap, isReadOnly, words, nodes,
+    uploadImageDialog, tagDialog, linkDialog, noteDialog, searchDialog, panel,
+    isDark, theme,
     // # actions
     initMindMap, undo, redo, setMode, insertNode, insertChildNode, removeNode, createSummary, createcreateAssociativeLine,
     toggleImageDialog, toggleLinkDialog, toggleNoteDialog, toggleTagDialog, togglePanel,

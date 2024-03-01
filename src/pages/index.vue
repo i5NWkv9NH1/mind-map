@@ -28,7 +28,7 @@ import { ON_BAKC_FORWARD, ON_NODE_ACTIVE } from '@/helpers';
 // # store
 import { useAppStore } from '@/store/app';
 // # comps
-import { Toolbar } from '@/widgets'
+import { Bottombar, Sidebar, Toolbar } from '@/widgets'
 
 
 const mindMapEl = ref<HTMLElement>()
@@ -73,6 +73,8 @@ onMounted(() => {
 
 <template>
   <Toolbar />
+  <Sidebar />
+  <Bottombar />
   <div id="mind-map-container">
     <div
       id="mind-map"

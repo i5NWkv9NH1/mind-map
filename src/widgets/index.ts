@@ -1,1 +1,5 @@
 export { default as Toolbar } from './Toolbar.vue'
+export { default as Sidebar } from './Sidebar.vue'
+export { default as Bottombar } from './Bottombar.vue'
+export * from './panels'
+export * from './EmptyNode'
