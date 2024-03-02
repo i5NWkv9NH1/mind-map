@@ -1,4 +1,7 @@
-<script setup lang="ts">
+<script
+  setup
+  lang="ts"
+>
 import { useAppStore } from '@/store';
 import { storeToRefs } from 'pinia';
 import { v4 as uuid } from 'uuid';
@@ -34,15 +37,15 @@ const component = computed(() => {
   }
 })
 
-onMounted(() => {
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      togglePanel()
-      e.stopImmediatePropagation()
-      e.stopPropagation()
-    }
-  })
-})
+// onMounted(() => {
+//   document.addEventListener('keydown', e => {
+//     if (e.key === 'Escape') {
+//       togglePanel()
+//       e.stopImmediatePropagation()
+//       e.stopPropagation()
+//     }
+//   })
+// })
 </script>
 
 <template>
@@ -104,7 +107,10 @@ onMounted(() => {
   </VExpandXTransition>
 </template>
 
-<style scoped lang="scss">
+<style
+  scoped
+  lang="scss"
+>
 #sidebar,
 #sidebar-window {
   position: fixed;

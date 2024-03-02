@@ -241,8 +241,8 @@ function onFontColorConfirm() {
                   <template #activator="activator">
                     <VBtn
                       v-bind="activator.props"
-                      :active="activator.isActive"
-                      :color="activator.isActive ? 'primary' : 'default'"
+                      :active="activator.isActive || textUnderlineStyle !== 0"
+                      :color="textUnderlineStyle !== 0 ? 'primary' : 'default'"
                       :variant="isDark ? 'outlined' : 'elevated'"
                       rounded="lg"
                       size="small"
@@ -592,6 +592,7 @@ function onFontColorConfirm() {
           <EmptyNode
             :size="128"
             icon="mdi-vector-link"
+            text="请选择一个节点"
           />
         </template>
       </VFabTransition>

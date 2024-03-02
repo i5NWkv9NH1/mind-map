@@ -28,7 +28,10 @@ const {
   mouseBehaviorItems,
   mouseScrollScaleItems,
   createNodeBehaviorItems,
-  lineWidthSizeItems
+  lineWidthSizeItems,
+  backgroundPositionItems,
+  backgroundRepeatItems,
+  backgroundSizeItems
 } = usePresets()
 const backgroundTabItems = ref([
   { id: uuid(), name: '颜色', value: 0 },
@@ -42,9 +45,9 @@ const paddingTabItems = ref([
 // # background
 const backgroundColor = ref('#fafafa')
 const backgroundImage = ref('')
-const backgroundRepeat = ref('')
-const backgroundPosition = ref('')
-const backgroundSize = ref('')
+const backgroundPosition = ref('0% 0%')
+const backgroundRepeat = ref('no-repeat')
+const backgroundSize = ref('auto')
 function onBackgroundColorConfirm() { }
 // # lines
 const lineColor = ref('#fafafa')
@@ -137,6 +140,7 @@ const createNodeBehavior = ref(0)
                         v-bind="activator.props"
                         :color="backgroundColor"
                         rounded="lg"
+                        size="large"
                         class="mr-2"
                       />
                       <span>选择背景颜色</span>
@@ -145,7 +149,93 @@ const createNodeBehavior = ref(0)
                 </ColorPicker>
               </VWindowItem>
               <VWindowItem value="图片">
-                <DragUpload v-model:src="backgroundImage" />
+                <div class="pa-2">
+                  <DragUpload v-model:src="backgroundImage" />
+                  <VRow>
+                    <VCol>
+                      <VSelect
+                        label="图片位置"
+                        v-model="backgroundPosition"
+                        :items="backgroundPositionItems"
+                        item-title="name"
+                        item-value="value"
+                        :variant="isDark ? 'outlined' : 'solo'"
+                        hide-details
+                      >
+
+                        <template #item="{ index, item, props }">
+                          <VList
+                            density="compact"
+                            nav
+                          >
+                            <VListItem
+                              v-bind="props"
+                              :value="item.value"
+                              :title="item.title"
+                            />
+                          </VList>
+                        </template>
+                      </VSelect>
+
+
+                    </VCol>
+
+                  </VRow>
+                  <VRow>
+                    <VCol>
+                      <VSelect
+                        label="图片重复"
+                        v-model="backgroundRepeat"
+                        :items="backgroundRepeatItems"
+                        item-title="name"
+                        item-value="value"
+                        :variant="isDark ? 'outlined' : 'solo'"
+                        hide-details
+                      >
+
+                        <template #item="{ index, item, props }">
+                          <VList
+                            density="compact"
+                            nav
+                          >
+                            <VListItem
+                              v-bind="props"
+                              :value="item.value"
+                              :title="item.title"
+                            />
+                          </VList>
+                        </template>
+                      </VSelect>
+                    </VCol>
+                  </VRow>
+                  <VRow>
+                    <VCol>
+                      <VSelect
+                        label="图片大小"
+                        v-model="backgroundSize"
+                        :items="backgroundSizeItems"
+                        item-title="name"
+                        item-value="value"
+                        :variant="isDark ? 'outlined' : 'solo'"
+                        hide-details
+                      >
+
+                        <template #item="{ index, item, props }">
+                          <VList
+                            density="compact"
+                            nav
+                          >
+                            <VListItem
+                              v-bind="props"
+                              :value="item.value"
+                              :title="item.title"
+                            />
+                          </VList>
+                        </template>
+                      </VSelect>
+                    </VCol>
+                  </VRow>
+                </div>
               </VWindowItem>
             </VWindow>
           </VCol>
