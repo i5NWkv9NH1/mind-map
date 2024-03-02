@@ -7,7 +7,7 @@ import { v4 as uuid } from 'uuid'
 import { watch } from 'vue';
 import { ref } from 'vue';
 
-const { undo, redo, insertNode, insertChildNode, removeNode, toggleImageDialog, toggleLinkDialog, toggleNoteDialog, toggleTagDialog, togglePanel, createSummary, createcreateAssociativeLine } = useAppStore()
+const { undo, redo, insertNode, insertChildNode, removeNode, toggleImageDialog, toggleLinkDialog, toggleNoteDialog, toggleTagDialog, togglePanel, createSummary, createcreateAssociativeLine, toggleEmojiDialog } = useAppStore()
 const { mindMap, isActiveNode, isStart, isEnd, canUndo, canRedo, mindMapMode, hasGeneralization, hasRoot } = storeToRefs(useAppStore())
 
 // # 撤销重做
@@ -18,15 +18,15 @@ const nodeActions = ref<NodeAction[]>([
   // { uid: uuid(), name: '格式刷', icon: 'mdi-brush-variant', disabled: () => canUndo.value, action: () => { } },
   { uid: uuid(), name: '同级节点', icon: 'mdi-tune', disabled: () => !isActiveNode.value || hasRoot.value || hasGeneralization.value, action: insertNode },
   { uid: uuid(), name: '子节点', icon: 'mdi-vector-polyline', disabled: () => !isActiveNode.value || hasGeneralization.value, action: insertChildNode },
-  { uid: uuid(), name: '删除节点', icon: 'mdi-vector-polyline', disabled: () => !isActiveNode.value, action: removeNode },
+  { uid: uuid(), name: '删除节点', icon: 'mdi-trash-can-outline', disabled: () => !isActiveNode.value, action: removeNode },
   { uid: uuid(), name: '图片', icon: 'mdi-image-plus-outline', disabled: () => !isActiveNode.value, action: toggleImageDialog },
-  { uid: uuid(), name: '图标', icon: 'mdi-emoticon-lol-outline', disabled: () => !isActiveNode.value, action: togglePanel },
+  { uid: uuid(), name: '图标', icon: 'mdi-emoticon-lol-outline', disabled: () => !isActiveNode.value, action: () => togglePanel() },
   { uid: uuid(), name: '超链接', icon: 'mdi-link-variant-plus', disabled: () => !isActiveNode.value, action: toggleLinkDialog },
   { uid: uuid(), name: '备注', icon: 'mdi-note-plus-outline', disabled: () => !isActiveNode.value, action: toggleNoteDialog },
   { uid: uuid(), name: '标签', icon: 'mdi-tag-plus-outline', disabled: () => !isActiveNode.value, action: toggleTagDialog },
   { uid: uuid(), name: '概要', icon: 'mdi-widgets-outline', disabled: () => !isActiveNode.value || hasRoot.value || hasGeneralization.value, action: createSummary },
   { uid: uuid(), name: '关联线', icon: 'mdi-vector-radius', disabled: () => !isActiveNode.value || hasGeneralization.value, action: createcreateAssociativeLine },
-  { uid: uuid(), name: '公式', icon: 'mdi-sigma', disabled: () => !isActiveNode.value || hasGeneralization.value, action: togglePanel },
+  { uid: uuid(), name: '公式', icon: 'mdi-sigma', disabled: () => !isActiveNode.value || hasGeneralization.value, action: () => togglePanel(8) },
 ])
 // # 导图操作
 const mindMapActions = ref<MapAction[]>([

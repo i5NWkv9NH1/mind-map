@@ -1,6 +1,11 @@
 @import './themes';
 @import './utils';
 
-::-webkit-scrollbar {
+html::-webkit-scrollbar {
   width: 0;
+}
+
+/* # Mind Map Color effect with vuetify thmee */
+body>div:nth-child(5) {
+  color: black;
 }

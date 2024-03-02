@@ -29,7 +29,7 @@ import { ON_BAKC_FORWARD, ON_NODE_ACTIVE } from '@/helpers';
 import { useAppStore } from '@/store/app';
 // # comps
 import { Bottombar, Sidebar, Toolbar } from '@/widgets'
-
+import { UploadImageDialog, SearchDialog, EmojiDialog, HyperLinkDialog, NoteDialog, TagDialog, } from '@/widgets/dialogs';
 
 const mindMapEl = ref<HTMLElement>()
 const { initMindMap, } = useAppStore()
@@ -81,6 +81,12 @@ onMounted(() => {
       ref="mindMapEl"
     />
   </div>
+  <SearchDialog />
+  <UploadImageDialog />
+  <EmojiDialog />
+  <HyperLinkDialog />
+  <NoteDialog />
+  <TagDialog />
 </template>
 
 <style scoped lang="scss">

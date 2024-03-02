@@ -7,6 +7,10 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    ColorPicker: typeof import('./src/components/ColorPicker.vue')['default']
+    DraggleUpload: typeof import('./src/components/DraggleUpload.vue')['default']
+    DragUpload: typeof import('./src/components/DragUpload.vue')['default']
+    MenuSelect: typeof import('./src/components/MenuSelect.vue')['default']
     PanelContainer: typeof import('./src/components/PanelContainer.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

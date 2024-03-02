@@ -22,8 +22,12 @@ export type UploadImageDialog = Dialog & {
 }
 export type LinkDialog = Dialog & {}
 export type NoteDialog = Dialog & {}
-export type TagDialog = Dialog & {}
+export type TagDialog = Dialog & {
+  items: { id: string; text: string; color: string }[]
+}
 export type SearchDialog = Dialog & {}
+export type EmojiDialog = Dialog & {}
+export type MathSheet = Dialog & {}
 export type Panel = {
   current: number | null
 }
@@ -59,6 +63,9 @@ export const useAppStore = defineStore('app', () => {
     src: '',
     file: null,
   })
+  const emojiDialog = ref<EmojiDialog>({
+    status: false
+  })
   const linkDialog = ref<LinkDialog>({
     status: false
   })
@@ -66,6 +73,10 @@ export const useAppStore = defineStore('app', () => {
     status: false
   })
   const tagDialog = ref<TagDialog>({
+    status: false,
+    items: []
+  })
+  const mathSheet = ref<MathSheet>({
     status: false
   })
   const searchDialog = ref<SearchDialog>({
@@ -131,6 +142,12 @@ export const useAppStore = defineStore('app', () => {
   function toggleNoteDialog(value = true) {
     noteDialog.value.status = value
   }
+  function toggleEmojiDialog(value = true) {
+    emojiDialog.value.status = value
+  }
+  function toggleMathSheet(value = true) {
+    mathSheet.value.status = value
+  }
   function toggleTagDialog(value = true) {
     tagDialog.value.status = value
   }
@@ -142,11 +159,11 @@ export const useAppStore = defineStore('app', () => {
   return {
     // # state
     mindMap, mindMapData, activeNodes, isStart, isEnd, mindMapMode, useLeftKeySelectionRightKeyDrag, isShowMiniMap, isReadOnly, words, nodes,
-    uploadImageDialog, tagDialog, linkDialog, noteDialog, searchDialog, panel,
+    uploadImageDialog, tagDialog, linkDialog, noteDialog, mathSheet, searchDialog, emojiDialog, panel,
     isDark, theme,
     // # actions
     initMindMap, undo, redo, setMode, insertNode, insertChildNode, removeNode, createSummary, createcreateAssociativeLine,
-    toggleImageDialog, toggleLinkDialog, toggleNoteDialog, toggleTagDialog, togglePanel,
+    toggleImageDialog, toggleLinkDialog, toggleEmojiDialog, toggleNoteDialog, toggleTagDialog, toggleMathSheet, togglePanel,
     // # getters
     hasRoot, hasGeneralization, isActiveNode, canUndo, canRedo
   }

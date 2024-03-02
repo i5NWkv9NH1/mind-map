@@ -8,12 +8,12 @@ import { watch } from 'vue';
 import { ref } from 'vue';
 import { ThemeSwitch } from './ThemeSwitch';
 import Scale from './Scale.vue';
-import SearchDialog from './SearchDialog.vue';
+import { SearchDialog } from './dialogs';
 import { MouseBehavior } from './MouseBehavior';
 import Stat from './Stat.vue';
 
 const { undo, redo, insertNode, insertChildNode, removeNode, toggleImageDialog, toggleLinkDialog, toggleNoteDialog, toggleTagDialog, togglePanel, createSummary, createcreateAssociativeLine, } = useAppStore()
-const { mindMap, isActiveNode, isStart, isEnd, canUndo, canRedo, mindMapMode, hasGeneralization, hasRoot, isShowMiniMap, isReadOnly } = storeToRefs(useAppStore())
+const { mindMap, isActiveNode, isStart, isEnd, canUndo, canRedo, mindMapMode, hasGeneralization, hasRoot, isShowMiniMap, isReadOnly, searchDialog } = storeToRefs(useAppStore())
 
 // # 撤销重做
 // # 节点编辑
@@ -49,7 +49,25 @@ const { mindMap, isActiveNode, isStart, isEnd, canUndo, canRedo, mindMapMode, ha
     </VTooltip>
     <ThemeSwitch />
     <Scale />
-    <SearchDialog />
+    <VTooltip
+      transition="slide-y-transition"
+      offset="10"
+      open-delay="100"
+      location="top"
+    >
+      <template #activator="{ isActive, props }">
+        <VBtn
+          v-bind="props"
+          :active="searchDialog.status"
+          :color="searchDialog.status ? 'primary' : 'default'"
+          @click="searchDialog.status = !searchDialog.status"
+          icon
+        >
+          <VIcon>mdi-magnify</VIcon>
+        </VBtn>
+      </template>
+      <p>搜索节点</p>
+    </VTooltip>
     <VTooltip
       transition="slide-y-transition"
       offset="10"
