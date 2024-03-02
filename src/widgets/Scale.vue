@@ -1,9 +1,9 @@
-<script setup lang="ts">
-import { useAppStore } from '@/store';
-import { storeToRefs } from 'pinia';
-import { ref } from 'vue';
+<script
+  setup
+  lang="ts"
+>
+import { ref } from 'vue'
 
-const { } = storeToRefs(useAppStore())
 const scale = ref(100)
 </script>
 
@@ -15,7 +15,7 @@ const scale = ref(100)
       open-delay="100"
       location="top"
     >
-      <template #activator="{ isActive, props }">
+      <template #activator="{ props }">
         <VBtn
           v-bind="props"
           class="mr-1"

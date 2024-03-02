@@ -1,18 +1,15 @@
-<script setup lang="ts">
-// @ts-ignore
-import { useAppStore } from '@/store';
-import { storeToRefs } from 'pinia';
-import { ref } from 'vue';
+<script
+  setup
+  lang="ts"
+>
+import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
+import { useAppStore } from '@/store'
 
-const { searchDialog, mindMap } = storeToRefs(useAppStore())
+const { searchDialog } = storeToRefs(useAppStore())
 const search = ref('')
 const replace = ref('')
 const isReplace = ref(false)
-function handleSearch() {
-  //@ts-ignore
-  mindMap.value!.search(search.value, () => {
-  })
-}
 </script>
 
 <template>
@@ -48,8 +45,8 @@ function handleSearch() {
         </VTextField>
         <VSlideYTransition>
           <VTextField
-            v-model="replace"
             v-if="isReplace"
+            v-model="replace"
             variant="outlined"
             rounded="lg"
             label="替换内容"
@@ -59,10 +56,12 @@ function handleSearch() {
       </VCardText>
       <VCardActions>
         <VBtn
-          @click="searchDialog.status = false"
           variant="plain"
+          @click="searchDialog.status = false"
         >
-          <VIcon start>mdi-close</VIcon>
+          <VIcon start>
+            mdi-close
+          </VIcon>
           <span>关闭</span>
         </VBtn>
         <VSpacer />
@@ -73,7 +72,10 @@ function handleSearch() {
   </VSlideXTransition>
 </template>
 
-<style scoped lang="scss">
+<style
+  scoped
+  lang="scss"
+>
 .search-box {
   position: fixed;
   top: 15%;

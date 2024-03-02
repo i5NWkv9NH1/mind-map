@@ -2,15 +2,11 @@
   setup
   lang="ts"
 >
-import { useAppStore } from '@/store';
-import { storeToRefs } from 'pinia';
-import { v4 as uuid } from 'uuid';
-import { watch } from 'vue';
-import { computed } from 'vue';
-import { ref } from 'vue';
-import { useTheme } from 'vuetify/lib/framework.mjs';
-import { BaseStyles, IconPanel, MapOutline, MapShortKeys, MapStructures, MapThemes, MathPanel, NodeStyles } from './panels';
-import { onMounted } from 'vue';
+import { storeToRefs } from 'pinia'
+import { v4 as uuid } from 'uuid'
+import { computed, ref } from 'vue'
+import { BaseStyles, IconPanel, MapOutline, MapShortKeys, MapStructures, MapThemes, MathPanel, NodeStyles } from './panels'
+import { useAppStore } from '@/store'
 
 const { togglePanel } = useAppStore()
 const { panel } = storeToRefs(useAppStore())
@@ -69,11 +65,11 @@ const component = computed(() => {
           :text="item.name"
           :active="panel.current === item.value"
           :color="panel.current === item.value ? 'primary' : 'default'"
-          @click="togglePanel(item.value)"
           variant="text"
           size="small"
           rounded="0"
           stacked
+          @click="togglePanel(item.value)"
         />
         <!-- <VTab
           v-for="item in items"
@@ -90,10 +86,10 @@ const component = computed(() => {
   </VSlideXTransition>
   <VExpandXTransition>
     <VWindow
-      v-model="panel.current"
-      :mandatory="false"
       v-if="panel.current"
       id="sidebar-window"
+      v-model="panel.current"
+      :mandatory="false"
     >
       <VWindowItem
         v-for="item in items"

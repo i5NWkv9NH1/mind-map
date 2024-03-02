@@ -1,12 +1,11 @@
-<script setup lang="ts">
-import PanelContainer from '@/components/PanelContainer.vue';
-import { useAppStore } from '@/store';
-import { over } from 'lodash';
-import { v4 as uuid } from 'uuid'
-import { ref, computed, watch } from 'vue'
+<script
+  setup
+  lang="ts"
+>
+import { useAppStore } from '@/store'
+import PanelContainer from '@/components/PanelContainer.vue'
 
-const { togglePanel, isDark } = useAppStore()
-
+const { togglePanel } = useAppStore()
 </script>
 
 <template>
@@ -16,15 +15,15 @@ const { togglePanel, isDark } = useAppStore()
       <VBtn
         color="surface"
         variant="flat"
-        @click="togglePanel(null)"
         icon
+        @click="togglePanel(null)"
       >
         <VIcon>mdi-close-circle</VIcon>
       </VBtn>
     </template>
+
     <template #content>
-      <VSheet class="px-2">
-      </VSheet>
+      <VSheet class="px-2" />
     </template>
   </PanelContainer>
 </template>

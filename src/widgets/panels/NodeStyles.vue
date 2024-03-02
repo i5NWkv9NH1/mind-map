@@ -2,12 +2,11 @@
   setup
   lang="ts"
 >
-import { PanelContainer, ColorPicker, MenuSelect } from '@/components';
-import { useAppStore } from '@/store';
-import { storeToRefs } from 'pinia';
-import { EmptyNode } from '../EmptyNode';
-import { ref } from 'vue';
-import { v4 as uuid } from 'uuid';
+import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
+import { EmptyNode } from '../EmptyNode'
+import { useAppStore } from '@/store'
+import { ColorPicker, MenuSelect, PanelContainer } from '@/components'
 import { usePresets } from '@/composables'
 
 const { togglePanel } = useAppStore()
@@ -23,7 +22,7 @@ const {
   lineStyleItems,
   lineArrowPositionItems,
   lineWidthSizeItems,
-  radiusSizeItems
+  radiusSizeItems,
 } = usePresets()
 // # font
 const fontFamily = ref('微软雅黑, Microsoft YaHei')
@@ -56,7 +55,6 @@ const paddingVer = ref(0)
 
 // # actions
 function onFontColorConfirm() {
-  console.log(fontColor.value)
 }
 </script>
 
@@ -67,21 +65,24 @@ function onFontColorConfirm() {
       <VBtn
         color="surface"
         variant="flat"
-        @click="togglePanel(null)"
         icon
+        @click="togglePanel(null)"
       >
         <VIcon>mdi-close</VIcon>
       </VBtn>
     </template>
-
     <template #content>
       <VFabTransition group>
         <template v-if="isActiveNode">
           <VSheet class="my-4">
-            <div class="text-body-1 mb-3">文字</div>
+            <div class="text-body-1 mb-3">
+              文字
+            </div>
             <VRow>
               <VCol>
-                <VLabel class="text-subtitle-2 mb-1">字体</VLabel>
+                <VLabel class="text-subtitle-2 mb-1">
+                  字体
+                </VLabel>
                 <VSelect
                   v-model="fontFamily"
                   :items="fontFamilyItems"
@@ -91,7 +92,7 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
-                  <template #item="{ index, item, props }">
+                  <template #item="{ item, props }">
                     <VList
                       density="compact"
                       nav
@@ -108,7 +109,9 @@ function onFontColorConfirm() {
             </VRow>
             <VRow>
               <VCol>
-                <VLabel class="text-subtitle-2 mb-1">字号</VLabel>
+                <VLabel class="text-subtitle-2 mb-1">
+                  字号
+                </VLabel>
                 <VSelect
                   v-model="fontSize"
                   :items="fontSizeItems"
@@ -118,8 +121,7 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
-
-                  <template #item="{ index, item, props }">
+                  <template #item="{ item, props }">
                     <VList
                       density="compact"
                       nav
@@ -134,7 +136,9 @@ function onFontColorConfirm() {
                 </VSelect>
               </VCol>
               <VCol>
-                <VLabel class="text-subtitle-2 mb-1">行高</VLabel>
+                <VLabel class="text-subtitle-2 mb-1">
+                  行高
+                </VLabel>
                 <VSelect
                   v-model="fontLineHeight"
                   :items="fontLineHeightItems"
@@ -144,8 +148,7 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
-
-                  <template #item="{ index, item, props }">
+                  <template #item="{ item, props }">
                     <VList
                       density="compact"
                       nav
@@ -167,7 +170,6 @@ function onFontColorConfirm() {
                   :items="usedColorItems"
                   @confirm="onFontColorConfirm"
                 >
-
                   <template #activator="activator">
                     <VBtn
                       v-bind="activator.props"
@@ -188,17 +190,16 @@ function onFontColorConfirm() {
                   open-delay="100"
                   location="top"
                 >
-
-                  <template #activator="{ isActive, props }">
+                  <template #activator="{ props }">
                     <VBtn
                       v-bind="props"
                       :active="isFontBold"
                       :color="isFontBold ? 'primary' : 'default'"
                       :variant="isDark ? 'outlined' : 'elevated'"
-                      @click="isFontBold = !isFontBold"
                       rounded="lg"
                       size="small"
                       icon
+                      @click="isFontBold = !isFontBold"
                     >
                       <VIcon>mdi-format-bold</VIcon>
                     </VBtn>
@@ -213,17 +214,16 @@ function onFontColorConfirm() {
                   open-delay="100"
                   location="top"
                 >
-
-                  <template #activator="{ isActive, props }">
+                  <template #activator="{ props }">
                     <VBtn
                       v-bind="props"
                       :active="isFontItalic"
                       :color="isFontItalic ? 'primary' : 'default'"
                       :variant="isDark ? 'outlined' : 'elevated'"
-                      @click="isFontItalic = !isFontItalic"
                       rounded="lg"
                       size="small"
                       icon
+                      @click="isFontItalic = !isFontItalic"
                     >
                       <VIcon>mdi-format-italic</VIcon>
                     </VBtn>
@@ -235,9 +235,8 @@ function onFontColorConfirm() {
                 <MenuSelect
                   v-model="textUnderlineStyle"
                   :items="textUnderlineStyleItems"
-                  :closeOnContentClick="true"
+                  :close-on-content-click="true"
                 >
-
                   <template #activator="activator">
                     <VBtn
                       v-bind="activator.props"
@@ -257,12 +256,15 @@ function onFontColorConfirm() {
           </VSheet>
           <VDivider />
           <VSheet class="my-4">
-            <div class="text-body-1 mb-3">边框</div>
+            <div class="text-body-1 mb-3">
+              边框
+            </div>
             <VRow align="center">
               <VCol>
-                <VLabel class="text-subtitle-2 mb-1">颜色</VLabel>
+                <VLabel class="text-subtitle-2 mb-1">
+                  颜色
+                </VLabel>
                 <ColorPicker v-model="borderColor">
-
                   <template #activator="activator">
                     <VBtn
                       v-bind="activator.props"
@@ -275,7 +277,9 @@ function onFontColorConfirm() {
                 </ColorPicker>
               </VCol>
               <VCol>
-                <VLabel class="text-subtitle-2 mb-1">样式 (TODO: svg)</VLabel>
+                <VLabel class="text-subtitle-2 mb-1">
+                  样式 (TODO: svg)
+                </VLabel>
                 <VSelect
                   v-model="borderStyles"
                   :items="borderStyleItems"
@@ -285,8 +289,7 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
-
-                  <template #item="{ index, item, props }">
+                  <template #item="{ item, props }">
                     <VList
                       density="compact"
                       nav
@@ -303,7 +306,9 @@ function onFontColorConfirm() {
             </VRow>
             <VRow>
               <VCol>
-                <VLabel class="text-subtitle-2 mb-1">宽度</VLabel>
+                <VLabel class="text-subtitle-2 mb-1">
+                  宽度
+                </VLabel>
                 <VSelect
                   v-model="borderWidth"
                   :items="lineWidthSizeItems"
@@ -313,8 +318,7 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
-
-                  <template #item="{ index, item, props }">
+                  <template #item="{ item, props }">
                     <VList
                       density="compact"
                       nav
@@ -329,7 +333,9 @@ function onFontColorConfirm() {
                 </VSelect>
               </VCol>
               <VCol>
-                <VLabel class="text-subtitle-2 mb-1">圆角 (TODO)</VLabel>
+                <VLabel class="text-subtitle-2 mb-1">
+                  圆角 (TODO)
+                </VLabel>
                 <VSelect
                   v-model="borderRadius"
                   :items="radiusSizeItems"
@@ -339,8 +345,7 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
-
-                  <template #item="{ index, item, props }">
+                  <template #item="{ item, props }">
                     <VList
                       density="compact"
                       nav
@@ -358,11 +363,12 @@ function onFontColorConfirm() {
           </VSheet>
           <VDivider />
           <VSheet class="my-4">
-            <div class="text-body-1 mb-3">背景</div>
+            <div class="text-body-1 mb-3">
+              背景
+            </div>
             <VRow>
               <VCol cols="6">
                 <ColorPicker v-model="backgroundColor">
-
                   <template #activator="activator">
                     <VBtn
                       v-bind="activator.props"
@@ -375,18 +381,17 @@ function onFontColorConfirm() {
             </VRow>
             <VRow
               align="center"
-              noGutters
+              no-gutters
             >
               <VCol>
                 <VCheckbox
                   v-model="isGradient"
                   label="渐变"
-                  hideDetails
+                  hide-details
                 />
               </VCol>
               <VCol>
                 <ColorPicker v-model="gradientStart">
-
                   <template #activator="activator">
                     <VIcon
                       v-bind="activator.props"
@@ -402,7 +407,6 @@ function onFontColorConfirm() {
               </VCol>
               <VCol>
                 <ColorPicker v-model="gradientEnd">
-
                   <template #activator="activator">
                     <VIcon
                       v-bind="activator.props"
@@ -420,7 +424,9 @@ function onFontColorConfirm() {
           </VSheet>
           <VDivider />
           <VSheet class="my-4">
-            <div class="text-body-1 mb-3">形状 (TODO: svg)</div>
+            <div class="text-body-1 mb-3">
+              形状 (TODO: svg)
+            </div>
             <VRow>
               <VCol cols="6">
                 <VSelect
@@ -432,8 +438,7 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
-
-                  <template #item="{ index, item, props }">
+                  <template #item="{ item, props }">
                     <VList
                       density="compact"
                       nav
@@ -451,12 +456,15 @@ function onFontColorConfirm() {
           </VSheet>
           <VDivider />
           <VSheet class="my-4">
-            <div class="text-body-1 mb-3">线条</div>
+            <div class="text-body-1 mb-3">
+              线条
+            </div>
             <VRow>
               <VCol>
-                <VLabel class="text-subtitle-2 mb-1">颜色</VLabel>
+                <VLabel class="text-subtitle-2 mb-1">
+                  颜色
+                </VLabel>
                 <ColorPicker v-model="lineColor">
-
                   <template #activator="activator">
                     <VBtn
                       v-bind="activator.props"
@@ -468,7 +476,9 @@ function onFontColorConfirm() {
                 </ColorPicker>
               </VCol>
               <VCol>
-                <VLabel class="text-subtitle-2 mb-1">样式 (TODO)</VLabel>
+                <VLabel class="text-subtitle-2 mb-1">
+                  样式 (TODO)
+                </VLabel>
                 <VSelect
                   v-model="lineStyle"
                   :items="lineStyleItems"
@@ -478,8 +488,7 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
-
-                  <template #item="{ index, item, props }">
+                  <template #item="{ item, props }">
                     <VList
                       density="compact"
                       nav
@@ -496,7 +505,9 @@ function onFontColorConfirm() {
             </VRow>
             <VRow>
               <VCol>
-                <VLabel class="text-subtitle-2 mb-1">宽度</VLabel>
+                <VLabel class="text-subtitle-2 mb-1">
+                  宽度
+                </VLabel>
                 <VSelect
                   v-model="lineWidth"
                   :items="lineWidthSizeItems"
@@ -506,8 +517,7 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
-
-                  <template #item="{ index, item, props }">
+                  <template #item="{ item, props }">
                     <VList
                       density="compact"
                       nav
@@ -522,7 +532,9 @@ function onFontColorConfirm() {
                 </VSelect>
               </VCol>
               <VCol>
-                <VLabel class="text-subtitle-2 mb-1">箭头位置</VLabel>
+                <VLabel class="text-subtitle-2 mb-1">
+                  箭头位置
+                </VLabel>
                 <VSelect
                   v-model="lineArrowPosition"
                   :items="lineArrowPositionItems"
@@ -532,8 +544,7 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
-
-                  <template #item="{ index, item, props }">
+                  <template #item="{ item, props }">
                     <VList
                       density="compact"
                       nav
@@ -551,7 +562,9 @@ function onFontColorConfirm() {
           </VSheet>
           <VDivider />
           <VSheet class="my-4">
-            <div class="text-body-1 mb-3">节点内边距</div>
+            <div class="text-body-1 mb-3">
+              节点内边距
+            </div>
             <VRow>
               <VCol cols="12">
                 <VSlider
@@ -559,10 +572,9 @@ function onFontColorConfirm() {
                   :max="100"
                   :min="0"
                   :step="1"
-                  thumbLabel
-                  hideDetails
+                  thumb-label
+                  hide-details
                 >
-
                   <template #prepend>
                     <span>水平</span>
                   </template>
@@ -575,10 +587,9 @@ function onFontColorConfirm() {
                   :max="100"
                   :min="0"
                   :step="1"
-                  thumbLabel
-                  hideDetails
+                  thumb-label
+                  hide-details
                 >
-
                   <template #prepend>
                     <span>垂直</span>
                   </template>
@@ -587,7 +598,6 @@ function onFontColorConfirm() {
             </VRow>
           </VSheet>
         </template>
-
         <template v-else>
           <EmptyNode
             :size="128"

@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { defineComponent, ref } from 'vue';
+import { ref } from 'vue'
 
 const expand = ref([''])
 </script>
@@ -9,7 +9,6 @@ const expand = ref([''])
     <v-list-item
       prepend-icon="mdi-home"
       title="Home"
-    ></v-list-item>
+    />
   </VList>
 </template>
-

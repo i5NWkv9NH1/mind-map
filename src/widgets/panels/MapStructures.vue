@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import PanelContainer from '@/components/PanelContainer.vue';
-import { useAppStore } from '@/store';
-import { over } from 'lodash';
-import { v4 as uuid } from 'uuid'
-import { ref, computed, watch } from 'vue'
+import { ref } from 'vue'
+import { useAppStore } from '@/store'
+import PanelContainer from '@/components/PanelContainer.vue'
 
-const { togglePanel, isDark } = useAppStore()
+const { togglePanel } = useAppStore()
 
 const structures = ref([1, 2, 3, 4, 5])
 const selected = ref(1)
@@ -18,8 +16,8 @@ const selected = ref(1)
       <VBtn
         color="surface"
         variant="flat"
-        @click="togglePanel(null)"
         icon
+        @click="togglePanel(null)"
       >
         <VIcon>mdi-close</VIcon>
       </VBtn>
@@ -33,7 +31,6 @@ const selected = ref(1)
           class="my-4"
           @click="selected = item"
         >
-
           <VCardText class="text-center">
             <VImg
               src="https://wanglin2.github.io/mind-map/dist/img/logicalStructure.png"

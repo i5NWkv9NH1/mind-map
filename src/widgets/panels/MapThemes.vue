@@ -1,23 +1,24 @@
-<script setup lang="ts">
-import PanelContainer from '@/components/PanelContainer.vue';
-import { useAppStore } from '@/store';
-import { over } from 'lodash';
-import { v4 as uuid } from 'uuid'
-import { ref, computed, watch } from 'vue'
+<script
+  setup
+  lang="ts"
+>
+import { computed, ref } from 'vue'
+import { useAppStore } from '@/store'
+import PanelContainer from '@/components/PanelContainer.vue'
 
 const current = ref('经典')
 const themeStyles = ref(['经典', '深色', '朴素'])
 const confirmDialog = ref({
-  status: false
+  status: false,
 })
 const selected = ref(1)
 const isHasModify = ref(false)
 const themes = computed(() => {
   switch (current.value) {
-    default: return []
     case '经典': return [1, 2, 3, 4, 5, 6]
     case '深色': return [7, 8, 9, 10, 11]
     case '朴素': return [11, 12, 13, 14, 15, 16]
+    default: return [1, 2, 3, 4, 5, 6]
   }
 })
 const { togglePanel } = useAppStore()
@@ -59,12 +60,16 @@ function overwrite() {
             </VCardText>
             <VCardActions>
               <VSpacer />
-              <VBtn @click="reserve">保留</VBtn>
+              <VBtn @click="reserve">
+                保留
+              </VBtn>
               <VBtn
                 variant="elevated"
                 color="primary"
                 @click="overwrite"
-              >覆盖</VBtn>
+              >
+                覆盖
+              </VBtn>
             </VCardActions>
           </VCard>
         </VCol>
@@ -77,21 +82,23 @@ function overwrite() {
       <VBtn
         color="surface"
         variant="flat"
-        @click="togglePanel(null)"
         icon
+        @click="togglePanel(null)"
       >
         <VIcon>mdi-close</VIcon>
       </VBtn>
     </template>
+
     <template #content>
       <VTabs
         v-model="current"
         density="compact"
       >
         <VTab
-          v-for="item in themeStyles"
-          :value="item"
-          :text="item"
+          v-for="theme in themeStyles"
+          :key="theme"
+          :value="theme"
+          :text="theme"
         />
       </VTabs>
       <VWindow
@@ -99,14 +106,16 @@ function overwrite() {
         class="px-2"
       >
         <VWindowItem
-          v-for="item in themeStyles"
-          :value="item"
+          v-for="theme in themeStyles"
+          :key="theme"
+          :value="theme"
         >
           <VCard
+            v-for="item in themes"
+            :key="item"
             :color="item === selected ? 'primary' : 'default'"
             elevation="4"
             class="my-4"
-            v-for="item in themes"
             @click="handleChange(item)"
           >
             <VCardText class="text-center">

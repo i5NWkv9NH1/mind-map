@@ -1,15 +1,18 @@
-<script setup lang="ts">
-import PanelContainer from '@/components/PanelContainer.vue';
-import { useAppStore } from '@/store';
-import { over } from 'lodash';
+<script
+  setup
+  lang="ts"
+>
 import { v4 as uuid } from 'uuid'
-import { ref, computed, watch } from 'vue'
+import { ref } from 'vue'
+import { useAppStore } from '@/store'
+import PanelContainer from '@/components/PanelContainer.vue'
 
-const { togglePanel, isDark } = useAppStore()
+const { togglePanel } = useAppStore()
 const keys = ref([
   {
     id: uuid(),
-    title: '节点操作', items: [
+    title: '节点操作',
+    items: [
       { id: uuid(), name: '插入下级节点', icon: 'mdi-vector-polyline', key: 'Tab' },
       { id: uuid(), name: '插入同级节点', icon: 'mdi-tune', key: 'Enter' },
       { id: uuid(), name: '插入父节点', icon: 'mdi-vector-point-plus', key: 'Shift + Tab' },
@@ -30,28 +33,30 @@ const keys = ref([
       { id: uuid(), name: '多选', icon: 'mdi-select-multiple', key: '右键 / Ctrl + 左键' },
       { id: uuid(), name: '一键整理布局', icon: 'mdi-grid-large', key: 'Ctrl + L' },
       { id: uuid(), name: '搜索和替换', icon: 'mdi-magnify', key: 'Ctrl + F' },
-    ]
+    ],
   },
   {
     id: uuid(),
-    title: '画布操作', items: [
+    title: '画布操作',
+    items: [
       { id: uuid(), name: '放大', icon: 'mdi-plus-thick', key: 'Ctrl + +' },
       { id: uuid(), name: '放大', icon: 'mdi-minus-thick', key: 'Ctrl + -' },
       { id: uuid(), name: '放大/缩小', icon: 'mdi-loupe', key: 'Ctrl + 鼠标滚动' },
       { id: uuid(), name: '回到根节点', icon: 'mdi-crosshairs-gps', key: 'Ctrl + Enter' },
       { id: uuid(), name: '适应画布', icon: 'mdi-image-size-select-small', key: 'Ctrl + i' },
-    ]
+    ],
   },
   {
     id: uuid(),
-    title: '大纲操作', items: [
+    title: '大纲操作',
+    items: [
       { id: uuid(), name: '文本换行', icon: 'mdi-wrap', key: 'Shift + Enter' },
       { id: uuid(), name: '删除节点', icon: 'mdi-trash-can-outline', key: 'Delete' },
       { id: uuid(), name: '插入下级节点', icon: 'mdi-vector-polyline', key: 'Tab' },
       { id: uuid(), name: '插入同级节点', icon: 'mdi-tune', key: 'Enter' },
       { id: uuid(), name: '上移一个层级', icon: 'mdi-arrow-up-thick', key: 'Shift + Tab' },
-    ]
-  }
+    ],
+  },
 ])
 </script>
 
@@ -62,12 +67,13 @@ const keys = ref([
       <VBtn
         color="surface"
         variant="flat"
-        @click="togglePanel(null)"
         icon
+        @click="togglePanel(null)"
       >
         <VIcon>mdi-close</VIcon>
       </VBtn>
     </template>
+
     <template #content>
       <VList
         v-for="item in keys"
@@ -77,18 +83,20 @@ const keys = ref([
         slim
         nav
       >
-        <div class="text-body-1 mb-3">{{ item.title }}</div>
+        <div class="text-body-1 mb-3">
+          {{ item.title }}
+        </div>
         <VListItem
-          v-for="key in item.items"
-          :prepend-icon="key.icon"
-          :title="key.name"
+          v-for="shortKey in item.items"
+          :key="shortKey.id"
+          :prepend-icon="shortKey.icon"
+          :title="shortKey.name"
         >
           <template #append>
             <!-- <VListItemSubtitle>{{ key.key }}</VListItemSubtitle> -->
-            <VCode>{{ key.key }}</VCode>
+            <VCode>{{ shortKey.key }}</VCode>
           </template>
         </VListItem>
-
       </VList>
     </template>
   </PanelContainer>

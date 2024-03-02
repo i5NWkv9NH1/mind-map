@@ -1,8 +1,9 @@
-<script setup lang="ts">
-import { isEmpty } from 'lodash';
-import { watch } from 'vue';
-import { ref } from 'vue';
-import { useClipboard } from '@vueuse/core'
+<script
+  setup
+  lang="ts"
+>
+import { isEmpty } from 'lodash'
+import { ref, watch } from 'vue'
 
 interface Props {
   height?: number
@@ -11,42 +12,42 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   // # image height
   height: 200,
-  rounded: 'lg'
+  rounded: 'lg',
 })
 // # models
 const src = defineModel<string, string>('src', {
-  required: true
+  required: true,
 })
 // # els
 const fileEl = ref<HTMLInputElement>()
 const dragover = ref(false) // # emit status
 const files = ref<File[]>() // # files
 const isHover = ref<boolean>(false) // # hover status on image
-const source = ref('')
-const { } = useClipboard({ source })
 // # event
 function onDrop(e: DragEvent) {
   dragover.value = false
-  if (!e.dataTransfer) return
+  if (!e.dataTransfer)
+    return
   const file = e.dataTransfer.files[0]
-  if (!file.type.includes('image')) return
+  if (!file.type.includes('image'))
+    return
   files.value = [file]
 }
 watch(files, () => {
   // ! file input onUpdate:modelValue will set value empty
   // ! if we not select image
-  if (isEmpty(files.value)) return
+  if (isEmpty(files.value))
+    return
   const blob = URL.createObjectURL(files.value![0])
   src.value = blob
 }, { deep: true })
-
 </script>
 
 <template>
   <VFileInput
-    class="d-none"
     ref="fileEl"
     v-model="files"
+    class="d-none"
   />
   <!-- # Empty -->
   <!-- # Has Image -->
@@ -103,32 +104,34 @@ watch(files, () => {
   </VExpandTransition> -->
   <!-- ! 第二种方式 有图片之后无法再拖动修改 -->
   <VCard
+    :color="dragover ? 'primary' : 'default'"
+    :rounded="props.rounded"
+    tabindex="0"
+    class="my-4"
     @drop.prevent="onDrop"
     @dragover.prevent="dragover = true"
     @dragenter.prevent="dragover = true"
     @dragleave.prevent="dragover = false"
-    :color="dragover ? 'primary' : 'default'"
-    :rounded="props.rounded"
     @click="fileEl && fileEl.click()"
-    tabindex="0"
-    class="my-4"
-    ref="cardEl"
   >
     <VExpandTransition>
       <template v-if="!src || dragover">
         <VCardText>
           <div class="d-flex flex-column align-center justify-center">
-            <VIcon size="128">mdi-cloud-upload</VIcon>
+            <VIcon size="128">
+              mdi-cloud-upload
+            </VIcon>
             <p>拖动图片、粘贴或者点击上传图片</p>
           </div>
         </VCardText>
       </template>
+
       <template v-else>
         <!-- # div as transition root -->
         <div>
           <VHover
-            v-model="isHover"
             v-slot="hoverArgs"
+            v-model="isHover"
           >
             <VImg
               v-bind="hoverArgs.props"
@@ -141,12 +144,12 @@ watch(files, () => {
                 :model-value="hoverArgs.isHovering"
                 contained
                 transition="scroll-y-transition"
-                contentClass="v-container position-relative"
+                content-class="v-container position-relative"
               >
                 <VBtn
                   class="overlay-close"
-                  @click.stop="src = ''"
                   icon
+                  @click.stop="src = ''"
                 >
                   <VIcon>mdi-close</VIcon>
                 </VBtn>
@@ -159,7 +162,10 @@ watch(files, () => {
   </VCard>
 </template>
 
-<style scoped lang="scss">
+<style
+  scoped
+  lang="scss"
+>
 .overlay-close {
   position: absolute;
   right: .5rem;

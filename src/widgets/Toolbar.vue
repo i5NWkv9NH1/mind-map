@@ -1,14 +1,15 @@
-<script setup lang="ts">
-import { ContentAction, NodeAction, MapAction } from '@/@types';
-import { COMMAND_BACK, COMMAND_FORWARD } from '@/helpers';
-import { useAppStore } from '@/store';
-import { storeToRefs } from 'pinia';
+<script
+  setup
+  lang="ts"
+>
+import { storeToRefs } from 'pinia'
 import { v4 as uuid } from 'uuid'
-import { watch } from 'vue';
-import { ref } from 'vue';
+import { ref } from 'vue'
+import type { MapAction, NodeAction } from '@/@types'
+import { useAppStore } from '@/store'
 
-const { undo, redo, insertNode, insertChildNode, removeNode, toggleImageDialog, toggleLinkDialog, toggleNoteDialog, toggleTagDialog, togglePanel, createSummary, createcreateAssociativeLine, toggleEmojiDialog } = useAppStore()
-const { mindMap, isActiveNode, isStart, isEnd, canUndo, canRedo, mindMapMode, hasGeneralization, hasRoot } = storeToRefs(useAppStore())
+const { undo, redo, insertNode, insertChildNode, removeNode, toggleImageDialog, toggleLinkDialog, toggleNoteDialog, toggleTagDialog, togglePanel, createSummary, createcreateAssociativeLine } = useAppStore()
+const { isActiveNode, canUndo, canRedo, mindMapMode, hasGeneralization, hasRoot } = storeToRefs(useAppStore())
 
 // # 撤销重做
 // # 节点编辑
@@ -48,9 +49,9 @@ const mindMapActions = ref<MapAction[]>([
     <VBtn
       v-for="item in nodeActions"
       :key="item.uid"
-      @click="item.action()"
       :disabled="item.disabled()"
       stacked
+      @click="item.action()"
     >
       <VIcon v-if="item.icon">
         {{ item.icon }}
@@ -61,8 +62,8 @@ const mindMapActions = ref<MapAction[]>([
       <VBtn
         v-for="item in mindMapActions"
         :key="item.uid"
-        @click="item.action"
         stacked
+        @click="item.action"
       >
         <VIcon v-if="item.icon">
           {{ item.icon }}
@@ -73,7 +74,10 @@ const mindMapActions = ref<MapAction[]>([
   </VToolbar>
 </template>
 
-<style scoped lang="scss">
+<style
+  scoped
+  lang="scss"
+>
 #toolbar {
   z-index: 999;
 }

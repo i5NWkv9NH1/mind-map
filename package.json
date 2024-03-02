@@ -1,14 +1,14 @@
 {
   "name": "@sora/nodemap",
-  "author": "sora",
-  "description": "A Mind Map Application Build with simple-mind-map and Vuetify.js",
-  "version": "0.0.0",
   "type": "module",
+  "version": "0.0.0",
+  "description": "A Mind Map Application Build with simple-mind-map and Vuetify.js",
+  "author": "sora",
   "scripts": {
     "dev": "cross-env NODE_OPTIONS='--no-warnings' vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
-    "lint": "eslint . --fix --ignore-path .gitignore",
+    "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
@@ -36,7 +36,7 @@
     "@iconify/json": "^2.2.187",
     "@types/file-saver": "^2.0.7",
     "@types/lodash": "^4.14.202",
-    "@types/node": "^20.10.0",
+    "@types/node": "^20.11.24",
     "@types/uuid": "^9.0.8",
     "@vitejs/plugin-vue": "^4.5.0",
     "@vitejs/plugin-vue-jsx": "^3.1.0",

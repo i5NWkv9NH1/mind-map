@@ -1,5 +1,5 @@
 // ? node
-export type MindMapNode<T = any> = {
+export interface MindMapNode<T = any> {
   uid: string
   nodeData: T
   layerIndex: number
@@ -13,21 +13,21 @@ export type MindMapNode<T = any> = {
   isGeneralization: boolean
   isRoot: boolean
   isDrag: boolean
-  setImage(args: SetImage): void
-  setIcon(args: SetIcon): void
-  setHyperlink(url: string, name: string): void
-  setNote(content: string): void
-  setTag(tags: string[]): void
+  setImage: (args: SetImage) => void
+  setIcon: (args: SetIcon) => void
+  setHyperlink: (url: string, name: string) => void
+  setNote: (content: string) => void
+  setTag: (tags: string[]) => void
   /**
    * @param name 样式名称 - fontFamily...
    * @param value  样式值 - 11
    * @param isActive
    */
-  setStyle(name: StyleName, value: string | number | any, isActive?: boolean): void
-  getData(type: GetDataType): void
+  setStyle: (name: StyleName, value: string | number | any, isActive?: boolean) => void
+  getData: (type: GetDataType) => void
 }
 
-export type SetImage = { url: string; title: string; width: number; height: number }
+export interface SetImage { url: string, title: string, width: number, height: number }
 export type SetIcon = string[]
 export type GetDataType = 'image' | 'imageTitle' | 'icon' | 'hyperlink' | 'hyperlinkTitle' | 'note' | 'tag'
 export type StyleName = `shape` | string

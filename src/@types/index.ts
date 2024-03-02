@@ -1,9 +1,9 @@
 export * from './mind-map'
 
-export type Action = {
-  uid: string;
-  name: string;
-  icon?: string;
+export interface Action {
+  uid: string
+  name: string
+  icon?: string
   action: () => void
 }
 export type ContentAction = Action & {

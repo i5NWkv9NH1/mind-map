@@ -1,4 +1,5 @@
 // Plugins
+import { URL, fileURLToPath } from 'node:url'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import Fonts from 'unplugin-fonts/vite'
@@ -10,12 +11,11 @@ import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
 // Utilities
 import { defineConfig } from 'vite'
-import { fileURLToPath, URL } from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    VueRouter({ extensions: ['.vue', '.tsx',] }),
+    VueRouter({ extensions: ['.vue', '.tsx'] }),
     Layouts(),
     Vue({
       template: { transformAssetUrls },
@@ -29,7 +29,7 @@ export default defineConfig({
       },
     }),
     Components({
-      dts: true
+      dts: true,
     }),
     Fonts({
       google: {

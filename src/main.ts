@@ -5,13 +5,13 @@
  */
 
 // Plugins
+import { createApp } from 'vue'
+import App from './App'
 import { registerPlugins } from '@/plugins'
 
 // Components
-import App from './App'
 
 // Composables
-import { createApp } from 'vue'
 
 const app = createApp(App)
 

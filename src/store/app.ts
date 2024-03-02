@@ -1,34 +1,28 @@
-// Utilities
-import { MindMapMode, MindMapNode, MindMapOptions } from '@/@types'
-import { COMMAND_ADD_GENERALIZATION, COMMAND_BACK, COMMAND_FORWARD, COMMAND_INSERT_CHILD_NODE, COMMAND_INSERT_NODE, COMMAND_REMOVE_NODE } from '@/helpers'
-import { booleanLiteral, react } from '@babel/types'
 import { useDark } from '@vueuse/core'
 import { isEmpty } from 'lodash'
 import { defineStore } from 'pinia'
 import MindMap from 'simple-mind-map'
-import { reactive } from 'vue'
-import { computed } from 'vue'
-import { shallowRef, watch } from 'vue'
-import { ref } from 'vue'
+import { computed, ref, shallowRef, watch } from 'vue'
 import { useTheme } from 'vuetify/lib/framework.mjs'
+import type { MindMapMode, MindMapNode } from '@/@types'
+import { COMMAND_ADD_GENERALIZATION, COMMAND_BACK, COMMAND_FORWARD, COMMAND_INSERT_CHILD_NODE, COMMAND_INSERT_NODE, COMMAND_REMOVE_NODE } from '@/helpers'
 
-export type Dialog = {
+export interface Dialog {
   status: boolean
 }
-
 export type UploadImageDialog = Dialog & {
-  src: string;
+  src: string
   file: File | undefined | null
 }
-export type LinkDialog = Dialog & {}
-export type NoteDialog = Dialog & {}
+export type LinkDialog = Dialog
+export type NoteDialog = Dialog
 export type TagDialog = Dialog & {
-  items: { id: string; text: string; color: string }[]
+  items: { id: string, text: string, color: string }[]
 }
-export type SearchDialog = Dialog & {}
-export type EmojiDialog = Dialog & {}
-export type MathSheet = Dialog & {}
-export type Panel = {
+export type SearchDialog = Dialog
+export type EmojiDialog = Dialog
+export type MathSheet = Dialog
+export interface Panel {
   current: number | null
 }
 
@@ -43,10 +37,10 @@ export const useAppStore = defineStore('app', () => {
   // # mind map
   const mindMap = ref<MindMap>()
   const mindMapData = ref({
-    "data": {
-      "text": "根节点"
+    data: {
+      text: '根节点',
     },
-    "children": []
+    children: [],
   })
   const activeNodes = shallowRef<MindMapNode[]>()
   const mindMapMode = ref<MindMapMode>('edit')
@@ -64,39 +58,39 @@ export const useAppStore = defineStore('app', () => {
     file: null,
   })
   const emojiDialog = ref<EmojiDialog>({
-    status: false
+    status: false,
   })
   const linkDialog = ref<LinkDialog>({
-    status: false
+    status: false,
   })
   const noteDialog = ref<NoteDialog>({
-    status: false
+    status: false,
   })
   const tagDialog = ref<TagDialog>({
     status: false,
-    items: []
+    items: [],
   })
   const mathSheet = ref<MathSheet>({
-    status: false
+    status: false,
   })
   const searchDialog = ref<SearchDialog>({
-    status: false
+    status: false,
   })
   // # sidebar panels
   const panel = ref<Panel>({
-    current: null
+    current: null,
   })
 
   // # getters
   // # mind map
   const isActiveNode = computed(() => !isEmpty(activeNodes.value))
   const hasRoot = computed(() => {
-    return activeNodes.value!.findIndex(node => {
+    return activeNodes.value!.findIndex((node) => {
       return node.isRoot
     }) !== -1
   })
   const hasGeneralization = computed(() => {
-    return activeNodes.value!.findIndex(node => {
+    return activeNodes.value!.findIndex((node) => {
       return node.isGeneralization
     }) !== -1
   })
@@ -158,13 +152,49 @@ export const useAppStore = defineStore('app', () => {
 
   return {
     // # state
-    mindMap, mindMapData, activeNodes, isStart, isEnd, mindMapMode, useLeftKeySelectionRightKeyDrag, isShowMiniMap, isReadOnly, words, nodes,
-    uploadImageDialog, tagDialog, linkDialog, noteDialog, mathSheet, searchDialog, emojiDialog, panel,
-    isDark, theme,
+    mindMap,
+    mindMapData,
+    activeNodes,
+    isStart,
+    isEnd,
+    mindMapMode,
+    useLeftKeySelectionRightKeyDrag,
+    isShowMiniMap,
+    isReadOnly,
+    words,
+    nodes,
+    uploadImageDialog,
+    tagDialog,
+    linkDialog,
+    noteDialog,
+    mathSheet,
+    searchDialog,
+    emojiDialog,
+    panel,
+    isDark,
+    theme,
     // # actions
-    initMindMap, undo, redo, setMode, insertNode, insertChildNode, removeNode, createSummary, createcreateAssociativeLine,
-    toggleImageDialog, toggleLinkDialog, toggleEmojiDialog, toggleNoteDialog, toggleTagDialog, toggleMathSheet, togglePanel,
+    initMindMap,
+    undo,
+    redo,
+    setMode,
+    insertNode,
+    insertChildNode,
+    removeNode,
+    createSummary,
+    createcreateAssociativeLine,
+    toggleImageDialog,
+    toggleLinkDialog,
+    toggleEmojiDialog,
+    toggleNoteDialog,
+    toggleTagDialog,
+    toggleMathSheet,
+    togglePanel,
     // # getters
-    hasRoot, hasGeneralization, isActiveNode, canUndo, canRedo
+    hasRoot,
+    hasGeneralization,
+    isActiveNode,
+    canUndo,
+    canRedo,
   }
 })

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
-import { storeToRefs } from 'pinia';
+import { onMounted, ref } from 'vue'
+import { storeToRefs } from 'pinia'
+
 // ! plugins
 import MindMap from 'simple-mind-map'
 import Select from 'simple-mind-map/src/plugins/Select.js'
@@ -17,29 +18,31 @@ import Search from 'simple-mind-map/src/plugins/Search.js'
 import Painter from 'simple-mind-map/src/plugins/Painter.js'
 import Scrollbar from 'simple-mind-map/src/plugins/Scrollbar.js'
 import Formula from 'simple-mind-map/src/plugins/Formula.js'
-import * as xmind from 'simple-mind-map/src/parse/xmind.js'
-import * as markdown from 'simple-mind-map/src/parse/markdown.js'
 import { SimplePlugin } from '@/plugins/mindmap'
 
 // # types
-import { MindMapNode } from '@/@types';
+import type { MindMapNode } from '@/@types'
+
 // # constants
-import { ON_BAKC_FORWARD, ON_NODE_ACTIVE } from '@/helpers';
+import { ON_BAKC_FORWARD, ON_NODE_ACTIVE } from '@/helpers'
+
 // # store
-import { useAppStore } from '@/store/app';
+import { useAppStore } from '@/store/app'
+
 // # comps
 import { Bottombar, Sidebar, Toolbar } from '@/widgets'
-import { UploadImageDialog, SearchDialog, EmojiDialog, HyperLinkDialog, NoteDialog, TagDialog, } from '@/widgets/dialogs';
+import { EmojiDialog, HyperLinkDialog, NoteDialog, SearchDialog, TagDialog, UploadImageDialog } from '@/widgets/dialogs'
 
 const mindMapEl = ref<HTMLElement>()
-const { initMindMap, } = useAppStore()
+const { initMindMap } = useAppStore()
 const { mindMap, mindMapData, activeNodes, isStart, isEnd } = storeToRefs(useAppStore())
 
 onMounted(() => {
   if (mindMapEl.value) {
     // # 初始化
     initMindMap({
-      el: mindMapEl.value, data: mindMapData.value
+      el: mindMapEl.value,
+      data: mindMapData.value,
     })
     // # plugins
     MindMap.usePlugin(RichText)
@@ -68,7 +71,6 @@ onMounted(() => {
     })
   }
 })
-
 </script>
 
 <template>

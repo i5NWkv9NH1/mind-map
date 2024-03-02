@@ -1,3 +1,8 @@
 import antfu from '@antfu/eslint-config'
 
-export default antfu({})
+export default antfu({
+  rules: {
+    'ts/ban-ts-comment': 'off',
+    'ts/prefer-ts-expect-error': 'off',
+  },
+})

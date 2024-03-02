@@ -1,9 +1,11 @@
-<script setup lang="ts">
-import { DragUpload } from '@/components';
-import { useAppStore } from '@/store';
-import { isEmpty } from 'lodash';
-import { storeToRefs } from 'pinia';
-import { ref, watch } from 'vue';
+<script
+  setup
+  lang="ts"
+>
+import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
+import { useAppStore } from '@/store'
+import { DragUpload } from '@/components'
 
 const { uploadImageDialog } = storeToRefs(useAppStore())
 const src = ref('')
@@ -16,17 +18,20 @@ function confirm() {
   uploadImageDialog.value.status = false
 }
 function paste(e: ClipboardEvent) {
-  if (!e.clipboardData) return
+  if (!e.clipboardData)
+    return
   const files = e.clipboardData.files
-  if (!files.length) return
+  if (!files.length)
+    return
   const file = files[0]
-  if (!file.type.includes('image')) return
+  if (!file.type.includes('image'))
+    return
   const blob = URL.createObjectURL(file)
   src.value = blob
 }
 const rules = ref([
-  (v: string) => v,  // # is url?
-  (v: string) => v
+  (v: string) => v, // # is url?
+  (v: string) => v,
 ])
 </script>
 
@@ -34,8 +39,8 @@ const rules = ref([
   <VDialog
     v-model="uploadImageDialog.status"
     transition="scroll-y-transition"
-    @paste="paste"
     persistent
+    @paste="paste"
   >
     <VContainer>
       <VRow justify="center">
@@ -53,12 +58,17 @@ const rules = ref([
               <DragUpload v-model:src="src" />
               <!-- <div class="text-body-1 mb-3">方式二：网络图片</div> -->
               <VListSubheader>方式二：网络图片</VListSubheader>
-              <VLabel class="text-subtitle-2">请输入图片地址</VLabel>
+              <VLabel class="text-subtitle-2">
+                请输入图片地址
+              </VLabel>
               <VTextField
                 variant="outlined"
                 density="compact"
+                :rules="rules"
               />
-              <VLabel class="text-subtitle-2">图片标题（可选）</VLabel>
+              <VLabel class="text-subtitle-2">
+                图片标题（可选）
+              </VLabel>
               <VTextField
                 variant="outlined"
                 density="compact"
@@ -66,14 +76,18 @@ const rules = ref([
             </VCardText>
             <VCardActions>
               <VBtn @click="close">
-                <VIcon start>mdi-close</VIcon>
+                <VIcon start>
+                  mdi-close
+                </VIcon>
                 <span>取消</span>
               </VBtn>
               <VBtn
                 color="primary"
                 @click="confirm"
               >
-                <VIcon start>mdi-content-save-outline</VIcon>
+                <VIcon start>
+                  mdi-content-save-outline
+                </VIcon>
                 <span>确定</span>
               </VBtn>
               <VSpacer />

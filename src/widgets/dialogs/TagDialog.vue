@@ -1,16 +1,19 @@
-<script setup lang="ts">
-import { useAppStore } from '@/store/app';
-import { isEmpty } from 'lodash';
-import { storeToRefs } from 'pinia';
-import { v4 as uuid } from 'uuid';
-import { ref, computed, watch } from 'vue';
+<script
+  setup
+  lang="ts"
+>
+import { isEmpty } from 'lodash'
+import { storeToRefs } from 'pinia'
+import { v4 as uuid } from 'uuid'
+import { ref, watch } from 'vue'
+import { useAppStore } from '@/store/app'
 
 const { tagDialog } = storeToRefs(useAppStore())
 const text = ref('')
 const color = ref('')
 
 watch(text, () => {
-  color.value = '#' + Math.floor(Math.random() * 16777215).toString(16)
+  color.value = `#${Math.floor(Math.random() * 16777215).toString(16)}`
 })
 
 function close() {
@@ -20,11 +23,12 @@ function confirm() {
   tagDialog.value.status = false
 }
 function addTag() {
-  if (!text.value) return
+  if (!text.value)
+    return
   tagDialog.value.items.push({
     id: uuid(),
     text: text.value.trim(),
-    color: color.value
+    color: color.value,
   })
   text.value = ''
 }
@@ -56,19 +60,20 @@ function addTag() {
               >
                 <template #append-inner>
                   <VBtn
-                    @click="addTag"
                     variant="flat"
+                    @click="addTag"
                   >
                     添加
                   </VBtn>
                 </template>
               </VTextField>
               <div
-                class="d-flex flex-wrap align-center"
                 v-if="!isEmpty(tagDialog.items)"
+                class="d-flex flex-wrap align-center"
               >
                 <VChip
                   v-for="tag in tagDialog.items"
+                  :key="tag.id"
                   :color="tag.color"
                   :text="tag.text"
                   class="mr-1 mb-1"
@@ -76,21 +81,27 @@ function addTag() {
                   :closable="false"
                 >
                   <template #close>
-                    <VIcon @click.stop="() => console.log('remove tag')">mdi-close-circle</VIcon>
+                    <VIcon @click.stop="() => console.log('remove tag')">
+                      mdi-close-circle
+                    </VIcon>
                   </template>
                 </VChip>
               </div>
             </VCardText>
             <VCardActions>
               <VBtn @click="close">
-                <VIcon start>mdi-close</VIcon>
+                <VIcon start>
+                  mdi-close
+                </VIcon>
                 <span>取消</span>
               </VBtn>
               <VBtn
                 color="primary"
                 @click="confirm"
               >
-                <VIcon start>mdi-content-save-outline</VIcon>
+                <VIcon start>
+                  mdi-content-save-outline
+                </VIcon>
                 <span>保存</span>
               </VBtn>
               <VSpacer />

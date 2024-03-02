@@ -1,8 +1,8 @@
-import { useAppStore } from "@/store";
-import { useToggle } from "@vueuse/core";
-import { storeToRefs } from "pinia";
-import { defineComponent, computed } from "vue";
-import { VBtn, VIcon, VTooltip } from "vuetify/components";
+import { useToggle } from '@vueuse/core'
+import { storeToRefs } from 'pinia'
+import { computed, defineComponent } from 'vue'
+import { VBtn, VIcon, VTooltip } from 'vuetify/components'
+import { useAppStore } from '@/store'
 
 export const ThemeSwitch = defineComponent({
   name: 'ThemeSwitch',
@@ -17,23 +17,26 @@ export const ThemeSwitch = defineComponent({
         open-delay="100"
         location="top"
         v-slots={{
-          activator: ({ isActive, props }: { isActive: boolean; props: any }) => <VBtn
-            {...props}
-            icon
-            active={isActive}
-            class="mr-2"
-            onClick={() => toggle()}
-          >
-            <VIcon>{icon.value}</VIcon>
-          </VBtn>,
-          default: () => <>
-            {/* @ts-ignore */}
-            <p>切换主题</p>
-          </>
+          activator: ({ isActive, props }: { isActive: boolean, props: any }) => (
+            <VBtn
+              {...props}
+              icon
+              active={isActive}
+              class="mr-2"
+              onClick={() => toggle()}
+            >
+              <VIcon>{icon.value}</VIcon>
+            </VBtn>
+          ),
+          default: () => (
+            <>
+              {/* @ts-ignore */}
+              <p>切换主题</p>
+            </>
+          ),
         }}
       />
 
-
     )
-  }
+  },
 })

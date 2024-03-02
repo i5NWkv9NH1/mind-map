@@ -5,10 +5,15 @@
  */
 
 // Composables
+// @ts-ignore
+import { process } from 'node:process'
 import { createRouter, createWebHistory } from 'vue-router/auto'
+
+// @ts-ignore
 import { setupLayouts } from 'virtual:generated-layouts'
 
 const router = createRouter({
+  // @ts-ignore
   history: createWebHistory(process.env.BASE_URL),
   extendRoutes: setupLayouts,
 })

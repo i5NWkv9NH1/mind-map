@@ -1,7 +1,9 @@
-<script  setup lang="ts">
-import { useAppStore } from '@/store';
-import { storeToRefs } from 'pinia';
-import { DragUpload } from '@/components'
+<script
+  setup
+  lang="ts"
+>
+import { storeToRefs } from 'pinia'
+import { useAppStore } from '@/store'
 
 const { emojiDialog } = storeToRefs(useAppStore())
 </script>
@@ -21,7 +23,7 @@ const { emojiDialog } = storeToRefs(useAppStore())
         >
           <VCard>
             <VCardTitle>图标</VCardTitle>
-            <VCardText></VCardText>
+            <VCardText />
           </VCard>
         </VCol>
       </VRow>

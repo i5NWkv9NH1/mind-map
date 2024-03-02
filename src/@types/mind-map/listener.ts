@@ -1,7 +1,7 @@
-import { MindMapNode } from "./node"
+import type { MindMapNode } from './node'
 
 // ? listener
-export type OnNodeActive = {
+export interface OnNodeActive {
   node: MindMapNode
   activeNodes: MindMapNode[]
 }

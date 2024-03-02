@@ -41,18 +41,23 @@ declare module 'simple-mind-map/src/plugins/Formula.js' {
   export default class { }
 }
 
-
 declare module 'simple-mind-map/src/parse/xmind.js' {
+  function parseXmindFile(): void
+  function transformXmind(): void
+  function transformOldXmind(): void
+  function transformToXmind(): void
   export {
     parseXmindFile,
     transformXmind,
     transformOldXmind,
-    transformToXmind
+    transformToXmind,
   }
 }
 declare module 'simple-mind-map/src/parse/markdown.js' {
+  function transformToMarkdown(): void
+  function transformMarkdownTo(): void
   export {
     transformToMarkdown,
-    transformMarkdownTo
+    transformMarkdownTo,
   }
 }

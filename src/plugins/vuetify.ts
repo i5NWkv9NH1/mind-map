@@ -8,7 +8,6 @@
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
 import * as directives from 'vuetify/directives'
-import { md3 } from 'vuetify/blueprints'
 
 // Composables
 import { createVuetify } from 'vuetify'
@@ -19,8 +18,8 @@ export default createVuetify({
   directives,
   defaults: {
     global: {
-      ripple: false
-    }
+      ripple: false,
+    },
   },
   // blueprint: md3
 })

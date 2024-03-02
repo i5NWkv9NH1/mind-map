@@ -2,16 +2,16 @@
   setup
   lang="ts"
 >
+const props = defineProps<Props>()
 const modelValue = defineModel<number | string>('modelValue', {
   type: Number,
   required: true,
   default: 0,
 })
 interface Props {
-  items: { id?: string; name: string; value: number | string }[]
+  items: { id?: string, name: string, value: number | string }[]
   size?: number
 }
-const props = defineProps<Props>()
 </script>
 
 <template>
@@ -24,7 +24,7 @@ const props = defineProps<Props>()
       <slot
         name="activator"
         :props="menuArgs.props"
-        :isActive="menuArgs.isActive"
+        :is-active="menuArgs.isActive"
       />
     </template>
     <VList

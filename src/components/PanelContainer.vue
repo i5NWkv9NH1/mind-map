@@ -1,10 +1,7 @@
-<script setup lang="ts">
-interface Props {
-  top?: number
-}
-const props = withDefaults(defineProps<Props>(), {
-  top: 112
-})
+<script
+  setup
+  lang="ts"
+>
 </script>
 
 <template>
@@ -21,7 +18,10 @@ const props = withDefaults(defineProps<Props>(), {
   </VCard>
 </template>
 
-<style scoped lang="scss">
+<style
+  scoped
+  lang="scss"
+>
 #panel {
 
   // height: calc(100vh - v-bind(top + 'px'));

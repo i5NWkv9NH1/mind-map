@@ -2,36 +2,30 @@
   setup
   lang="ts"
 >
-import PanelContainer from '@/components/PanelContainer.vue';
-import { useAppStore } from '@/store';
-import { storeToRefs } from 'pinia';
-import { v4 as uuid } from 'uuid';
-import { ref } from 'vue';
+import { storeToRefs } from 'pinia'
+import { v4 as uuid } from 'uuid'
+import { ref } from 'vue'
+import { useAppStore } from '@/store'
+import PanelContainer from '@/components/PanelContainer.vue'
 import { usePresets } from '@/composables'
-import { ColorPicker } from '@/components';
-import DragUpload from '@/components/DragUpload.vue';
+import { ColorPicker } from '@/components'
+import DragUpload from '@/components/DragUpload.vue'
 
 // # background
 const { togglePanel } = useAppStore()
 const { isDark } = storeToRefs(useAppStore())
 const {
   usedColorItems,
-  textUnderlineStyleItems,
   fontFamilyItems,
   fontSizeItems,
-  fontLineHeightItems,
-  borderStyleItems,
-  shapeItems,
   lineStyleItems,
-  radiusSizeItems,
-  lineArrowPositionItems,
   mouseBehaviorItems,
   mouseScrollScaleItems,
   createNodeBehaviorItems,
   lineWidthSizeItems,
   backgroundPositionItems,
   backgroundRepeatItems,
-  backgroundSizeItems
+  backgroundSizeItems,
 } = usePresets()
 const backgroundTabItems = ref([
   { id: uuid(), name: '颜色', value: 0 },
@@ -99,8 +93,8 @@ const createNodeBehavior = ref(0)
       <VBtn
         color="surface"
         variant="flat"
-        @click="togglePanel(null)"
         icon
+        @click="togglePanel(null)"
       >
         <VIcon>mdi-close</VIcon>
       </VBtn>
@@ -108,7 +102,9 @@ const createNodeBehavior = ref(0)
 
     <template #content>
       <VSheet class="my-4">
-        <div class="text-body-1 mb-3">画布背景</div>
+        <div class="text-body-1 mb-3">
+          画布背景
+        </div>
         <VRow>
           <VCol>
             <VTabs
@@ -133,7 +129,6 @@ const createNodeBehavior = ref(0)
                   :items="usedColorItems"
                   @confirm="onBackgroundColorConfirm"
                 >
-
                   <template #activator="activator">
                     <div class="pa-2">
                       <VBtn
@@ -154,16 +149,15 @@ const createNodeBehavior = ref(0)
                   <VRow>
                     <VCol>
                       <VSelect
-                        label="图片位置"
                         v-model="backgroundPosition"
+                        label="图片位置"
                         :items="backgroundPositionItems"
                         item-title="name"
                         item-value="value"
                         :variant="isDark ? 'outlined' : 'solo'"
                         hide-details
                       >
-
-                        <template #item="{ index, item, props }">
+                        <template #item="{ item, props }">
                           <VList
                             density="compact"
                             nav
@@ -176,24 +170,20 @@ const createNodeBehavior = ref(0)
                           </VList>
                         </template>
                       </VSelect>
-
-
                     </VCol>
-
                   </VRow>
                   <VRow>
                     <VCol>
                       <VSelect
-                        label="图片重复"
                         v-model="backgroundRepeat"
+                        label="图片重复"
                         :items="backgroundRepeatItems"
                         item-title="name"
                         item-value="value"
                         :variant="isDark ? 'outlined' : 'solo'"
                         hide-details
                       >
-
-                        <template #item="{ index, item, props }">
+                        <template #item="{ item, props }">
                           <VList
                             density="compact"
                             nav
@@ -211,16 +201,15 @@ const createNodeBehavior = ref(0)
                   <VRow>
                     <VCol>
                       <VSelect
-                        label="图片大小"
                         v-model="backgroundSize"
+                        label="图片大小"
                         :items="backgroundSizeItems"
                         item-title="name"
                         item-value="value"
                         :variant="isDark ? 'outlined' : 'solo'"
                         hide-details
                       >
-
-                        <template #item="{ index, item, props }">
+                        <template #item="{ item, props }">
                           <VList
                             density="compact"
                             nav
@@ -243,15 +232,18 @@ const createNodeBehavior = ref(0)
       </VSheet>
       <VDivider />
       <VSheet class="my-4">
-        <div class="text-body-1 mb-3">连线</div>
+        <div class="text-body-1 mb-3">
+          连线
+        </div>
         <VRow>
           <VCol>
-            <VLabel class="text-subtitle-2 mb-1">颜色</VLabel>
+            <VLabel class="text-subtitle-2 mb-1">
+              颜色
+            </VLabel>
             <ColorPicker
               v-model="lineColor"
               location="left center"
             >
-
               <template #activator="activator">
                 <VBtn
                   v-bind="activator.props"
@@ -264,7 +256,9 @@ const createNodeBehavior = ref(0)
             </ColorPicker>
           </VCol>
           <VCol>
-            <VLabel class="text-subtitle-2 mb-1">粗细</VLabel>
+            <VLabel class="text-subtitle-2 mb-1">
+              粗细
+            </VLabel>
             <VSelect
               v-model="lineWidth"
               :items="lineWidthSizeItems"
@@ -274,8 +268,7 @@ const createNodeBehavior = ref(0)
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
-
-              <template #item="{ index, item, props }">
+              <template #item="{ item, props }">
                 <VList
                   density="compact"
                   nav
@@ -292,7 +285,9 @@ const createNodeBehavior = ref(0)
         </VRow>
         <VRow align="center">
           <VCol cols="6">
-            <VLabel class="text-subtitle-2 mb-1">风格</VLabel>
+            <VLabel class="text-subtitle-2 mb-1">
+              风格
+            </VLabel>
             <VSelect
               v-model="lineStyle"
               :items="lineStyleItems"
@@ -302,8 +297,7 @@ const createNodeBehavior = ref(0)
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
-
-              <template #item="{ index, item, props }">
+              <template #item="{ item, props }">
                 <VList
                   density="compact"
                   nav
@@ -331,12 +325,15 @@ const createNodeBehavior = ref(0)
       </VSheet>
       <VDivider />
       <VSheet class="my-4">
-        <div class="text-body-1 mb-3">概要的连线</div>
+        <div class="text-body-1 mb-3">
+          概要的连线
+        </div>
         <VRow>
           <VCol>
-            <VLabel class="text-subtitle-2 mb-1">颜色</VLabel>
+            <VLabel class="text-subtitle-2 mb-1">
+              颜色
+            </VLabel>
             <ColorPicker v-model="summaryLineColor">
-
               <template #activator="activator">
                 <VBtn
                   v-bind="activator.props"
@@ -349,7 +346,9 @@ const createNodeBehavior = ref(0)
             </ColorPicker>
           </VCol>
           <VCol>
-            <VLabel class="text-subtitle-2 mb-1">粗细</VLabel>
+            <VLabel class="text-subtitle-2 mb-1">
+              粗细
+            </VLabel>
             <VSelect
               v-model="summaryLineWidth"
               :items="lineWidthSizeItems"
@@ -359,8 +358,7 @@ const createNodeBehavior = ref(0)
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
-
-              <template #item="{ index, item, props }">
+              <template #item="{ item, props }">
                 <VList
                   density="compact"
                   nav
@@ -378,12 +376,15 @@ const createNodeBehavior = ref(0)
       </VSheet>
       <VDivider />
       <VSheet class="my-4">
-        <div class="text-body-1 mb-3">关联线</div>
+        <div class="text-body-1 mb-3">
+          关联线
+        </div>
         <VRow>
           <VCol>
-            <VLabel class="text-subtitle-2 mb-1">颜色</VLabel>
+            <VLabel class="text-subtitle-2 mb-1">
+              颜色
+            </VLabel>
             <ColorPicker v-model="relateLineColor">
-
               <template #activator="activator">
                 <VBtn
                   v-bind="activator.props"
@@ -396,7 +397,9 @@ const createNodeBehavior = ref(0)
             </ColorPicker>
           </VCol>
           <VCol>
-            <VLabel class="text-subtitle-2 mb-1">粗细</VLabel>
+            <VLabel class="text-subtitle-2 mb-1">
+              粗细
+            </VLabel>
             <VSelect
               v-model="relateLineWidth"
               :items="lineWidthSizeItems"
@@ -406,8 +409,7 @@ const createNodeBehavior = ref(0)
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
-
-              <template #item="{ index, item, props }">
+              <template #item="{ item, props }">
                 <VList
                   density="compact"
                   nav
@@ -424,9 +426,10 @@ const createNodeBehavior = ref(0)
         </VRow>
         <VRow>
           <VCol>
-            <VLabel class="text-subtitle-2 mb-1">激活颜色</VLabel>
+            <VLabel class="text-subtitle-2 mb-1">
+              激活颜色
+            </VLabel>
             <ColorPicker v-model="relateLineActiveColor">
-
               <template #activator="activator">
                 <VBtn
                   v-bind="activator.props"
@@ -439,7 +442,9 @@ const createNodeBehavior = ref(0)
             </ColorPicker>
           </VCol>
           <VCol>
-            <VLabel class="text-subtitle-2 mb-1">粗细</VLabel>
+            <VLabel class="text-subtitle-2 mb-1">
+              粗细
+            </VLabel>
             <VSelect
               v-model="relateLineActiveWidth"
               :items="lineWidthSizeItems"
@@ -449,8 +454,7 @@ const createNodeBehavior = ref(0)
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
-
-              <template #item="{ index, item, props }">
+              <template #item="{ item, props }">
                 <VList
                   density="compact"
                   nav
@@ -468,10 +472,14 @@ const createNodeBehavior = ref(0)
       </VSheet>
       <VDivider />
       <VSheet class="my-4">
-        <div class="text-body-1 mb-3">关联线文字</div>
+        <div class="text-body-1 mb-3">
+          关联线文字
+        </div>
         <VRow>
           <VCol>
-            <VLabel class="text-subtitle-2 mb-1">字体</VLabel>
+            <VLabel class="text-subtitle-2 mb-1">
+              字体
+            </VLabel>
             <VSelect
               v-model="relateLineFontFamily"
               :items="fontFamilyItems"
@@ -481,8 +489,7 @@ const createNodeBehavior = ref(0)
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
-
-              <template #item="{ index, item, props }">
+              <template #item="{ item, props }">
                 <VList
                   density="compact"
                   nav
@@ -499,9 +506,10 @@ const createNodeBehavior = ref(0)
         </VRow>
         <VRow>
           <VCol>
-            <VLabel class="text-subtitle-2 mb-1">颜色</VLabel>
+            <VLabel class="text-subtitle-2 mb-1">
+              颜色
+            </VLabel>
             <ColorPicker v-model="relateLineFontColor">
-
               <template #activator="activator">
                 <VBtn
                   v-bind="activator.props"
@@ -514,7 +522,9 @@ const createNodeBehavior = ref(0)
             </ColorPicker>
           </VCol>
           <VCol>
-            <VLabel class="text-subtitle-2 mb-1">字号</VLabel>
+            <VLabel class="text-subtitle-2 mb-1">
+              字号
+            </VLabel>
             <VSelect
               v-model="relateLineFontSize"
               :items="fontSizeItems"
@@ -524,8 +534,7 @@ const createNodeBehavior = ref(0)
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
-
-              <template #item="{ index, item, props }">
+              <template #item="{ item, props }">
                 <VList
                   density="compact"
                   nav
@@ -543,7 +552,9 @@ const createNodeBehavior = ref(0)
       </VSheet>
       <VDivider />
       <VSheet class="my-4">
-        <div class="text-body-1 mb-3">节点边框风格</div>
+        <div class="text-body-1 mb-3">
+          节点边框风格
+        </div>
         <VRow>
           <VCol>
             <VCheckbox
@@ -557,7 +568,9 @@ const createNodeBehavior = ref(0)
       </VSheet>
       <VDivider />
       <VSheet class="my-4">
-        <div class="text-body-1 mb-3">节点内边距</div>
+        <div class="text-body-1 mb-3">
+          节点内边距
+        </div>
         <VRow>
           <VCol cols="12">
             <VSlider
@@ -565,10 +578,9 @@ const createNodeBehavior = ref(0)
               :max="100"
               :min="0"
               :step="1"
-              thumbLabel
-              hideDetails
+              thumb-label
+              hide-details
             >
-
               <template #prepend>
                 <span>水平</span>
               </template>
@@ -578,10 +590,9 @@ const createNodeBehavior = ref(0)
               :max="100"
               :min="0"
               :step="1"
-              thumbLabel
-              hideDetails
+              thumb-label
+              hide-details
             >
-
               <template #prepend>
                 <span>水平</span>
               </template>
@@ -591,7 +602,9 @@ const createNodeBehavior = ref(0)
       </VSheet>
       <VDivider />
       <VSheet class="my-4">
-        <div class="text-body-1 mb-3">图片</div>
+        <div class="text-body-1 mb-3">
+          图片
+        </div>
         <VRow>
           <VCol cols="12">
             <VSlider
@@ -599,10 +612,9 @@ const createNodeBehavior = ref(0)
               :max="100"
               :min="0"
               :step="1"
-              thumbLabel
-              hideDetails
+              thumb-label
+              hide-details
             >
-
               <template #prepend>
                 <span>水平</span>
               </template>
@@ -612,10 +624,9 @@ const createNodeBehavior = ref(0)
               :max="100"
               :min="0"
               :step="1"
-              thumbLabel
-              hideDetails
+              thumb-label
+              hide-details
             >
-
               <template #prepend>
                 <span>水平</span>
               </template>
@@ -625,7 +636,9 @@ const createNodeBehavior = ref(0)
       </VSheet>
       <VDivider />
       <VSheet class="my-4">
-        <div class="text-body-1 mb-3">图标</div>
+        <div class="text-body-1 mb-3">
+          图标
+        </div>
         <VRow>
           <VCol cols="12">
             <VSlider
@@ -633,10 +646,9 @@ const createNodeBehavior = ref(0)
               :max="50"
               :min="12"
               :step="1"
-              thumbLabel
-              hideDetails
+              thumb-label
+              hide-details
             >
-
               <template #prepend>
                 <span>大小</span>
               </template>
@@ -646,7 +658,9 @@ const createNodeBehavior = ref(0)
       </VSheet>
       <VDivider />
       <VSheet class="my-4">
-        <div class="text-body-1 mb-3">节点外边距</div>
+        <div class="text-body-1 mb-3">
+          节点外边距
+        </div>
         <VRow>
           <VCol>
             <VTabs
@@ -671,10 +685,9 @@ const createNodeBehavior = ref(0)
                   :max="100"
                   :min="0"
                   :step="1"
-                  thumbLabel
-                  hideDetails
+                  thumb-label
+                  hide-details
                 >
-
                   <template #prepend>
                     <span>水平</span>
                   </template>
@@ -684,10 +697,9 @@ const createNodeBehavior = ref(0)
                   :max="100"
                   :min="0"
                   :step="1"
-                  thumbLabel
-                  hideDetails
+                  thumb-label
+                  hide-details
                 >
-
                   <template #prepend>
                     <span>水平</span>
                   </template>
@@ -699,10 +711,9 @@ const createNodeBehavior = ref(0)
                   :max="100"
                   :min="0"
                   :step="1"
-                  thumbLabel
-                  hideDetails
+                  thumb-label
+                  hide-details
                 >
-
                   <template #prepend>
                     <span>水平</span>
                   </template>
@@ -712,10 +723,9 @@ const createNodeBehavior = ref(0)
                   :max="100"
                   :min="0"
                   :step="1"
-                  thumbLabel
-                  hideDetails
+                  thumb-label
+                  hide-details
                 >
-
                   <template #prepend>
                     <span>水平</span>
                   </template>
@@ -727,7 +737,9 @@ const createNodeBehavior = ref(0)
       </VSheet>
       <VDivider />
       <VSheet class="my-4">
-        <div class="text-body-1 mb-3">水印</div>
+        <div class="text-body-1 mb-3">
+          水印
+        </div>
         <VRow>
           <VCol>
             <VCheckbox
@@ -741,7 +753,9 @@ const createNodeBehavior = ref(0)
       </VSheet>
       <VDivider />
       <VSheet class="my-4">
-        <div class="text-body-1 mb-3">其他配置</div>
+        <div class="text-body-1 mb-3">
+          其他配置
+        </div>
         <VRow align="center">
           <VCol>
             <VCheckbox
@@ -760,7 +774,9 @@ const createNodeBehavior = ref(0)
         </VRow>
         <VRow>
           <VCol>
-            <VLabel class="text-subtitle-2 mb-1">鼠标滚动行为</VLabel>
+            <VLabel class="text-subtitle-2 mb-1">
+              鼠标滚动行为
+            </VLabel>
             <VSelect
               v-model="mouseBehavior"
               :items="mouseBehaviorItems"
@@ -769,8 +785,7 @@ const createNodeBehavior = ref(0)
               density="compact"
               hide-details
             >
-
-              <template #item="{ index, item, props }">
+              <template #item="{ item, props }">
                 <VList
                   density="compact"
                   nav
@@ -787,7 +802,9 @@ const createNodeBehavior = ref(0)
         </VRow>
         <VRow>
           <VCol>
-            <VLabel class="text-subtitle-2 mb-1">鼠标滚轮缩放</VLabel>
+            <VLabel class="text-subtitle-2 mb-1">
+              鼠标滚轮缩放
+            </VLabel>
             <VSelect
               v-model="mouseScrollScale"
               :items="mouseScrollScaleItems"
@@ -796,8 +813,7 @@ const createNodeBehavior = ref(0)
               density="compact"
               hide-details
             >
-
-              <template #item="{ index, item, props }">
+              <template #item="{ item, props }">
                 <VList
                   density="compact"
                   nav
@@ -814,7 +830,9 @@ const createNodeBehavior = ref(0)
         </VRow>
         <VRow>
           <VCol>
-            <VLabel class="text-subtitle-2 mb-1">创建新节点的行为</VLabel>
+            <VLabel class="text-subtitle-2 mb-1">
+              创建新节点的行为
+            </VLabel>
             <VSelect
               v-model="createNodeBehavior"
               :items="createNodeBehaviorItems"
@@ -823,8 +841,7 @@ const createNodeBehavior = ref(0)
               density="compact"
               hide-details
             >
-
-              <template #item="{ index, item, props }">
+              <template #item="{ item, props }">
                 <VList
                   density="compact"
                   nav
@@ -855,6 +872,5 @@ const createNodeBehavior = ref(0)
         </VRow>
       </VSheet>
     </template>
-
   </PanelContainer>
 </template>

@@ -1,21 +1,14 @@
-<script setup lang="ts">
-import { useAppStore } from '@/store/app';
-import { storeToRefs } from 'pinia';
-import "@toast-ui/editor/dist/toastui-editor.css";
-import Editor from "@toast-ui/editor";
-import { ref } from 'vue';
-import { onMounted } from 'vue';
-
+<script
+  setup
+  lang="ts"
+>
+import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import '@toast-ui/editor/dist/toastui-editor.css'
+import { useAppStore } from '@/store/app'
 
 const { noteDialog } = storeToRefs(useAppStore())
 const el = ref<HTMLElement>()
-const editor = ref<Editor>()
-const note = ref<string>('')
-
-const editorOptions = ref({
-  usageStatistics: false,
-  hideModeSwitch: true
-})
 
 function close() {
   noteDialog.value.status = false
@@ -23,7 +16,6 @@ function close() {
 function confirm() {
   noteDialog.value.status = false
 }
-
 </script>
 
 <template>
@@ -48,14 +40,18 @@ function confirm() {
             </VCardText>
             <VCardActions>
               <VBtn @click="close">
-                <VIcon start>mdi-close</VIcon>
+                <VIcon start>
+                  mdi-close
+                </VIcon>
                 <span>取消</span>
               </VBtn>
               <VBtn
                 color="primary"
                 @click="confirm"
               >
-                <VIcon start>mdi-content-save-outline</VIcon>
+                <VIcon start>
+                  mdi-content-save-outline
+                </VIcon>
                 <span>确定</span>
               </VBtn>
               <VSpacer />

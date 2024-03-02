@@ -1,19 +1,15 @@
-<script setup lang="ts">
-import { ContentAction, NodeAction, MapAction } from '@/@types';
-import { COMMAND_BACK, COMMAND_FORWARD } from '@/helpers';
-import { useAppStore } from '@/store';
-import { storeToRefs } from 'pinia';
-import { v4 as uuid } from 'uuid'
-import { watch } from 'vue';
-import { ref } from 'vue';
-import { ThemeSwitch } from './ThemeSwitch';
-import Scale from './Scale.vue';
-import { SearchDialog } from './dialogs';
-import { MouseBehavior } from './MouseBehavior';
-import Stat from './Stat.vue';
+<script
+  setup
+  lang="ts"
+>
+import { storeToRefs } from 'pinia'
+import { MouseBehavior } from './MouseBehavior'
+import Scale from './Scale.vue'
+import Stat from './Stat.vue'
+import { ThemeSwitch } from './ThemeSwitch'
+import { useAppStore } from '@/store'
 
-const { undo, redo, insertNode, insertChildNode, removeNode, toggleImageDialog, toggleLinkDialog, toggleNoteDialog, toggleTagDialog, togglePanel, createSummary, createcreateAssociativeLine, } = useAppStore()
-const { mindMap, isActiveNode, isStart, isEnd, canUndo, canRedo, mindMapMode, hasGeneralization, hasRoot, isShowMiniMap, isReadOnly, searchDialog } = storeToRefs(useAppStore())
+const { mindMapMode, isShowMiniMap, isReadOnly, searchDialog } = storeToRefs(useAppStore())
 
 // # 撤销重做
 // # 节点编辑
@@ -28,7 +24,7 @@ const { mindMap, isActiveNode, isStart, isEnd, canUndo, canRedo, mindMapMode, ha
     absolute
     extension-height="64"
   >
-    <!-- # 定位-->
+    <!-- # 定位 -->
     <VTooltip
       transition="slide-y-transition"
       offset="10"
@@ -55,13 +51,13 @@ const { mindMap, isActiveNode, isStart, isEnd, canUndo, canRedo, mindMapMode, ha
       open-delay="100"
       location="top"
     >
-      <template #activator="{ isActive, props }">
+      <template #activator="{ props }">
         <VBtn
           v-bind="props"
           :active="searchDialog.status"
           :color="searchDialog.status ? 'primary' : 'default'"
-          @click="searchDialog.status = !searchDialog.status"
           icon
+          @click="searchDialog.status = !searchDialog.status"
         >
           <VIcon>mdi-magnify</VIcon>
         </VBtn>
@@ -79,8 +75,8 @@ const { mindMap, isActiveNode, isStart, isEnd, canUndo, canRedo, mindMapMode, ha
           v-bind="props"
           :active="isActive"
           class="mr-2"
-          @click="isShowMiniMap = !isShowMiniMap"
           icon
+          @click="isShowMiniMap = !isShowMiniMap"
         >
           <VIcon> {{ isShowMiniMap ? 'mdi-map-marker-off-outline' : 'mdi-map-marker-outline' }}</VIcon>
         </VBtn>
@@ -100,11 +96,11 @@ const { mindMap, isActiveNode, isStart, isEnd, canUndo, canRedo, mindMapMode, ha
           v-bind="props"
           :active="isActive"
           class="mr-2"
+          icon
           @click="() => {
             if (isReadOnly) mindMapMode = 'edit'
             else mindMapMode = 'readonly'
           }"
-          icon
         >
           <VIcon> {{ isReadOnly ? 'mdi-eye-outline' : 'mdi-note-edit-outline' }}</VIcon>
         </VBtn>
@@ -161,7 +157,10 @@ const { mindMap, isActiveNode, isStart, isEnd, canUndo, canRedo, mindMapMode, ha
   </VToolbar>
 </template>
 
-<style scoped lang="scss">
+<style
+  scoped
+  lang="scss"
+>
 @use "@/styles/utils/z.scss";
 
 #bottombar {

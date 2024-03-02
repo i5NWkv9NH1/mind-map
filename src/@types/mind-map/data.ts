@@ -1,14 +1,13 @@
-import { MindMapNode } from "./node"
+import type { MindMapNode } from './node'
 
 // ? data
-export type MindMapData = {
+export interface MindMapData {
   // ? root
   children: MindMapNode[]
   data: {
     expand: boolean
     isActive: boolean
     uid: string
-    text: String
+    text: string
   }
 }
-

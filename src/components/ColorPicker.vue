@@ -2,11 +2,19 @@
   setup
   lang="ts"
 >
-import { isEmpty } from 'lodash';
-import { ref } from 'vue';
+import { isEmpty } from 'lodash'
+import { ref } from 'vue'
 
+const props = withDefaults(defineProps<Props>(), {
+  items: () => [],
+  size: 24,
+  closeOnContentClick: false,
+  persistent: true,
+  location: 'left top',
+})
+const emits = defineEmits(['confirm'])
 const modelValue = defineModel<string>('modelValue', {
-  required: true
+  required: true,
 })
 interface Props {
   items?: string[]
@@ -15,14 +23,6 @@ interface Props {
   persistent?: boolean
   location?: any
 }
-const props = withDefaults(defineProps<Props>(), {
-  items: () => [],
-  size: 24,
-  closeOnContentClick: false,
-  persistent: true,
-  location: 'left top'
-})
-const emits = defineEmits(['confirm'])
 const isMenuOpen = ref(false)
 const tempColor = ref(modelValue.value)
 function onClose() {
@@ -48,7 +48,7 @@ function onConfirm() {
       <slot
         name="activator"
         :props="menuArgs.props"
-        :isActive="menuArgs.isActive"
+        :is-active="menuArgs.isActive"
       />
     </template>
     <VCard>
@@ -62,8 +62,8 @@ function onConfirm() {
           <div class="d-flex flex-wrap align-center px-4 used-colors">
             <VIcon
               v-for="item in props.items"
-              :color="item"
               :key="item"
+              :color="item"
               :size="props.size"
               @click="modelValue = item"
             >
@@ -73,10 +73,12 @@ function onConfirm() {
         </VList>
       </VCardText>
       <VCardActions>
-        <VBtn @click="onClose">取消</VBtn>
+        <VBtn @click="onClose">
+          取消
+        </VBtn>
         <VBtn
-          @click="onConfirm"
           color="primary"
+          @click="onConfirm"
         >
           确定
         </VBtn>

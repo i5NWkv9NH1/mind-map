@@ -1,15 +1,14 @@
-import MindMap from 'simple-mind-map'
+import type MindMap from 'simple-mind-map'
+
 export class SimplePlugin {
   public static instanceName: string = 'simple'
 
-  constructor({ mindMap }: { mindMap: MindMap }) {
-    console.log('mind-map::plugins:', 'simple')
+  constructor({ _ }: { _: MindMap }) {
   }
 
   beforePluginRemove() { }
 
   beforePluginDestroy() { }
-
 }
 
 SimplePlugin.instanceName = 'Simple'

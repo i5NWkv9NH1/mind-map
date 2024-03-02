@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useAppStore } from '@/store';
-import { storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia'
+import { useAppStore } from '@/store'
 
 const { words, nodes } = storeToRefs(useAppStore())
 </script>
