@@ -1,14 +1,92 @@
-<script setup lang="ts">
+<script
+  setup
+  lang="ts"
+>
 import PanelContainer from '@/components/PanelContainer.vue';
 import { useAppStore } from '@/store';
 import { storeToRefs } from 'pinia';
+import { v4 as uuid } from 'uuid';
 import { ref } from 'vue';
+import { usePresets } from '@/composables'
+import { ColorPicker } from '@/components';
+import DragUpload from '@/components/DragUpload.vue';
 
+// # background
 const { togglePanel } = useAppStore()
 const { isDark } = storeToRefs(useAppStore())
-const backgroundTab = ref('颜色')
-const paddingTab = ref('二级节点')
-
+const {
+  usedColorItems,
+  textUnderlineStyleItems,
+  fontFamilyItems,
+  fontSizeItems,
+  fontLineHeightItems,
+  borderStyleItems,
+  shapeItems,
+  lineStyleItems,
+  radiusSizeItems,
+  lineArrowPositionItems,
+  mouseBehaviorItems,
+  mouseScrollScaleItems,
+  createNodeBehaviorItems,
+  lineWidthSizeItems
+} = usePresets()
+const backgroundTabItems = ref([
+  { id: uuid(), name: '颜色', value: 0 },
+  { id: uuid(), name: '图片', value: 1 },
+])
+const backgroundTab = ref(0)
+const paddingTabItems = ref([
+  { id: uuid(), name: '二级节点', value: 0 },
+  { id: uuid(), name: '三级以下节点', value: 1 },
+])
+// # background
+const backgroundColor = ref('#fafafa')
+const backgroundImage = ref('')
+const backgroundRepeat = ref('')
+const backgroundPosition = ref('')
+const backgroundSize = ref('')
+function onBackgroundColorConfirm() { }
+// # lines
+const lineColor = ref('#fafafa')
+const lineWidth = ref(2)
+const lineStyle = ref('straight')
+const isShowArrow = ref(false)
+// # summary
+const summaryLineColor = ref('#fafafa')
+const summaryLineWidth = ref(2)
+// # 关联线
+const relateLineColor = ref('#fafafa')
+const relateLineWidth = ref(2)
+const relateLineActiveColor = ref('#fafafa')
+const relateLineActiveWidth = ref(8)
+// # 关联线文字
+const relateLineFontFamily = ref('微软雅黑, Microsoft YaHei')
+const relateLineFontColor = ref('#fafafa')
+const relateLineFontSize = ref(14)
+// # 节点边框
+const useBottomBorderNodeStyle = ref(false)
+// # 节点内边距
+const paddingHor = ref(15)
+const paddingVer = ref(0)
+// # 图片
+const imageMaxWidth = ref(100)
+const imageMaxHeight = ref(100)
+// # 图标
+const iconSize = ref(12)
+// # 节点外边距
+const currentPadding = ref(0)
+const twoLevelNodePaddingHor = ref(100)
+const twoLevelNodePaddingVer = ref(40)
+const childNodePaddingHor = ref(50)
+const childNodePaddingVer = ref(0)
+// # 水印
+const isShowWaterMarker = ref(false)
+// # 其他配置
+const isUseFreeDragOnNode = ref(false)
+const isUseRichTextonNode = ref(false)
+const mouseBehavior = ref(1)
+const mouseScrollScale = ref(0)
+const createNodeBehavior = ref(0)
 </script>
 
 <template>
@@ -24,6 +102,7 @@ const paddingTab = ref('二级节点')
         <VIcon>mdi-close</VIcon>
       </VBtn>
     </template>
+
     <template #content>
       <VSheet class="my-4">
         <div class="text-body-1 mb-3">画布背景</div>
@@ -34,56 +113,78 @@ const paddingTab = ref('二级节点')
               density="compact"
             >
               <VTab
-                v-for="tab in ['颜色', '图片']"
-                :key="tab"
+                v-for="tab in backgroundTabItems"
+                :key="tab.id"
+                :text="tab.name"
+                :value="tab.value"
                 size="small"
-                :text="tab"
-                :value="tab"
               />
             </VTabs>
             <VWindow
               v-model="backgroundTab"
-              class="mt-4"
+              class="my-4"
             >
               <VWindowItem value="颜色">
-                <VAvatar
-                  v-for="item in 20"
-                  :key="item"
-                  rounded="lg"
-                  color="primary"
-                  class="ma-1"
-                  size="24"
-                />
+                <ColorPicker
+                  v-model="backgroundColor"
+                  :items="usedColorItems"
+                  @confirm="onBackgroundColorConfirm"
+                >
+
+                  <template #activator="activator">
+                    <div class="pa-2">
+                      <VBtn
+                        v-bind="activator.props"
+                        :color="backgroundColor"
+                        rounded="lg"
+                        class="mr-2"
+                      />
+                      <span>选择背景颜色</span>
+                    </div>
+                  </template>
+                </ColorPicker>
               </VWindowItem>
               <VWindowItem value="图片">
-                上传图片
+                <DragUpload v-model:src="backgroundImage" />
               </VWindowItem>
             </VWindow>
           </VCol>
         </VRow>
       </VSheet>
+      <VDivider />
       <VSheet class="my-4">
         <div class="text-body-1 mb-3">连线</div>
         <VRow>
           <VCol>
-            <VLabel class="mr-4">颜色</VLabel>
-            <VAvatar
-              class="d-block mt-2"
-              rounded="lg"
-              size="24"
-              color="primary"
-            />
+            <VLabel class="text-subtitle-2 mb-1">颜色</VLabel>
+            <ColorPicker
+              v-model="lineColor"
+              location="left center"
+            >
+
+              <template #activator="activator">
+                <VBtn
+                  v-bind="activator.props"
+                  class="d-block"
+                  :color="lineColor"
+                  elevation="4"
+                  block
+                />
+              </template>
+            </ColorPicker>
           </VCol>
           <VCol>
-            <VLabel>粗细</VLabel>
+            <VLabel class="text-subtitle-2 mb-1">粗细</VLabel>
             <VSelect
-              :items="[1, 2, 3, 4, 5]"
+              v-model="lineWidth"
+              :items="lineWidthSizeItems"
               item-title="name"
               item-value="value"
               density="compact"
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
+
               <template #item="{ index, item, props }">
                 <VList
                   density="compact"
@@ -101,15 +202,17 @@ const paddingTab = ref('二级节点')
         </VRow>
         <VRow align="center">
           <VCol cols="6">
-            <VLabel>风格</VLabel>
+            <VLabel class="text-subtitle-2 mb-1">风格</VLabel>
             <VSelect
-              :items="[1, 2, 3, 4, 5]"
+              v-model="lineStyle"
+              :items="lineStyleItems"
               item-title="name"
               item-value="value"
               density="compact"
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
+
               <template #item="{ index, item, props }">
                 <VList
                   density="compact"
@@ -128,6 +231,7 @@ const paddingTab = ref('二级节点')
         <VRow>
           <VCol>
             <VCheckbox
+              v-model="isShowArrow"
               label="是否显示箭头"
               density="compact"
               hide-details
@@ -135,28 +239,37 @@ const paddingTab = ref('二级节点')
           </VCol>
         </VRow>
       </VSheet>
+      <VDivider />
       <VSheet class="my-4">
         <div class="text-body-1 mb-3">概要的连线</div>
         <VRow>
           <VCol>
-            <VLabel>颜色</VLabel>
-            <VAvatar
-              size="24"
-              class="d-block"
-              color="primary"
-              rounded="lg"
-            />
+            <VLabel class="text-subtitle-2 mb-1">颜色</VLabel>
+            <ColorPicker v-model="summaryLineColor">
+
+              <template #activator="activator">
+                <VBtn
+                  v-bind="activator.props"
+                  class="d-block"
+                  :color="summaryLineColor"
+                  elevation="4"
+                  block
+                />
+              </template>
+            </ColorPicker>
           </VCol>
           <VCol>
-            <VLabel>粗细</VLabel>
+            <VLabel class="text-subtitle-2 mb-1">粗细</VLabel>
             <VSelect
-              :items="[1, 2, 3, 4, 5]"
+              v-model="summaryLineWidth"
+              :items="lineWidthSizeItems"
               item-title="name"
               item-value="value"
               density="compact"
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
+
               <template #item="{ index, item, props }">
                 <VList
                   density="compact"
@@ -173,28 +286,37 @@ const paddingTab = ref('二级节点')
           </VCol>
         </VRow>
       </VSheet>
+      <VDivider />
       <VSheet class="my-4">
         <div class="text-body-1 mb-3">关联线</div>
         <VRow>
           <VCol>
-            <VLabel>颜色</VLabel>
-            <VAvatar
-              size="24"
-              class="d-block"
-              color="primary"
-              rounded="lg"
-            />
+            <VLabel class="text-subtitle-2 mb-1">颜色</VLabel>
+            <ColorPicker v-model="relateLineColor">
+
+              <template #activator="activator">
+                <VBtn
+                  v-bind="activator.props"
+                  class="d-block"
+                  :color="relateLineColor"
+                  elevation="4"
+                  block
+                />
+              </template>
+            </ColorPicker>
           </VCol>
           <VCol>
-            <VLabel>粗细</VLabel>
+            <VLabel class="text-subtitle-2 mb-1">粗细</VLabel>
             <VSelect
-              :items="[1, 2, 3, 4, 5]"
+              v-model="relateLineWidth"
+              :items="lineWidthSizeItems"
               item-title="name"
               item-value="value"
               density="compact"
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
+
               <template #item="{ index, item, props }">
                 <VList
                   density="compact"
@@ -212,24 +334,32 @@ const paddingTab = ref('二级节点')
         </VRow>
         <VRow>
           <VCol>
-            <VLabel>激活颜色</VLabel>
-            <VAvatar
-              size="24"
-              class="d-block"
-              color="primary"
-              rounded="lg"
-            />
+            <VLabel class="text-subtitle-2 mb-1">激活颜色</VLabel>
+            <ColorPicker v-model="relateLineActiveColor">
+
+              <template #activator="activator">
+                <VBtn
+                  v-bind="activator.props"
+                  class="d-block"
+                  :color="relateLineActiveColor"
+                  elevation="4"
+                  block
+                />
+              </template>
+            </ColorPicker>
           </VCol>
           <VCol>
-            <VLabel>粗细</VLabel>
+            <VLabel class="text-subtitle-2 mb-1">粗细</VLabel>
             <VSelect
-              :items="[1, 2, 3, 4, 5]"
+              v-model="relateLineActiveWidth"
+              :items="lineWidthSizeItems"
               item-title="name"
               item-value="value"
               density="compact"
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
+
               <template #item="{ index, item, props }">
                 <VList
                   density="compact"
@@ -246,19 +376,22 @@ const paddingTab = ref('二级节点')
           </VCol>
         </VRow>
       </VSheet>
+      <VDivider />
       <VSheet class="my-4">
         <div class="text-body-1 mb-3">关联线文字</div>
         <VRow>
           <VCol>
-            <VLabel>字体</VLabel>
+            <VLabel class="text-subtitle-2 mb-1">字体</VLabel>
             <VSelect
-              :items="[1, 2, 3, 4, 5]"
+              v-model="relateLineFontFamily"
+              :items="fontFamilyItems"
               item-title="name"
               item-value="value"
               density="compact"
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
+
               <template #item="{ index, item, props }">
                 <VList
                   density="compact"
@@ -276,24 +409,32 @@ const paddingTab = ref('二级节点')
         </VRow>
         <VRow>
           <VCol>
-            <VLabel>颜色</VLabel>
-            <VAvatar
-              size="24"
-              class="d-block"
-              color="primary"
-              rounded="lg"
-            />
+            <VLabel class="text-subtitle-2 mb-1">颜色</VLabel>
+            <ColorPicker v-model="relateLineFontColor">
+
+              <template #activator="activator">
+                <VBtn
+                  v-bind="activator.props"
+                  class="d-block"
+                  :color="relateLineFontColor"
+                  elevation="4"
+                  block
+                />
+              </template>
+            </ColorPicker>
           </VCol>
           <VCol>
-            <VLabel>字号</VLabel>
+            <VLabel class="text-subtitle-2 mb-1">字号</VLabel>
             <VSelect
-              :items="[1, 2, 3, 4, 5]"
+              v-model="relateLineFontSize"
+              :items="fontSizeItems"
               item-title="name"
               item-value="value"
               density="compact"
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
+
               <template #item="{ index, item, props }">
                 <VList
                   density="compact"
@@ -310,11 +451,13 @@ const paddingTab = ref('二级节点')
           </VCol>
         </VRow>
       </VSheet>
+      <VDivider />
       <VSheet class="my-4">
         <div class="text-body-1 mb-3">节点边框风格</div>
         <VRow>
           <VCol>
             <VCheckbox
+              v-model="useBottomBorderNodeStyle"
               label="是否使用只有底边框的风格"
               density="compact"
               hide-details
@@ -322,45 +465,88 @@ const paddingTab = ref('二级节点')
           </VCol>
         </VRow>
       </VSheet>
+      <VDivider />
       <VSheet class="my-4">
         <div class="text-body-1 mb-3">节点内边距</div>
         <VRow>
           <VCol cols="12">
-            <VSlider thumb-label>
+            <VSlider
+              v-model="paddingHor"
+              :max="100"
+              :min="0"
+              :step="1"
+              thumbLabel
+              hideDetails
+            >
+
               <template #prepend>
                 <span>水平</span>
               </template>
             </VSlider>
-            <VSlider thumb-label>
+            <VSlider
+              v-model="paddingVer"
+              :max="100"
+              :min="0"
+              :step="1"
+              thumbLabel
+              hideDetails
+            >
+
               <template #prepend>
-                <span>垂直</span>
+                <span>水平</span>
               </template>
             </VSlider>
           </VCol>
         </VRow>
       </VSheet>
+      <VDivider />
       <VSheet class="my-4">
         <div class="text-body-1 mb-3">图片</div>
         <VRow>
           <VCol cols="12">
-            <VSlider thumb-label>
+            <VSlider
+              v-model="imageMaxWidth"
+              :max="100"
+              :min="0"
+              :step="1"
+              thumbLabel
+              hideDetails
+            >
+
               <template #prepend>
-                <span>显示的最大宽度</span>
+                <span>水平</span>
               </template>
             </VSlider>
-            <VSlider thumb-label>
+            <VSlider
+              v-model="imageMaxHeight"
+              :max="100"
+              :min="0"
+              :step="1"
+              thumbLabel
+              hideDetails
+            >
+
               <template #prepend>
-                <span>显示的最大高度</span>
+                <span>水平</span>
               </template>
             </VSlider>
           </VCol>
         </VRow>
       </VSheet>
+      <VDivider />
       <VSheet class="my-4">
         <div class="text-body-1 mb-3">图标</div>
         <VRow>
           <VCol cols="12">
-            <VSlider thumb-label>
+            <VSlider
+              v-model="iconSize"
+              :max="50"
+              :min="12"
+              :step="1"
+              thumbLabel
+              hideDetails
+            >
+
               <template #prepend>
                 <span>大小</span>
               </template>
@@ -368,47 +554,80 @@ const paddingTab = ref('二级节点')
           </VCol>
         </VRow>
       </VSheet>
+      <VDivider />
       <VSheet class="my-4">
         <div class="text-body-1 mb-3">节点外边距</div>
         <VRow>
           <VCol>
             <VTabs
-              v-model="paddingTab"
+              v-model="currentPadding"
               density="compact"
             >
               <VTab
-                v-for="tab in ['二级节点', '三级以下节点']"
-                :key="tab"
+                v-for="tab in paddingTabItems"
+                :key="tab.id"
+                :text="tab.name"
+                :value="tab.value"
                 size="small"
-                :text="tab"
-                :value="tab"
               />
             </VTabs>
             <VWindow
-              v-model="paddingTab"
+              v-model="currentPadding"
               class="mt-4"
             >
-              <VWindowItem value="二级节点">
-                <VSlider thumb-label>
+              <VWindowItem :value="0">
+                <VSlider
+                  v-model="twoLevelNodePaddingHor"
+                  :max="100"
+                  :min="0"
+                  :step="1"
+                  thumbLabel
+                  hideDetails
+                >
+
                   <template #prepend>
                     <span>水平</span>
                   </template>
                 </VSlider>
-                <VSlider thumb-label>
+                <VSlider
+                  v-model="twoLevelNodePaddingVer"
+                  :max="100"
+                  :min="0"
+                  :step="1"
+                  thumbLabel
+                  hideDetails
+                >
+
                   <template #prepend>
-                    <span>垂直</span>
+                    <span>水平</span>
                   </template>
                 </VSlider>
               </VWindowItem>
-              <VWindowItem value="三级以下节点">
-                <VSlider thumb-label>
+              <VWindowItem :value="1">
+                <VSlider
+                  v-model="childNodePaddingHor"
+                  :max="100"
+                  :min="0"
+                  :step="1"
+                  thumbLabel
+                  hideDetails
+                >
+
                   <template #prepend>
                     <span>水平</span>
                   </template>
                 </VSlider>
-                <VSlider thumb-label>
+                <VSlider
+                  v-model="childNodePaddingVer"
+                  :max="100"
+                  :min="0"
+                  :step="1"
+                  thumbLabel
+                  hideDetails
+                >
+
                   <template #prepend>
-                    <span>垂直</span>
+                    <span>水平</span>
                   </template>
                 </VSlider>
               </VWindowItem>
@@ -416,11 +635,13 @@ const paddingTab = ref('二级节点')
           </VCol>
         </VRow>
       </VSheet>
+      <VDivider />
       <VSheet class="my-4">
         <div class="text-body-1 mb-3">水印</div>
         <VRow>
           <VCol>
             <VCheckbox
+              v-model="isShowWaterMarker"
               label="是否显示水印"
               density="compact"
               hide-details
@@ -428,20 +649,19 @@ const paddingTab = ref('二级节点')
           </VCol>
         </VRow>
       </VSheet>
+      <VDivider />
       <VSheet class="my-4">
         <div class="text-body-1 mb-3">其他配置</div>
         <VRow align="center">
           <VCol>
             <VCheckbox
+              v-model="isUseFreeDragOnNode"
               label="是否开启节点自由拖拽"
               density="compact"
               hide-details
             />
-          </VCol>
-        </VRow>
-        <VRow>
-          <VCol>
             <VCheckbox
+              v-model="isUseRichTextonNode"
               label="是否开启节点富文本编辑"
               density="compact"
               hide-details
@@ -450,13 +670,16 @@ const paddingTab = ref('二级节点')
         </VRow>
         <VRow>
           <VCol>
-            <VLabel>鼠标滚动行为</VLabel>
+            <VLabel class="text-subtitle-2 mb-1">鼠标滚动行为</VLabel>
             <VSelect
-              :items="['上下移动视图', '缩放视图']"
-              density="compact"
+              v-model="mouseBehavior"
+              :items="mouseBehaviorItems"
               :variant="isDark ? 'outlined' : 'solo'"
+              item-title="name"
+              density="compact"
               hide-details
             >
+
               <template #item="{ index, item, props }">
                 <VList
                   density="compact"
@@ -474,13 +697,43 @@ const paddingTab = ref('二级节点')
         </VRow>
         <VRow>
           <VCol>
-            <VLabel>创建新节点的行为</VLabel>
+            <VLabel class="text-subtitle-2 mb-1">鼠标滚轮缩放</VLabel>
             <VSelect
-              :items="['激活新节点及进入编辑', '不激活新节点', '只激活新节点，不进入编辑']"
-              density="compact"
+              v-model="mouseScrollScale"
+              :items="mouseScrollScaleItems"
               :variant="isDark ? 'outlined' : 'solo'"
+              item-title="name"
+              density="compact"
               hide-details
             >
+
+              <template #item="{ index, item, props }">
+                <VList
+                  density="compact"
+                  nav
+                >
+                  <VListItem
+                    v-bind="props"
+                    :value="item.value"
+                    :title="item.title"
+                  />
+                </VList>
+              </template>
+            </VSelect>
+          </VCol>
+        </VRow>
+        <VRow>
+          <VCol>
+            <VLabel class="text-subtitle-2 mb-1">创建新节点的行为</VLabel>
+            <VSelect
+              v-model="createNodeBehavior"
+              :items="createNodeBehaviorItems"
+              :variant="isDark ? 'outlined' : 'solo'"
+              item-title="name"
+              density="compact"
+              hide-details
+            >
+
               <template #item="{ index, item, props }">
                 <VList
                   density="compact"
@@ -503,10 +756,6 @@ const paddingTab = ref('二级节点')
               density="compact"
               hide-details
             />
-          </VCol>
-        </VRow>
-        <VRow>
-          <VCol>
             <VCheckbox
               label="是否开启手绘风格"
               density="compact"

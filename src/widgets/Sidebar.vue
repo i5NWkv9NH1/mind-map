@@ -6,13 +6,15 @@ import { watch } from 'vue';
 import { computed } from 'vue';
 import { ref } from 'vue';
 import { useTheme } from 'vuetify/lib/framework.mjs';
-import { BaseStyles, MapOutline, MapShortKeys, MapStructures, MapThemes, NodeStyles } from './panels';
+import { BaseStyles, IconPanel, MapOutline, MapShortKeys, MapStructures, MapThemes, MathPanel, NodeStyles } from './panels';
+import { onMounted } from 'vue';
 
 const { togglePanel } = useAppStore()
 const { panel } = storeToRefs(useAppStore())
 const items = ref([
   { id: uuid(), name: '节点样式', color: 'primary', icon: 'mdi-star-shooting-outline', value: 1 },
-  { id: uuid(), name: '基础样式', color: 'primary', icon: 'mdi-palette-outline', value: 2 },
+  // { id: uuid(), name: '基础样式', color: 'primary', icon: 'mdi-palette-outline', value: 2 },
+  { id: uuid(), name: '基础样式', color: 'primary', icon: 'mdi-auto-fix', value: 2 },
   { id: uuid(), name: '主题', color: 'primary', icon: 'mdi-tshirt-crew-outline', value: 3 },
   { id: uuid(), name: '结构', color: 'primary', icon: 'mdi-sitemap-outline', value: 4 },
   { id: uuid(), name: '大纲', color: 'primary', icon: 'mdi-card-text-outline', value: 5 },
@@ -26,8 +28,20 @@ const component = computed(() => {
     case 4: return MapStructures
     case 5: return MapOutline
     case 6: return MapShortKeys
+    case 7: return IconPanel
+    case 8: return MathPanel
     default: return NodeStyles
   }
+})
+
+onMounted(() => {
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      togglePanel()
+      e.stopImmediatePropagation()
+      e.stopPropagation()
+    }
+  })
 })
 </script>
 

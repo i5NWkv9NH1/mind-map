@@ -1,68 +1,63 @@
-<script setup lang="ts">
-import PanelContainer from '@/components/PanelContainer.vue';
+<script
+  setup
+  lang="ts"
+>
+import { PanelContainer, ColorPicker, MenuSelect } from '@/components';
 import { useAppStore } from '@/store';
 import { storeToRefs } from 'pinia';
 import { EmptyNode } from '../EmptyNode';
 import { ref } from 'vue';
-import { useTheme } from 'vuetify/lib/framework.mjs';
+import { v4 as uuid } from 'uuid';
+import { usePresets } from '@/composables'
 
 const { togglePanel } = useAppStore()
 const { isActiveNode, isDark } = storeToRefs(useAppStore())
+const {
+  usedColorItems,
+  textUnderlineStyleItems,
+  fontFamilyItems,
+  fontSizeItems,
+  fontLineHeightItems,
+  borderStyleItems,
+  shapeItems,
+  lineStyleItems,
+  lineArrowPositionItems,
+  lineWidthSizeItems,
+  radiusSizeItems
+} = usePresets()
+// # font
+const fontFamily = ref('微软雅黑, Microsoft YaHei')
+const fontSize = ref(14)
+const fontLineHeight = ref(1.5)
+const fontColor = ref('#549688')
+const isFontBold = ref(false)
+const isFontItalic = ref(false)
+const textUnderlineStyle = ref(0)
+// # border
+const borderColor = ref('#1e3556')
+const borderStyles = ref('none')
+const borderWidth = ref(2)
+const borderRadius = ref(10)
+// # background
+const backgroundColor = ref('#a9dada')
+const isGradient = ref(false)
+const gradientStart = ref('#fcc400')
+const gradientEnd = ref('#68ccca')
+// # shape
+const shape = ref('rectangle')
+// # line
+const lineColor = ref('#384c69')
+const lineStyle = ref('straight')
+const lineWidth = ref(2)
+const lineArrowPosition = ref('start')
+// # padding
+const paddingHor = ref(15)
+const paddingVer = ref(0)
 
-const fonts = ref([
-  {
-    "name": "宋体",
-    "value": "宋体, SimSun, Songti SC"
-  },
-  {
-    "name": "微软雅黑",
-    "value": "微软雅黑, Microsoft YaHei"
-  },
-  {
-    "name": "楷体",
-    "value": "楷体, 楷体_GB2312, SimKai, STKaiti"
-  },
-  {
-    "name": "黑体",
-    "value": "黑体, SimHei, Heiti SC"
-  },
-  {
-    "name": "隶书",
-    "value": "隶书, SimLi"
-  },
-  {
-    "name": "Andale Mono",
-    "value": "andale mono"
-  },
-  {
-    "name": "Arial",
-    "value": "arial, helvetica, sans-serif"
-  },
-  {
-    "name": "arialBlack",
-    "value": "arial black, avant garde"
-  },
-  {
-    "name": "Comic Sans Ms",
-    "value": "comic sans ms"
-  },
-  {
-    "name": "Impact",
-    "value": "impact, chicago"
-  },
-  {
-    "name": "Times New Roman",
-    "value": "times new roman"
-  },
-  {
-    "name": "Sans-Serif",
-    "value": "sans-serif"
-  },
-  {
-    "name": "serif",
-    "value": "serif"
-  }
-])
+// # actions
+function onFontColorConfirm() {
+  console.log(fontColor.value)
+}
 </script>
 
 <template>
@@ -78,6 +73,7 @@ const fonts = ref([
         <VIcon>mdi-close</VIcon>
       </VBtn>
     </template>
+
     <template #content>
       <VFabTransition group>
         <template v-if="isActiveNode">
@@ -85,9 +81,10 @@ const fonts = ref([
             <div class="text-body-1 mb-3">文字</div>
             <VRow>
               <VCol>
-                <VLabel>字体</VLabel>
+                <VLabel class="text-subtitle-2 mb-1">字体</VLabel>
                 <VSelect
-                  :items="fonts"
+                  v-model="fontFamily"
+                  :items="fontFamilyItems"
                   item-title="name"
                   item-value="value"
                   density="compact"
@@ -111,15 +108,17 @@ const fonts = ref([
             </VRow>
             <VRow>
               <VCol>
-                <VLabel>字号</VLabel>
+                <VLabel class="text-subtitle-2 mb-1">字号</VLabel>
                 <VSelect
-                  :items="fonts"
+                  v-model="fontSize"
+                  :items="fontSizeItems"
                   item-title="name"
                   item-value="value"
                   density="compact"
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
+
                   <template #item="{ index, item, props }">
                     <VList
                       density="compact"
@@ -135,15 +134,17 @@ const fonts = ref([
                 </VSelect>
               </VCol>
               <VCol>
-                <VLabel>行高</VLabel>
+                <VLabel class="text-subtitle-2 mb-1">行高</VLabel>
                 <VSelect
-                  :items="fonts"
+                  v-model="fontLineHeight"
+                  :items="fontLineHeightItems"
                   item-title="name"
                   item-value="value"
                   density="compact"
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
+
                   <template #item="{ index, item, props }">
                     <VList
                       density="compact"
@@ -159,44 +160,132 @@ const fonts = ref([
                 </VSelect>
               </VCol>
             </VRow>
+            <VRow align="center">
+              <VCol>
+                <ColorPicker
+                  v-model="fontColor"
+                  :items="usedColorItems"
+                  @confirm="onFontColorConfirm"
+                >
+
+                  <template #activator="activator">
+                    <VBtn
+                      v-bind="activator.props"
+                      :color="fontColor"
+                      rounded="lg"
+                      size="small"
+                      icon
+                    >
+                      <VIcon>mdi-format-color-text</VIcon>
+                    </VBtn>
+                  </template>
+                </ColorPicker>
+              </VCol>
+              <VCol>
+                <VTooltip
+                  transition="slide-y-transition"
+                  offset="10"
+                  open-delay="100"
+                  location="top"
+                >
+
+                  <template #activator="{ isActive, props }">
+                    <VBtn
+                      v-bind="props"
+                      :active="isFontBold"
+                      :color="isFontBold ? 'primary' : 'default'"
+                      :variant="isDark ? 'outlined' : 'elevated'"
+                      @click="isFontBold = !isFontBold"
+                      rounded="lg"
+                      size="small"
+                      icon
+                    >
+                      <VIcon>mdi-format-bold</VIcon>
+                    </VBtn>
+                  </template>
+                  <p>加粗</p>
+                </VTooltip>
+              </VCol>
+              <VCol>
+                <VTooltip
+                  transition="slide-y-transition"
+                  offset="10"
+                  open-delay="100"
+                  location="top"
+                >
+
+                  <template #activator="{ isActive, props }">
+                    <VBtn
+                      v-bind="props"
+                      :active="isFontItalic"
+                      :color="isFontItalic ? 'primary' : 'default'"
+                      :variant="isDark ? 'outlined' : 'elevated'"
+                      @click="isFontItalic = !isFontItalic"
+                      rounded="lg"
+                      size="small"
+                      icon
+                    >
+                      <VIcon>mdi-format-italic</VIcon>
+                    </VBtn>
+                  </template>
+                  <p>斜体</p>
+                </VTooltip>
+              </VCol>
+              <VCol>
+                <MenuSelect
+                  v-model="textUnderlineStyle"
+                  :items="textUnderlineStyleItems"
+                  :closeOnContentClick="true"
+                >
+
+                  <template #activator="activator">
+                    <VBtn
+                      v-bind="activator.props"
+                      :active="activator.isActive"
+                      :color="activator.isActive ? 'primary' : 'default'"
+                      :variant="isDark ? 'outlined' : 'elevated'"
+                      rounded="lg"
+                      size="small"
+                      icon
+                    >
+                      <VIcon>mdi-format-underline</VIcon>
+                    </VBtn>
+                  </template>
+                </MenuSelect>
+              </VCol>
+            </VRow>
           </VSheet>
+          <VDivider />
           <VSheet class="my-4">
             <div class="text-body-1 mb-3">边框</div>
-            <VRow>
+            <VRow align="center">
               <VCol>
-                <VLabel>颜色</VLabel>
-                <VSelect
-                  :items="fonts"
-                  item-title="name"
-                  item-value="value"
-                  density="compact"
-                  :variant="isDark ? 'outlined' : 'solo'"
-                  hide-details
-                >
-                  <template #item="{ index, item, props }">
-                    <VList
-                      density="compact"
-                      nav
-                    >
-                      <VListItem
-                        v-bind="props"
-                        :value="item.value"
-                        :title="item.title"
-                      />
-                    </VList>
+                <VLabel class="text-subtitle-2 mb-1">颜色</VLabel>
+                <ColorPicker v-model="borderColor">
+
+                  <template #activator="activator">
+                    <VBtn
+                      v-bind="activator.props"
+                      class="d-block"
+                      :color="borderColor"
+                      elevation="4"
+                      block
+                    />
                   </template>
-                </VSelect>
+                </ColorPicker>
               </VCol>
               <VCol>
-                <VLabel>样式</VLabel>
+                <VLabel class="text-subtitle-2 mb-1">样式 (TODO: svg)</VLabel>
                 <VSelect
-                  :items="fonts"
+                  v-model="borderStyles"
+                  :items="borderStyleItems"
                   item-title="name"
                   item-value="value"
                   density="compact"
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
+
                   <template #item="{ index, item, props }">
                     <VList
                       density="compact"
@@ -214,15 +303,17 @@ const fonts = ref([
             </VRow>
             <VRow>
               <VCol>
-                <VLabel>宽度</VLabel>
+                <VLabel class="text-subtitle-2 mb-1">宽度</VLabel>
                 <VSelect
-                  :items="fonts"
+                  v-model="borderWidth"
+                  :items="lineWidthSizeItems"
                   item-title="name"
                   item-value="value"
                   density="compact"
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
+
                   <template #item="{ index, item, props }">
                     <VList
                       density="compact"
@@ -238,15 +329,17 @@ const fonts = ref([
                 </VSelect>
               </VCol>
               <VCol>
-                <VLabel>高度</VLabel>
+                <VLabel class="text-subtitle-2 mb-1">圆角 (TODO)</VLabel>
                 <VSelect
-                  :items="fonts"
+                  v-model="borderRadius"
+                  :items="radiusSizeItems"
                   item-title="name"
                   item-value="value"
                   density="compact"
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
+
                   <template #item="{ index, item, props }">
                     <VList
                       density="compact"
@@ -263,122 +356,83 @@ const fonts = ref([
               </VCol>
             </VRow>
           </VSheet>
+          <VDivider />
           <VSheet class="my-4">
             <div class="text-body-1 mb-3">背景</div>
             <VRow>
-              <VCol>
-                <VLabel>颜色</VLabel>
-                <VSelect
-                  :items="fonts"
-                  item-title="name"
-                  item-value="value"
-                  density="compact"
-                  :variant="isDark ? 'outlined' : 'solo'"
-                  hide-details
-                >
-                  <template #item="{ index, item, props }">
-                    <VList
-                      density="compact"
-                      nav
-                    >
-                      <VListItem
-                        v-bind="props"
-                        :value="item.value"
-                        :title="item.title"
-                      />
-                    </VList>
+              <VCol cols="6">
+                <ColorPicker v-model="backgroundColor">
+
+                  <template #activator="activator">
+                    <VBtn
+                      v-bind="activator.props"
+                      :color="backgroundColor"
+                      block
+                    />
                   </template>
-                </VSelect>
+                </ColorPicker>
               </VCol>
             </VRow>
-            <VRow>
+            <VRow
+              align="center"
+              noGutters
+            >
               <VCol>
-                <VLabel>渐变</VLabel>
-                <VSelect
-                  :items="fonts"
-                  item-title="name"
-                  item-value="value"
-                  density="compact"
-                  :variant="isDark ? 'outlined' : 'solo'"
-                  hide-details
-                >
-                  <template #item="{ index, item, props }">
-                    <VList
-                      density="compact"
-                      nav
-                    >
-                      <VListItem
-                        v-bind="props"
-                        :value="item.value"
-                        :title="item.title"
-                      />
-                    </VList>
-                  </template>
-                </VSelect>
+                <VCheckbox
+                  v-model="isGradient"
+                  label="渐变"
+                  hideDetails
+                />
               </VCol>
               <VCol>
-                <VLabel>起始</VLabel>
-                <VSelect
-                  :items="fonts"
-                  item-title="name"
-                  item-value="value"
-                  density="compact"
-                  :variant="isDark ? 'outlined' : 'solo'"
-                  hide-details
-                >
-                  <template #item="{ index, item, props }">
-                    <VList
-                      density="compact"
-                      nav
+                <ColorPicker v-model="gradientStart">
+
+                  <template #activator="activator">
+                    <VIcon
+                      v-bind="activator.props"
+                      :color="gradientStart"
+                      size="36"
+                      start
                     >
-                      <VListItem
-                        v-bind="props"
-                        :value="item.value"
-                        :title="item.title"
-                      />
-                    </VList>
+                      mdi-square-rounded
+                    </VIcon>
+                    <span>起始</span>
                   </template>
-                </VSelect>
+                </ColorPicker>
               </VCol>
               <VCol>
-                <VLabel>结束</VLabel>
-                <VSelect
-                  :items="fonts"
-                  item-title="name"
-                  item-value="value"
-                  density="compact"
-                  :variant="isDark ? 'outlined' : 'solo'"
-                  hide-details
-                >
-                  <template #item="{ index, item, props }">
-                    <VList
-                      density="compact"
-                      nav
+                <ColorPicker v-model="gradientEnd">
+
+                  <template #activator="activator">
+                    <VIcon
+                      v-bind="activator.props"
+                      :color="gradientEnd"
+                      size="36"
+                      start
                     >
-                      <VListItem
-                        v-bind="props"
-                        :value="item.value"
-                        :title="item.title"
-                      />
-                    </VList>
+                      mdi-square-rounded
+                    </VIcon>
+                    <span>结束</span>
                   </template>
-                </VSelect>
+                </ColorPicker>
               </VCol>
             </VRow>
           </VSheet>
+          <VDivider />
           <VSheet class="my-4">
-            <div class="text-body-1 mb-3">形状</div>
+            <div class="text-body-1 mb-3">形状 (TODO: svg)</div>
             <VRow>
-              <VCol>
-                <VLabel>形状</VLabel>
+              <VCol cols="6">
                 <VSelect
-                  :items="fonts"
+                  v-model="shape"
+                  :items="shapeItems"
                   item-title="name"
                   item-value="value"
                   density="compact"
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
+
                   <template #item="{ index, item, props }">
                     <VList
                       density="compact"
@@ -395,43 +449,36 @@ const fonts = ref([
               </VCol>
             </VRow>
           </VSheet>
+          <VDivider />
           <VSheet class="my-4">
             <div class="text-body-1 mb-3">线条</div>
             <VRow>
               <VCol>
-                <VLabel>颜色</VLabel>
-                <VSelect
-                  :items="fonts"
-                  item-title="name"
-                  item-value="value"
-                  density="compact"
-                  :variant="isDark ? 'outlined' : 'solo'"
-                  hide-details
-                >
-                  <template #item="{ index, item, props }">
-                    <VList
-                      density="compact"
-                      nav
-                    >
-                      <VListItem
-                        v-bind="props"
-                        :value="item.value"
-                        :title="item.title"
-                      />
-                    </VList>
+                <VLabel class="text-subtitle-2 mb-1">颜色</VLabel>
+                <ColorPicker v-model="lineColor">
+
+                  <template #activator="activator">
+                    <VBtn
+                      v-bind="activator.props"
+                      :color="lineColor"
+                      elevation="4"
+                      block
+                    />
                   </template>
-                </VSelect>
+                </ColorPicker>
               </VCol>
               <VCol>
-                <VLabel>样式</VLabel>
+                <VLabel class="text-subtitle-2 mb-1">样式 (TODO)</VLabel>
                 <VSelect
-                  :items="fonts"
+                  v-model="lineStyle"
+                  :items="lineStyleItems"
                   item-title="name"
                   item-value="value"
                   density="compact"
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
+
                   <template #item="{ index, item, props }">
                     <VList
                       density="compact"
@@ -449,15 +496,17 @@ const fonts = ref([
             </VRow>
             <VRow>
               <VCol>
-                <VLabel>宽度</VLabel>
+                <VLabel class="text-subtitle-2 mb-1">宽度</VLabel>
                 <VSelect
-                  :items="fonts"
+                  v-model="lineWidth"
+                  :items="lineWidthSizeItems"
                   item-title="name"
                   item-value="value"
                   density="compact"
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
+
                   <template #item="{ index, item, props }">
                     <VList
                       density="compact"
@@ -473,15 +522,17 @@ const fonts = ref([
                 </VSelect>
               </VCol>
               <VCol>
-                <VLabel>箭头位置</VLabel>
+                <VLabel class="text-subtitle-2 mb-1">箭头位置</VLabel>
                 <VSelect
-                  :items="fonts"
+                  v-model="lineArrowPosition"
+                  :items="lineArrowPositionItems"
                   item-title="name"
                   item-value="value"
                   density="compact"
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
+
                   <template #item="{ index, item, props }">
                     <VList
                       density="compact"
@@ -498,18 +549,36 @@ const fonts = ref([
               </VCol>
             </VRow>
           </VSheet>
+          <VDivider />
           <VSheet class="my-4">
             <div class="text-body-1 mb-3">节点内边距</div>
             <VRow>
               <VCol cols="12">
-                <VSlider thumb-label="always">
+                <VSlider
+                  v-model="paddingHor"
+                  :max="100"
+                  :min="0"
+                  :step="1"
+                  thumbLabel
+                  hideDetails
+                >
+
                   <template #prepend>
                     <span>水平</span>
                   </template>
                 </VSlider>
               </VCol>
               <VCol cols="12">
-                <VSlider thumb-label="always">
+                <VSlider
+                  v-model="paddingVer"
+                  density="compact"
+                  :max="100"
+                  :min="0"
+                  :step="1"
+                  thumbLabel
+                  hideDetails
+                >
+
                   <template #prepend>
                     <span>垂直</span>
                   </template>
