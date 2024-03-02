@@ -1,4 +1,5 @@
 {
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
   "compilerOptions": {
     "target": "ESNext",
     "jsx": "preserve",
@@ -17,7 +18,8 @@
     },
     "resolveJsonModule": true,
     "types": [
-      "simple-mind-map"
+      "simple-mind-map",
+      "vite-plugin-vue-layouts/client"
     ],
     "strict": true,
     "noEmit": true,
@@ -34,7 +36,8 @@
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
-    "src/**/*.vue"
+    "src/**/*.vue",
+    "./typed-router.d.ts"
   ],
   "exclude": [
     "node_modules"

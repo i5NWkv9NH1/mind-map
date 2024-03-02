@@ -15,7 +15,7 @@ export const MouseBehavior = defineComponent({
         open-delay="100"
         location="top"
         v-slots={{
-          activator: ({ _, props }: { _: boolean, props: any }) => (
+          activator: ({ props }: { props: any }) => (
             <VBtn
               {...props}
               active={true}
@@ -42,10 +42,8 @@ export const MouseBehavior = defineComponent({
           ),
           default: () => (
             <>
-              {/* @ts-ignore */}
               <p>
                 {useLeftKeySelectionRightKeyDrag.value ? '当前：左键选择节点，右键拖动画布' : '当前：左键拖动画布，右键选择节点'}
-                {/* @ts-ignore */}
               </p>
             </>
           ),

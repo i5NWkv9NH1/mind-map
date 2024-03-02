@@ -5,14 +5,12 @@
  */
 
 // Composables
-// @ts-ignore
 import { createRouter, createWebHistory } from 'vue-router/auto'
-
-// @ts-ignore
 import { setupLayouts } from 'virtual:generated-layouts'
 
 const router = createRouter({
   // @ts-ignore
+  // eslint-disable-next-line node/prefer-global/process
   history: createWebHistory(process.env.BASE_URL),
   extendRoutes: setupLayouts,
 })
