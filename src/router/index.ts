@@ -6,7 +6,6 @@
 
 // Composables
 // @ts-ignore
-import { process } from 'node:process'
 import { createRouter, createWebHistory } from 'vue-router/auto'
 
 // @ts-ignore

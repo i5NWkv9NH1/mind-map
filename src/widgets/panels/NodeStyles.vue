@@ -19,6 +19,7 @@ const {
   fontLineHeightItems,
   borderStyleItems,
   shapeItems,
+  shapeMapItems,
   lineStyleItems,
   lineArrowPositionItems,
   lineWidthSizeItems,
@@ -34,7 +35,7 @@ const isFontItalic = ref(false)
 const textUnderlineStyle = ref(0)
 // # border
 const borderColor = ref('#1e3556')
-const borderStyles = ref('none')
+const borderStyle = ref('none')
 const borderWidth = ref(2)
 const borderRadius = ref(10)
 // # background
@@ -46,7 +47,7 @@ const gradientEnd = ref('#68ccca')
 const shape = ref('rectangle')
 // # line
 const lineColor = ref('#384c69')
-const lineStyle = ref('straight')
+const lineStyle = ref('none')
 const lineWidth = ref(2)
 const lineArrowPosition = ref('start')
 // # padding
@@ -71,6 +72,7 @@ function onFontColorConfirm() {
         <VIcon>mdi-close</VIcon>
       </VBtn>
     </template>
+
     <template #content>
       <VFabTransition group>
         <template v-if="isActiveNode">
@@ -101,6 +103,7 @@ function onFontColorConfirm() {
                         v-bind="props"
                         :value="item.value"
                         :title="item.title"
+                        :active="fontFamily === item.value"
                       />
                     </VList>
                   </template>
@@ -121,6 +124,7 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
+
                   <template #item="{ item, props }">
                     <VList
                       density="compact"
@@ -130,6 +134,7 @@ function onFontColorConfirm() {
                         v-bind="props"
                         :value="item.value"
                         :title="item.title"
+                        :active="fontSize === item.value"
                       />
                     </VList>
                   </template>
@@ -148,6 +153,7 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
+
                   <template #item="{ item, props }">
                     <VList
                       density="compact"
@@ -157,6 +163,7 @@ function onFontColorConfirm() {
                         v-bind="props"
                         :value="item.value"
                         :title="item.title"
+                        :active="fontLineHeight === item.value"
                       />
                     </VList>
                   </template>
@@ -170,6 +177,7 @@ function onFontColorConfirm() {
                   :items="usedColorItems"
                   @confirm="onFontColorConfirm"
                 >
+
                   <template #activator="activator">
                     <VBtn
                       v-bind="activator.props"
@@ -190,6 +198,7 @@ function onFontColorConfirm() {
                   open-delay="100"
                   location="top"
                 >
+
                   <template #activator="{ props }">
                     <VBtn
                       v-bind="props"
@@ -214,6 +223,7 @@ function onFontColorConfirm() {
                   open-delay="100"
                   location="top"
                 >
+
                   <template #activator="{ props }">
                     <VBtn
                       v-bind="props"
@@ -237,6 +247,7 @@ function onFontColorConfirm() {
                   :items="textUnderlineStyleItems"
                   :close-on-content-click="true"
                 >
+
                   <template #activator="activator">
                     <VBtn
                       v-bind="activator.props"
@@ -265,6 +276,7 @@ function onFontColorConfirm() {
                   颜色
                 </VLabel>
                 <ColorPicker v-model="borderColor">
+
                   <template #activator="activator">
                     <VBtn
                       v-bind="activator.props"
@@ -278,10 +290,10 @@ function onFontColorConfirm() {
               </VCol>
               <VCol>
                 <VLabel class="text-subtitle-2 mb-1">
-                  样式 (TODO: svg)
+                  样式
                 </VLabel>
                 <VSelect
-                  v-model="borderStyles"
+                  v-model="borderStyle"
                   :items="borderStyleItems"
                   item-title="name"
                   item-value="value"
@@ -289,6 +301,7 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
+
                   <template #item="{ item, props }">
                     <VList
                       density="compact"
@@ -297,8 +310,28 @@ function onFontColorConfirm() {
                       <VListItem
                         v-bind="props"
                         :value="item.value"
-                        :title="item.title"
-                      />
+                        :active="borderStyle === item.value"
+                      >
+                        <svg
+                          width="100"
+                          height="20"
+                        >
+                          <line
+                            x1="10"
+                            y1="17"
+                            x2="110"
+                            y2="17"
+                            stroke-width="2"
+                            :stroke="borderStyle === item.value
+          ? '#409eff'
+          : isDark
+            ? '#fff'
+            : '#000'
+          "
+                            :stroke-dasharray="item.value"
+                          />
+                        </svg>
+                      </VListItem>
                     </VList>
                   </template>
                 </VSelect>
@@ -318,6 +351,7 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
+
                   <template #item="{ item, props }">
                     <VList
                       density="compact"
@@ -326,15 +360,33 @@ function onFontColorConfirm() {
                       <VListItem
                         v-bind="props"
                         :value="item.value"
-                        :title="item.title"
-                      />
+                        :active="borderWidth === item.value"
+                      >
+                        <template v-if="!item.value" />
+                        <template v-else>
+                          <svg
+                            width="100"
+                            height="20"
+                          >
+                            <line
+                              x1="0"
+                              y1="0"
+                              x2="100"
+                              y2="0"
+                              stroke-dasharray="none"
+                              :stroke="borderWidth === item.value ? '#409eff' : isDark ? '#fff' : '#000'"
+                              :stroke-width="item.value"
+                            />
+                          </svg>
+                        </template>
+                      </VListItem>
                     </VList>
                   </template>
                 </VSelect>
               </VCol>
               <VCol>
                 <VLabel class="text-subtitle-2 mb-1">
-                  圆角 (TODO)
+                  圆角
                 </VLabel>
                 <VSelect
                   v-model="borderRadius"
@@ -345,6 +397,7 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
+
                   <template #item="{ item, props }">
                     <VList
                       density="compact"
@@ -354,6 +407,7 @@ function onFontColorConfirm() {
                         v-bind="props"
                         :value="item.value"
                         :title="item.title"
+                        :active="borderRadius === item.value"
                       />
                     </VList>
                   </template>
@@ -369,6 +423,7 @@ function onFontColorConfirm() {
             <VRow>
               <VCol cols="6">
                 <ColorPicker v-model="backgroundColor">
+
                   <template #activator="activator">
                     <VBtn
                       v-bind="activator.props"
@@ -390,45 +445,47 @@ function onFontColorConfirm() {
                   hide-details
                 />
               </VCol>
-              <VCol>
-                <ColorPicker v-model="gradientStart">
-                  <template #activator="activator">
-                    <VIcon
-                      v-bind="activator.props"
-                      :color="gradientStart"
-                      size="36"
-                      start
-                    >
-                      mdi-square-rounded
-                    </VIcon>
-                    <span>起始</span>
-                  </template>
-                </ColorPicker>
-              </VCol>
-              <VCol>
-                <ColorPicker v-model="gradientEnd">
-                  <template #activator="activator">
-                    <VIcon
-                      v-bind="activator.props"
-                      :color="gradientEnd"
-                      size="36"
-                      start
-                    >
-                      mdi-square-rounded
-                    </VIcon>
-                    <span>结束</span>
-                  </template>
-                </ColorPicker>
-              </VCol>
+              <VExpandTransition>
+                <VCol v-if="isGradient">
+                  <ColorPicker v-model="gradientStart">
+
+                    <template #activator="activator">
+                      <VBtn
+                        v-bind="activator.props"
+                        :color="gradientStart"
+                        size="small"
+                        class="mr-1"
+                      />
+                      <span>起始</span>
+                    </template>
+                  </ColorPicker>
+                </VCol>
+              </VExpandTransition>
+              <VExpandTransition>
+                <VCol v-if="isGradient">
+                  <ColorPicker v-model="gradientEnd">
+
+                    <template #activator="activator">
+                      <VBtn
+                        v-bind="activator.props"
+                        :color="gradientEnd"
+                        size="small"
+                        class="mr-1"
+                      />
+                      <span>结束</span>
+                    </template>
+                  </ColorPicker>
+                </VCol>
+              </VExpandTransition>
             </VRow>
           </VSheet>
           <VDivider />
           <VSheet class="my-4">
             <div class="text-body-1 mb-3">
-              形状 (TODO: svg)
+              形状
             </div>
             <VRow>
-              <VCol cols="6">
+              <VCol cols="8">
                 <VSelect
                   v-model="shape"
                   :items="shapeItems"
@@ -438,6 +495,7 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
+
                   <template #item="{ item, props }">
                     <VList
                       density="compact"
@@ -446,8 +504,25 @@ function onFontColorConfirm() {
                       <VListItem
                         v-bind="props"
                         :value="item.value"
-                        :title="item.title"
-                      />
+                        :active="shape === item.value"
+                      >
+                        <svg
+                          width="100"
+                          height="32"
+                        >
+                          <path
+                            fill="none"
+                            :d="shapeMapItems[item.value]"
+                            :stroke="item.value === shape
+          ? '#409eff'
+          : isDark
+            ? '#fff'
+            : '#000'
+          "
+                            stroke-width="2"
+                          />
+                        </svg>
+                      </VListItem>
                     </VList>
                   </template>
                 </VSelect>
@@ -465,6 +540,7 @@ function onFontColorConfirm() {
                   颜色
                 </VLabel>
                 <ColorPicker v-model="lineColor">
+
                   <template #activator="activator">
                     <VBtn
                       v-bind="activator.props"
@@ -477,7 +553,7 @@ function onFontColorConfirm() {
               </VCol>
               <VCol>
                 <VLabel class="text-subtitle-2 mb-1">
-                  样式 (TODO)
+                  样式
                 </VLabel>
                 <VSelect
                   v-model="lineStyle"
@@ -488,6 +564,7 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
+
                   <template #item="{ item, props }">
                     <VList
                       density="compact"
@@ -496,8 +573,28 @@ function onFontColorConfirm() {
                       <VListItem
                         v-bind="props"
                         :value="item.value"
-                        :title="item.title"
-                      />
+                        :active="lineStyle === item.value"
+                      >
+                        <svg
+                          width="100"
+                          height="20"
+                        >
+                          <line
+                            x1="10"
+                            y1="17"
+                            x2="110"
+                            y2="17"
+                            stroke-width="2"
+                            :stroke="lineStyle === item.value
+          ? '#409eff'
+          : isDark
+            ? '#fff'
+            : '#000'
+          "
+                            :stroke-dasharray="item.value"
+                          />
+                        </svg>
+                      </VListItem>
                     </VList>
                   </template>
                 </VSelect>
@@ -517,6 +614,7 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
+
                   <template #item="{ item, props }">
                     <VList
                       density="compact"
@@ -525,8 +623,26 @@ function onFontColorConfirm() {
                       <VListItem
                         v-bind="props"
                         :value="item.value"
-                        :title="item.title"
-                      />
+                        :active="lineWidth === item.value"
+                      >
+                        <template v-if="!item.value" />
+                        <template v-else>
+                          <svg
+                            width="100"
+                            height="20"
+                          >
+                            <line
+                              x1="0"
+                              y1="0"
+                              x2="100"
+                              y2="0"
+                              stroke-dasharray="none"
+                              :stroke="lineWidth === item.value ? '#409eff' : isDark ? '#fff' : '#000'"
+                              :stroke-width="item.value"
+                            />
+                          </svg>
+                        </template>
+                      </VListItem>
                     </VList>
                   </template>
                 </VSelect>
@@ -544,6 +660,7 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
+
                   <template #item="{ item, props }">
                     <VList
                       density="compact"
@@ -553,6 +670,7 @@ function onFontColorConfirm() {
                         v-bind="props"
                         :value="item.value"
                         :title="item.title"
+                        :active="lineArrowPosition === item.value"
                       />
                     </VList>
                   </template>
@@ -575,6 +693,7 @@ function onFontColorConfirm() {
                   thumb-label
                   hide-details
                 >
+
                   <template #prepend>
                     <span>水平</span>
                   </template>
@@ -590,6 +709,7 @@ function onFontColorConfirm() {
                   thumb-label
                   hide-details
                 >
+
                   <template #prepend>
                     <span>垂直</span>
                   </template>
@@ -598,6 +718,7 @@ function onFontColorConfirm() {
             </VRow>
           </VSheet>
         </template>
+
         <template v-else>
           <EmptyNode
             :size="128"

@@ -10,12 +10,13 @@ export interface TextUnderlineStyle { id: string, name: string, value: number | 
 export interface BorderStyle { id: string, name: string, value: string | number }
 export interface BorderWidth { id: string, name: string, value: string | number }
 export interface BorderRedius { id: string, name: string, value: string | number }
-export interface Shape { id: string, name: string, value: string | number }
+export type ShapeMap = 'rectangle' | 'diamond' | 'parallelogram' | 'roundedRectangle' | 'octagonalRectangle' | 'outerTriangularRectangle' | 'innerTriangularRectangle' | 'ellipse' | 'circle'
+export interface Shape { id: string, name: string, value: ShapeMap }
 export interface LineStyle { id: string, name: string, value: string | number }
 export interface LineWidth { id: string, name: string, value: string | number }
 export interface LineArrowPosition { id: string, name: string, value: string | number }
-export interface MouseBehavior { id: string, name: string, value: string | number }
-export interface MouseScrollScale { id: string, name: string, value: string | number }
+export interface MouseBehavior { id: string, name: string, value: 'zoom' | 'move' }
+export interface MouseScrollScale { id: string, name: string, value: boolean }
 export interface CreateNodeBehavior { id: string, name: string, value: string | number }
 export interface BackgroundPosition { id: string, name: string, value: string | number }
 export interface BackgroundRepeat { id: string, name: string, value: string | number }
@@ -78,7 +79,7 @@ export function usePresets() {
     { id: uuid(), name: 'Sans-Serif', value: 'sans-serif' },
     { id: uuid(), name: 'serif', value: 'serif' },
   ])
-  const fontSizeItems = ref<number[]>([10, 12, 16, 18, 24, 32, 48])
+  const fontSizeItems = ref<number[]>([10, 12, 14, 16, 18, 24, 32, 48])
   const fontLineHeightItems = ref<number[]>([1, 1.5, 2, 2.5, 3])
   const textUnderlineStyleItems = ref<TextUnderlineStyle[]>([
     { id: uuid(), name: '无', value: 0 },
@@ -106,11 +107,22 @@ export function usePresets() {
     { id: uuid(), name: '椭圆', value: 'ellipse' },
     { id: uuid(), name: '圆', value: 'circle' },
   ])
-  const lineStyleItems = ref<LineStyle[]>([
-    { id: uuid(), name: '直线', value: 'straight' },
-    { id: uuid(), name: '曲线', value: 'curve' },
-    { id: uuid(), name: '直连', value: 'direct' },
-  ])
+  const shapeMapItems = ref<Record<any, any>>({
+    rectangle: 'M 4 12 L 4 3 L 56 3 L 56 21 L 4 21 L 4 12 Z',
+    diamond: 'M 4 12 L 30 3 L 56 12 L 30 21 L 4 12 Z',
+    parallelogram: 'M 10 3 L 56 3 L 50 21 L 4 21 L 10 3 Z',
+    roundedRectangle:
+      'M 13 3 L 47 3 A 9 9 0, 0 1 47 21 L 13 21 A 9 9 0, 0 1 13 3 Z',
+    octagonalRectangle:
+      'M 4 12 L 4 9 L 10 3 L 50 3 L 56 9 L 56 15 L 50 21 L 10 21 L 4 15 L 4 12 Z',
+    outerTriangularRectangle:
+      'M 4 12 L 10 3 L 50 3 L 56 12 L 50 21 L 10 21 L 4 12 Z',
+    innerTriangularRectangle:
+      'M 10 12 L 4 3 L 56 3 L 50 12 L 56 21 L 4 21 L 10 12 Z',
+    ellipse: 'M 4 12 A 26 9 0, 1, 0 30 3 A 26 9 0, 0, 0 4 12 Z',
+    circle: 'M 21 12 A 9 9 0, 1, 0 30 3 A 9 9 0, 0, 0 21 12 Z',
+  })
+  const lineStyleItems = ref<LineStyle[]>(borderStyleItems.value)
   const lineWidthSizeItems = ref<LineWidth[]>([
     { id: uuid(), name: '0', value: 0 },
     { id: uuid(), name: '1', value: 1 },
@@ -142,17 +154,17 @@ export function usePresets() {
     { id: uuid(), name: '尾部', value: 'end' },
   ])
   const mouseBehaviorItems = ref<MouseBehavior[]>([
-    { id: uuid(), name: '缩放视图', value: 0 },
-    { id: uuid(), name: '上下移动视图', value: 1 },
+    { id: uuid(), name: '缩放视图', value: 'zoom' },
+    { id: uuid(), name: '上下移动视图', value: 'move' },
   ])
   const mouseScrollScaleItems = ref<MouseScrollScale[]>([
-    { id: uuid(), name: '向前缩小，向后放大', value: 0 },
-    { id: uuid(), name: '向前放大，向后缩小', value: 0 },
+    { id: uuid(), name: '向前缩小，向后放大', value: false },
+    { id: uuid(), name: '向前放大，向后缩小', value: true },
   ])
   const createNodeBehaviorItems = ref<CreateNodeBehavior[]>([
-    { id: uuid(), name: '激活新节点并进入编辑', value: 0 },
-    { id: uuid(), name: '不激活新节点', value: 1 },
-    { id: uuid(), name: '只激活新节点，不进入编辑', value: 2 },
+    { id: uuid(), name: '激活新节点并进入编辑', value: 'default' },
+    { id: uuid(), name: '不激活新节点', value: 'notActive' },
+    { id: uuid(), name: '只激活新节点，不进入编辑', value: 'activeOnly' },
   ])
   const backgroundRepeatItems = ref<BackgroundPosition[]>([
     { id: uuid(), name: '不重复', value: 'no-repeat' },
@@ -193,6 +205,7 @@ export function usePresets() {
     lineWidthSizeItems,
     // #
     shapeItems,
+    shapeMapItems,
     // #
     lineStyleItems,
     lineArrowPositionItems,

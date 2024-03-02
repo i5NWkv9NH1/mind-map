@@ -46,7 +46,7 @@ function onBackgroundColorConfirm() { }
 // # lines
 const lineColor = ref('#fafafa')
 const lineWidth = ref(2)
-const lineStyle = ref('straight')
+const lineStyle = ref('none')
 const isShowArrow = ref(false)
 // # summary
 const summaryLineColor = ref('#fafafa')
@@ -81,9 +81,9 @@ const isShowWaterMarker = ref(false)
 // # 其他配置
 const isUseFreeDragOnNode = ref(false)
 const isUseRichTextonNode = ref(false)
-const mouseBehavior = ref(1)
-const mouseScrollScale = ref(0)
-const createNodeBehavior = ref(0)
+const mouseBehavior = ref<'zoom' | 'move'>('zoom')
+const mouseScrollScale = ref(false)
+const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default')
 </script>
 
 <template>
@@ -157,6 +157,7 @@ const createNodeBehavior = ref(0)
                         :variant="isDark ? 'outlined' : 'solo'"
                         hide-details
                       >
+
                         <template #item="{ item, props }">
                           <VList
                             density="compact"
@@ -166,6 +167,7 @@ const createNodeBehavior = ref(0)
                               v-bind="props"
                               :value="item.value"
                               :title="item.title"
+                              :active="backgroundPosition === item.value"
                             />
                           </VList>
                         </template>
@@ -183,6 +185,7 @@ const createNodeBehavior = ref(0)
                         :variant="isDark ? 'outlined' : 'solo'"
                         hide-details
                       >
+
                         <template #item="{ item, props }">
                           <VList
                             density="compact"
@@ -192,6 +195,7 @@ const createNodeBehavior = ref(0)
                               v-bind="props"
                               :value="item.value"
                               :title="item.title"
+                              :active="backgroundRepeat === item.value"
                             />
                           </VList>
                         </template>
@@ -209,6 +213,7 @@ const createNodeBehavior = ref(0)
                         :variant="isDark ? 'outlined' : 'solo'"
                         hide-details
                       >
+
                         <template #item="{ item, props }">
                           <VList
                             density="compact"
@@ -218,6 +223,7 @@ const createNodeBehavior = ref(0)
                               v-bind="props"
                               :value="item.value"
                               :title="item.title"
+                              :active="backgroundSize === item.value"
                             />
                           </VList>
                         </template>
@@ -244,6 +250,7 @@ const createNodeBehavior = ref(0)
               v-model="lineColor"
               location="left center"
             >
+
               <template #activator="activator">
                 <VBtn
                   v-bind="activator.props"
@@ -268,6 +275,7 @@ const createNodeBehavior = ref(0)
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
+
               <template #item="{ item, props }">
                 <VList
                   density="compact"
@@ -276,8 +284,26 @@ const createNodeBehavior = ref(0)
                   <VListItem
                     v-bind="props"
                     :value="item.value"
-                    :title="item.title"
-                  />
+                    :active="lineWidth === item.value"
+                  >
+                    <template v-if="!item.value" />
+                    <template v-else>
+                      <svg
+                        width="100"
+                        height="20"
+                      >
+                        <line
+                          x1="0"
+                          y1="0"
+                          x2="100"
+                          y2="0"
+                          stroke-dasharray="none"
+                          :stroke="lineWidth === item.value ? '#409eff' : isDark ? '#fff' : '#000'"
+                          :stroke-width="item.value"
+                        />
+                      </svg>
+                    </template>
+                  </vlistitem>
                 </VList>
               </template>
             </VSelect>
@@ -297,6 +323,7 @@ const createNodeBehavior = ref(0)
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
+
               <template #item="{ item, props }">
                 <VList
                   density="compact"
@@ -305,8 +332,28 @@ const createNodeBehavior = ref(0)
                   <VListItem
                     v-bind="props"
                     :value="item.value"
-                    :title="item.title"
-                  />
+                    :active="lineStyle === item.value"
+                  >
+                    <svg
+                      width="100"
+                      height="20"
+                    >
+                      <line
+                        x1="10"
+                        y1="17"
+                        x2="110"
+                        y2="17"
+                        stroke-width="2"
+                        :stroke="lineStyle === item.value
+          ? '#409eff'
+          : isDark
+            ? '#fff'
+            : '#000'
+          "
+                        :stroke-dasharray="item.value"
+                      />
+                    </svg>
+                  </VListItem>
                 </VList>
               </template>
             </VSelect>
@@ -334,6 +381,7 @@ const createNodeBehavior = ref(0)
               颜色
             </VLabel>
             <ColorPicker v-model="summaryLineColor">
+
               <template #activator="activator">
                 <VBtn
                   v-bind="activator.props"
@@ -358,6 +406,7 @@ const createNodeBehavior = ref(0)
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
+
               <template #item="{ item, props }">
                 <VList
                   density="compact"
@@ -366,8 +415,26 @@ const createNodeBehavior = ref(0)
                   <VListItem
                     v-bind="props"
                     :value="item.value"
-                    :title="item.title"
-                  />
+                    :active="summaryLineWidth === item.value"
+                  >
+                    <template v-if="!item.value" />
+                    <template v-else>
+                      <svg
+                        width="100"
+                        height="20"
+                      >
+                        <line
+                          x1="0"
+                          y1="0"
+                          x2="100"
+                          y2="0"
+                          stroke-dasharray="none"
+                          :stroke="summaryLineWidth === item.value ? '#409eff' : isDark ? '#fff' : '#000'"
+                          :stroke-width="item.value"
+                        />
+                      </svg>
+                    </template>
+                  </VListItem>
                 </VList>
               </template>
             </VSelect>
@@ -385,6 +452,7 @@ const createNodeBehavior = ref(0)
               颜色
             </VLabel>
             <ColorPicker v-model="relateLineColor">
+
               <template #activator="activator">
                 <VBtn
                   v-bind="activator.props"
@@ -409,6 +477,7 @@ const createNodeBehavior = ref(0)
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
+
               <template #item="{ item, props }">
                 <VList
                   density="compact"
@@ -417,8 +486,26 @@ const createNodeBehavior = ref(0)
                   <VListItem
                     v-bind="props"
                     :value="item.value"
-                    :title="item.title"
-                  />
+                    :active="relateLineWidth === item.value"
+                  >
+                    <template v-if="!item.value" />
+                    <template v-else>
+                      <svg
+                        width="100"
+                        height="20"
+                      >
+                        <line
+                          x1="0"
+                          y1="0"
+                          x2="100"
+                          y2="0"
+                          stroke-dasharray="none"
+                          :stroke="relateLineWidth === item.value ? '#409eff' : isDark ? '#fff' : '#000'"
+                          :stroke-width="item.value"
+                        />
+                      </svg>
+                    </template>
+                  </VListItem>
                 </VList>
               </template>
             </VSelect>
@@ -430,6 +517,7 @@ const createNodeBehavior = ref(0)
               激活颜色
             </VLabel>
             <ColorPicker v-model="relateLineActiveColor">
+
               <template #activator="activator">
                 <VBtn
                   v-bind="activator.props"
@@ -454,6 +542,7 @@ const createNodeBehavior = ref(0)
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
+
               <template #item="{ item, props }">
                 <VList
                   density="compact"
@@ -462,8 +551,26 @@ const createNodeBehavior = ref(0)
                   <VListItem
                     v-bind="props"
                     :value="item.value"
-                    :title="item.title"
-                  />
+                    :active="relateLineActiveWidth === item.value"
+                  >
+                    <template v-if="!item.value" />
+                    <template v-else>
+                      <svg
+                        width="100"
+                        height="20"
+                      >
+                        <line
+                          x1="0"
+                          y1="0"
+                          x2="100"
+                          y2="0"
+                          stroke-dasharray="none"
+                          :stroke="relateLineActiveWidth === item.value ? '#409eff' : isDark ? '#fff' : '#000'"
+                          :stroke-width="item.value"
+                        />
+                      </svg>
+                    </template>
+                  </VListItem>
                 </VList>
               </template>
             </VSelect>
@@ -489,6 +596,7 @@ const createNodeBehavior = ref(0)
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
+
               <template #item="{ item, props }">
                 <VList
                   density="compact"
@@ -498,6 +606,7 @@ const createNodeBehavior = ref(0)
                     v-bind="props"
                     :value="item.value"
                     :title="item.title"
+                    :active="relateLineFontFamily === item.value"
                   />
                 </VList>
               </template>
@@ -510,6 +619,7 @@ const createNodeBehavior = ref(0)
               颜色
             </VLabel>
             <ColorPicker v-model="relateLineFontColor">
+
               <template #activator="activator">
                 <VBtn
                   v-bind="activator.props"
@@ -534,6 +644,7 @@ const createNodeBehavior = ref(0)
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
+
               <template #item="{ item, props }">
                 <VList
                   density="compact"
@@ -543,6 +654,7 @@ const createNodeBehavior = ref(0)
                     v-bind="props"
                     :value="item.value"
                     :title="item.title"
+                    :active="fontSizeItems === item.value"
                   />
                 </VList>
               </template>
@@ -581,6 +693,7 @@ const createNodeBehavior = ref(0)
               thumb-label
               hide-details
             >
+
               <template #prepend>
                 <span>水平</span>
               </template>
@@ -593,6 +706,7 @@ const createNodeBehavior = ref(0)
               thumb-label
               hide-details
             >
+
               <template #prepend>
                 <span>水平</span>
               </template>
@@ -615,6 +729,7 @@ const createNodeBehavior = ref(0)
               thumb-label
               hide-details
             >
+
               <template #prepend>
                 <span>水平</span>
               </template>
@@ -627,6 +742,7 @@ const createNodeBehavior = ref(0)
               thumb-label
               hide-details
             >
+
               <template #prepend>
                 <span>水平</span>
               </template>
@@ -649,6 +765,7 @@ const createNodeBehavior = ref(0)
               thumb-label
               hide-details
             >
+
               <template #prepend>
                 <span>大小</span>
               </template>
@@ -688,6 +805,7 @@ const createNodeBehavior = ref(0)
                   thumb-label
                   hide-details
                 >
+
                   <template #prepend>
                     <span>水平</span>
                   </template>
@@ -700,6 +818,7 @@ const createNodeBehavior = ref(0)
                   thumb-label
                   hide-details
                 >
+
                   <template #prepend>
                     <span>水平</span>
                   </template>
@@ -714,6 +833,7 @@ const createNodeBehavior = ref(0)
                   thumb-label
                   hide-details
                 >
+
                   <template #prepend>
                     <span>水平</span>
                   </template>
@@ -726,6 +846,7 @@ const createNodeBehavior = ref(0)
                   thumb-label
                   hide-details
                 >
+
                   <template #prepend>
                     <span>水平</span>
                   </template>
@@ -785,6 +906,7 @@ const createNodeBehavior = ref(0)
               density="compact"
               hide-details
             >
+
               <template #item="{ item, props }">
                 <VList
                   density="compact"
@@ -794,40 +916,45 @@ const createNodeBehavior = ref(0)
                     v-bind="props"
                     :value="item.value"
                     :title="item.title"
+                    :active="mouseBehavior === item.value"
                   />
                 </VList>
               </template>
             </VSelect>
           </VCol>
         </VRow>
-        <VRow>
-          <VCol>
-            <VLabel class="text-subtitle-2 mb-1">
-              鼠标滚轮缩放
-            </VLabel>
-            <VSelect
-              v-model="mouseScrollScale"
-              :items="mouseScrollScaleItems"
-              :variant="isDark ? 'outlined' : 'solo'"
-              item-title="name"
-              density="compact"
-              hide-details
-            >
-              <template #item="{ item, props }">
-                <VList
-                  density="compact"
-                  nav
-                >
-                  <VListItem
-                    v-bind="props"
-                    :value="item.value"
-                    :title="item.title"
-                  />
-                </VList>
-              </template>
-            </VSelect>
-          </VCol>
-        </VRow>
+        <VExpandTransition>
+          <VRow v-if="mouseBehavior === 'zoom'">
+            <VCol>
+              <VLabel class="text-subtitle-2 mb-1">
+                鼠标滚轮缩放
+              </VLabel>
+              <VSelect
+                v-model="mouseScrollScale"
+                :items="mouseScrollScaleItems"
+                :variant="isDark ? 'outlined' : 'solo'"
+                item-title="name"
+                density="compact"
+                hide-details
+              >
+
+                <template #item="{ item, props }">
+                  <VList
+                    density="compact"
+                    nav
+                  >
+                    <VListItem
+                      v-bind="props"
+                      :value="item.value"
+                      :title="item.title"
+                      :active="mouseScrollScale === item.value"
+                    />
+                  </VList>
+                </template>
+              </VSelect>
+            </VCol>
+          </VRow>
+        </VExpandTransition>
         <VRow>
           <VCol>
             <VLabel class="text-subtitle-2 mb-1">
@@ -841,6 +968,7 @@ const createNodeBehavior = ref(0)
               density="compact"
               hide-details
             >
+
               <template #item="{ item, props }">
                 <VList
                   density="compact"
@@ -850,6 +978,7 @@ const createNodeBehavior = ref(0)
                     v-bind="props"
                     :value="item.value"
                     :title="item.title"
+                    :active="createNodeBehavior === item.value"
                   />
                 </VList>
               </template>
@@ -864,7 +993,8 @@ const createNodeBehavior = ref(0)
               hide-details
             />
             <VCheckbox
-              label="是否开启手绘风格"
+              label="是否开启手绘风格 (WIP)"
+              disabled
               density="compact"
               hide-details
             />

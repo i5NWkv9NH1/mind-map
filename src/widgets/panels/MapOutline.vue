@@ -1,12 +1,25 @@
 <script
   setup
-  lang="ts"
+  lang="tsx"
 >
-import { TreeView } from '@/components'
-import PanelContainer from '@/components/PanelContainer.vue'
+import { VList } from 'vuetify/components'
+import { ref, watch } from 'vue'
+import { PanelContainer } from '@/components'
 import { useAppStore } from '@/store'
 
 const { togglePanel } = useAppStore()
+
+const activeNode = ref<any>()
+
+// eslint-disable-next-line no-console
+watch(activeNode, () => console.log(activeNode.value))
+
+function TreeView() {
+  return (
+    <VList>
+    </VList>
+  )
+}
 </script>
 
 <template>
