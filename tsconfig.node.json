@@ -3,7 +3,7 @@
   "compilerOptions": {
     "composite": true,
     "module": "ESNext",
-    "moduleResolution": "Bundle",
+    "moduleResolution": "Bundler",
     "types": ["node"],
     "allowSyntheticDefaultImports": true
   },

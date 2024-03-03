@@ -1,7 +1,7 @@
 export * from './mind-map'
 
 export interface Action {
-  uid: string
+  id: string
   name: string
   icon?: string
   action: () => void

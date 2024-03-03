@@ -1,12 +1,16 @@
-<script setup lang="ts">
+<script
+  setup
+  lang="ts"
+>
 import { ref } from 'vue'
 import { useAppStore } from '@/store'
 import PanelContainer from '@/components/PanelContainer.vue'
+import { storeToRefs } from 'pinia';
+import { usePresets } from '@/composables';
 
 const { togglePanel } = useAppStore()
-
-const structures = ref([1, 2, 3, 4, 5])
-const selected = ref(1)
+const { LayoutStructureItems } = usePresets()
+const selectLayoutStructure = ref('logicalStructure')
 </script>
 
 <template>
@@ -22,18 +26,19 @@ const selected = ref(1)
         <VIcon>mdi-close</VIcon>
       </VBtn>
     </template>
+
     <template #content>
       <VSheet class="px-2">
         <VCard
-          v-for="item in structures"
-          :key="item"
-          :color="item === selected ? 'primary' : 'default'"
+          v-for="item in LayoutStructureItems"
+          :key="item.id"
+          :color="item.value === selectLayoutStructure ? 'primary' : 'default'"
           class="my-4"
-          @click="selected = item"
+          @click="selectLayoutStructure = item.value"
         >
           <VCardText class="text-center">
             <VImg
-              src="https://wanglin2.github.io/mind-map/dist/img/logicalStructure.png"
+              :src="`/img/structures/${item.value}.png`"
               width="100%"
               height="200"
             />

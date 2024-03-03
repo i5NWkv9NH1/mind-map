@@ -4,32 +4,42 @@
 >
 import { computed, ref } from 'vue'
 import { useAppStore } from '@/store'
-import PanelContainer from '@/components/PanelContainer.vue'
+import { PanelContainer } from '@/components'
+import { v4 as uuid } from 'uuid'
+import { storeToRefs } from 'pinia';
+import { usePresets } from '@/composables';
+import type { MindMapTheme } from '@/@types/mind-map/theme';
 
-const current = ref('经典')
-const themeStyles = ref(['经典', '深色', '朴素'])
+const { togglePanel } = useAppStore()
+const { } = storeToRefs(useAppStore())
+const { getClassicThemes, getDarkThemes, getSimpleThemes, } = usePresets()
+const current = ref(0)
+const themeStyles = ref([
+  { id: uuid(), name: '经典', value: 0 },
+  { id: uuid(), name: '深色', value: 1 },
+  { id: uuid(), name: '朴素', value: 2 },
+])
 const confirmDialog = ref({
   status: false,
 })
-const selected = ref(1)
+const selected = ref('default')
 const isHasModify = ref(false)
-const themes = computed(() => {
+const themes = computed<MindMapTheme[]>(() => {
   switch (current.value) {
-    case '经典': return [1, 2, 3, 4, 5, 6]
-    case '深色': return [7, 8, 9, 10, 11]
-    case '朴素': return [11, 12, 13, 14, 15, 16]
-    default: return [1, 2, 3, 4, 5, 6]
+    case 0: return getClassicThemes.value
+    case 1: return getDarkThemes.value
+    case 2: return getSimpleThemes.value
+    default: return getClassicThemes.value
   }
 })
-const { togglePanel } = useAppStore()
-function handleChange(item: number) {
+
+function handleChange(themeName: string) {
   if (isHasModify.value) {
     confirmDialog.value.status = true
     return
   }
-  selected.value = item
+  selected.value = themeName
 }
-
 function reserve() {
   confirmDialog.value.status = false
 }
@@ -95,10 +105,10 @@ function overwrite() {
         density="compact"
       >
         <VTab
-          v-for="theme in themeStyles"
-          :key="theme"
-          :value="theme"
-          :text="theme"
+          v-for="tab in themeStyles"
+          :key="tab.id"
+          :value="tab.value"
+          :text="tab.name"
         />
       </VTabs>
       <VWindow
@@ -106,25 +116,25 @@ function overwrite() {
         class="px-2"
       >
         <VWindowItem
-          v-for="theme in themeStyles"
-          :key="theme"
-          :value="theme"
+          v-for="tab in themeStyles"
+          :key="tab.id"
+          :value="tab.value"
         >
           <VCard
-            v-for="item in themes"
-            :key="item"
-            :color="item === selected ? 'primary' : 'default'"
+            v-for="theme in themes"
+            :key="theme.name"
+            :color="theme.value === selected ? 'primary' : 'default'"
             elevation="4"
             class="my-4"
-            @click="handleChange(item)"
+            @click="handleChange(theme.value)"
           >
             <VCardText class="text-center">
               <VImg
-                src="https://wanglin2.github.io/mind-map/dist/img/classic7.jpg"
+                :src="'/img/themes/' + theme.value + '.jpg'"
                 width="100%"
                 height="120"
               />
-              <p>脑图经典{{ item }}</p>
+              {{ theme.name }}
             </VCardText>
           </VCard>
         </VWindowItem>

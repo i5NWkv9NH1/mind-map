@@ -18,8 +18,10 @@
     },
     "resolveJsonModule": true,
     "types": [
+      "node",
       "simple-mind-map",
-      "vite-plugin-vue-layouts/client"
+      "vite-plugin-vue-layouts/client",
+      "pinia-plugin-persist"
     ],
     "strict": true,
     "noEmit": true,

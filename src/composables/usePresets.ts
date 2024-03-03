@@ -1,8 +1,11 @@
 /**
  * @description May be replaced by api
  */
+import type { MindMapTheme } from '@/@types/mind-map/theme'
+import { themeList } from 'simple-mind-map/src/constants/constant'
 import { v4 as uuid } from 'uuid'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { oreo, shallowSea, lemonBubbles, neonLamp, dark3, dark4, darkNightLceBlade, seaBlueLine, morandi, rose, cactus, classic5, classic6, classic7 } from '../helpers/themes'
 
 export type UsedColor = string
 export interface FontFamily { id: string, name: string, value: number | string }
@@ -21,6 +24,7 @@ export interface CreateNodeBehavior { id: string, name: string, value: string | 
 export interface BackgroundPosition { id: string, name: string, value: string | number }
 export interface BackgroundRepeat { id: string, name: string, value: string | number }
 export interface BackgroundSize { id: string, name: string, value: string | number }
+export interface LayoutStructure { id: string; name: string; value: string }
 
 export function usePresets() {
   const usedColorItems = ref<UsedColor[]>([
@@ -190,6 +194,191 @@ export function usePresets() {
     { id: uuid(), name: '覆盖', value: 'cover' },
     { id: uuid(), name: '保持', value: 'contain' },
   ])
+  const customThemes = ref<MindMapTheme[]>([
+    //#region // # expand
+    {
+      name: '奥利奥',
+      value: 'oreo',
+      theme: oreo,
+      dark: false
+    },
+    {
+      name: '浅海',
+      value: 'shallowSea',
+      theme: shallowSea,
+      dark: false
+    },
+    {
+      name: '柠檬气泡',
+      value: 'lemonBubbles',
+      theme: lemonBubbles,
+      dark: false
+    },
+    {
+      name: '玫瑰',
+      value: 'rose',
+      theme: rose,
+      dark: false
+    },
+    {
+      name: '海蓝线',
+      value: 'seaBlueLine',
+      theme: seaBlueLine,
+      dark: false
+    },
+    {
+      name: '霓虹灯',
+      value: 'neonLamp',
+      theme: neonLamp,
+      dark: true
+    },
+    {
+      name: '暗夜冰刃',
+      value: 'darkNightLceBlade',
+      theme: darkNightLceBlade,
+      dark: true
+    },
+    {
+      name: '莫兰迪',
+      value: 'morandi',
+      theme: morandi,
+      dark: false
+    },
+    {
+      name: '脑图经典5',
+      value: 'classic5',
+      theme: classic5,
+      dark: false
+    },
+    {
+      name: '暗色3',
+      value: 'dark3',
+      theme: dark3,
+      dark: true
+    },
+    {
+      name: '暗色4',
+      value: 'dark4',
+      theme: dark4,
+      dark: true
+    },
+    {
+      name: '仙人掌',
+      value: 'cactus',
+      theme: cactus,
+      dark: false
+    },
+    {
+      name: '脑图经典6',
+      value: 'classic6',
+      theme: classic6,
+      dark: false
+    },
+    {
+      name: '脑图经典7',
+      value: 'classic7',
+      theme: classic7,
+      dark: false
+    }
+    //#endregion
+  ])
+  const internalThemes = ref<any[]>(themeList)
+  const mindMapThemes = computed(() => customThemes.value.concat(internalThemes.value))
+  const baiduThemes = [
+    'default',
+    'skyGreen',
+    'classic2',
+    'classic3',
+    'classicGreen',
+    'classicBlue',
+    'blueSky',
+    'brainImpairedPink',
+    'earthYellow',
+    'freshGreen',
+    'freshRed',
+    'romanticPurple',
+    'pinkGrape',
+    'mint'
+  ]
+  const getClassicThemes = computed(() => mindMapThemes.value.filter(theme => !theme.dark))
+  const getDarkThemes = computed(() => mindMapThemes.value.filter(theme => theme.dark))
+  const getSimpleThemes = computed(() => {
+    const items: MindMapTheme[] = []
+    mindMapThemes.value.forEach(theme => {
+      if (baiduThemes.includes(theme.value)) {
+        items.push(theme)
+      }
+    })
+    return items
+  })
+
+  // # 逻辑结构图
+  const LayoutStructureItems = ref<LayoutStructure[]>([
+    //#region // # expand
+    {
+      id: uuid(),
+      name: '逻辑结构图',
+      value: 'logicalStructure'
+    },
+    {
+      id: uuid(),
+      name: '思维导图',
+      value: 'mindMap'
+    },
+    {
+      id: uuid(),
+      name: '组织结构图',
+      value: 'organizationStructure'
+    },
+    {
+      id: uuid(),
+      name: '目录组织图',
+      value: 'catalogOrganization'
+    },
+    {
+      id: uuid(),
+      name: '时间轴',
+      value: 'timeline'
+    },
+    {
+      id: uuid(),
+      name: '时间轴2',
+      value: 'timeline2'
+    },
+    {
+      id: uuid(),
+      name: '竖向时间轴',
+      value: 'verticalTimeline'
+    },
+    {
+      id: uuid(),
+      name: '鱼骨图',
+      value: 'fishbone'
+    }
+    //#endregion
+  ])
+  const mathItems = ref<string[]>([
+    'a^2',
+    'a_2',
+    'a^{2+2}',
+    'a_{i,j}',
+    'x_2^3',
+    '\\overbrace{1+2+\\cdots+100}',
+    '\\sum_{k=1}^N k^2',
+    '\\lim_{n \\to \\infty}x_n',
+    '\\int_{-N}^{N} e^x\\, dx',
+    '\\sqrt{3}',
+    '\\sqrt[n]{3}',
+    '\\sin\\theta',
+    '\\log X',
+    '\\log_{10}',
+    '\\log_\\alpha X',
+    '\\lim_{t\\to n}T',
+    '\\frac{1}{2}=0.5',
+    '\\binom{n}{k}',
+    '\\begin{matrix}x & y \\\\z & v\\end{matrix}',
+    '\\begin{cases}3x + 5y +  z \\\\7x - 2y + 4z \\\\-6x + 3y + 2z\\end{cases}'
+  ])
 
   return {
     // #
@@ -217,5 +406,15 @@ export function usePresets() {
     backgroundPositionItems,
     backgroundRepeatItems,
     backgroundSizeItems,
+    // #
+    customThemes,
+    internalThemes,
+    mindMapThemes,
+    getClassicThemes,
+    getDarkThemes,
+    getSimpleThemes,
+    // #
+    LayoutStructureItems,
+    mathItems
   }
 }

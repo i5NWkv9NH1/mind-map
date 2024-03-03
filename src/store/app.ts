@@ -4,8 +4,9 @@ import { defineStore } from 'pinia'
 import MindMap from 'simple-mind-map'
 import { computed, ref, shallowRef, watch } from 'vue'
 import { useTheme } from 'vuetify/lib/framework.mjs'
-import type { MindMapMode, MindMapNode } from '@/@types'
+import type { MindMapData, MindMapMode, MindMapNode } from '@/@types'
 import { COMMAND_ADD_GENERALIZATION, COMMAND_BACK, COMMAND_FORWARD, COMMAND_INSERT_CHILD_NODE, COMMAND_INSERT_NODE, COMMAND_REMOVE_NODE } from '@/helpers'
+import { v4 } from 'uuid'
 
 export interface Dialog {
   status: boolean
@@ -22,6 +23,7 @@ export type TagDialog = Dialog & {
 export type SearchDialog = Dialog
 export type EmojiDialog = Dialog
 export type MathSheet = Dialog
+export type MindMapOutlineDialog = Dialog
 export interface Panel {
   current: number | null
 }
@@ -36,9 +38,12 @@ export const useAppStore = defineStore('app', () => {
   }, { immediate: true })
   // # mind map
   const mindMap = ref<MindMap>()
-  const mindMapData = ref({
+  const mindMapData = ref<MindMapData>({
     data: {
-      text: '根节点',
+      text: 'Root',
+      expand: true,
+      isActive: false,
+      uid: v4()
     },
     children: [],
   })
@@ -76,6 +81,9 @@ export const useAppStore = defineStore('app', () => {
   const searchDialog = ref<SearchDialog>({
     status: false,
   })
+  const mindMapOutlineDialog = ref<MindMapOutlineDialog>({
+    status: false
+  })
   // # sidebar panels
   const panel = ref<Panel>({
     current: null,
@@ -100,6 +108,9 @@ export const useAppStore = defineStore('app', () => {
   // # mind map
   function initMindMap(options: any) {
     mindMap.value = new MindMap(options)
+  }
+  function updateMindMapData(data: MindMapData) {
+    mindMapData.value = data
   }
   function undo() {
     mindMap.value?.execCommand(COMMAND_BACK)
@@ -145,6 +156,9 @@ export const useAppStore = defineStore('app', () => {
   function toggleTagDialog(value = true) {
     tagDialog.value.status = value
   }
+  function toggleOutlineDialog(value = true) {
+    mindMapOutlineDialog.value.status = value
+  }
   // # panels
   function togglePanel(value: number | null = null) {
     panel.value.current = value
@@ -170,11 +184,13 @@ export const useAppStore = defineStore('app', () => {
     mathSheet,
     searchDialog,
     emojiDialog,
+    mindMapOutlineDialog,
     panel,
     isDark,
     theme,
     // # actions
     initMindMap,
+    updateMindMapData,
     undo,
     redo,
     setMode,
@@ -188,6 +204,7 @@ export const useAppStore = defineStore('app', () => {
     toggleEmojiDialog,
     toggleNoteDialog,
     toggleTagDialog,
+    toggleOutlineDialog,
     toggleMathSheet,
     togglePanel,
     // # getters
@@ -197,4 +214,10 @@ export const useAppStore = defineStore('app', () => {
     canUndo,
     canRedo,
   }
-})
+},
+  //  {
+  //   persist: {
+  //     enabled: true,
+  //   }
+  // }
+)

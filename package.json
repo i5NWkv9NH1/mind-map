@@ -23,6 +23,7 @@
     "highlight.js": "^11.9.0",
     "jsmind": "^0.8.2",
     "lodash": "^4.17.21",
+    "pinia-plugin-persist": "^1.0.0",
     "roboto-fontface": "*",
     "roughjs": "^4.6.6",
     "simple-mind-map": "^0.9.7",

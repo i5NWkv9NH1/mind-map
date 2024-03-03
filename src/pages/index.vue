@@ -1,4 +1,7 @@
-<script setup lang="ts">
+<script
+  setup
+  lang="ts"
+>
 import { onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 
@@ -18,23 +21,25 @@ import Search from 'simple-mind-map/src/plugins/Search.js'
 import Painter from 'simple-mind-map/src/plugins/Painter.js'
 import Scrollbar from 'simple-mind-map/src/plugins/Scrollbar.js'
 import Formula from 'simple-mind-map/src/plugins/Formula.js'
+import { nodeRichTextToTextWithWrap } from 'simple-mind-map/src/utils'
 import { SimplePlugin } from '@/plugins/mindmap'
 
 // # types
-import type { MindMapNode } from '@/@types'
+import type { MindMapData, MindMapNode } from '@/@types'
 
 // # constants
-import { ON_BAKC_FORWARD, ON_NODE_ACTIVE } from '@/helpers'
+import { ON_BAKC_FORWARD, ON_DATA_CHANGE, ON_NODE_ACTIVE } from '@/helpers'
 
 // # store
 import { useAppStore } from '@/store/app'
 
 // # comps
 import { Bottombar, Sidebar, Toolbar } from '@/widgets'
-import { EmojiDialog, HyperLinkDialog, NoteDialog, SearchDialog, TagDialog, UploadImageDialog } from '@/widgets/dialogs'
+import { EmojiDialog, HyperLinkDialog, NoteDialog, SearchDialog, TagDialog, UploadImageDialog, MindMapOutlineDialog } from '@/widgets/dialogs'
+import { isEmpty } from 'lodash'
 
 const mindMapEl = ref<HTMLElement>()
-const { initMindMap } = useAppStore()
+const { initMindMap, updateMindMapData } = useAppStore()
 const { mindMap, mindMapData, activeNodes, isStart, isEnd } = storeToRefs(useAppStore())
 
 onMounted(() => {
@@ -62,6 +67,22 @@ onMounted(() => {
     MindMap.usePlugin(SimplePlugin)
 
     // # 监听事件
+    mindMap.value?.on(ON_DATA_CHANGE, (e: MindMapData) => {
+      e.root = true
+      const walk = (root: MindMapData) => {
+        const text = (root.data.richText ? nodeRichTextToTextWithWrap(root.data.text) : root.data.text).replaceAll(/\n/g, '<br>')
+        root.textCache = text
+        root.label = text
+        root.uid = root.data.uid
+        if (root.children && root.children.length > 0) {
+          root.children.forEach((item: any) => {
+            walk(item)
+          })
+        }
+      }
+      walk(e)
+      updateMindMapData(e)
+    })
     mindMap.value?.on(ON_NODE_ACTIVE, (node: MindMapNode, activeNodeList: MindMapNode[]) => {
       activeNodes.value = activeNodeList
     })
@@ -89,9 +110,13 @@ onMounted(() => {
   <HyperLinkDialog />
   <NoteDialog />
   <TagDialog />
+  <MindMapOutlineDialog />
 </template>
 
-<style scoped lang="scss">
+<style
+  scoped
+  lang="scss"
+>
 #mind-map-container {
   position: fixed;
   top: 0;

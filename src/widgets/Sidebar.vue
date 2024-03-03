@@ -5,7 +5,7 @@
 import { storeToRefs } from 'pinia'
 import { v4 as uuid } from 'uuid'
 import { computed, ref } from 'vue'
-import { BaseStyles, IconPanel, MapOutline, MapShortKeys, MapStructures, MapThemes, MathPanel, NodeStyles } from './panels'
+import { BaseStyles, IconPanel, MapShortKeys, MapStructures, MapThemes, MathPanel, NodeStyles } from './panels'
 import { useAppStore } from '@/store'
 
 const { togglePanel } = useAppStore()
@@ -16,8 +16,8 @@ const items = ref([
   { id: uuid(), name: '基础样式', color: 'primary', icon: 'mdi-auto-fix', value: 2 },
   { id: uuid(), name: '主题', color: 'primary', icon: 'mdi-tshirt-crew-outline', value: 3 },
   { id: uuid(), name: '结构', color: 'primary', icon: 'mdi-sitemap-outline', value: 4 },
-  { id: uuid(), name: '大纲', color: 'primary', icon: 'mdi-card-text-outline', value: 5 },
-  { id: uuid(), name: '快捷键', color: 'primary', icon: 'mdi-keyboard-outline', value: 6 },
+  // { id: uuid(), name: '大纲', color: 'primary', icon: 'mdi-card-text-outline', value: 5 },
+  { id: uuid(), name: '快捷键', color: 'primary', icon: 'mdi-keyboard-outline', value: 5 },
 ])
 const component = computed(() => {
   switch (panel.value.current) {
@@ -25,10 +25,9 @@ const component = computed(() => {
     case 2: return BaseStyles
     case 3: return MapThemes
     case 4: return MapStructures
-    case 5: return MapOutline
-    case 6: return MapShortKeys
-    case 7: return IconPanel
-    case 8: return MathPanel
+    case 5: return MapShortKeys
+    case 6: return IconPanel
+    case 7: return MathPanel
     default: return NodeStyles
   }
 })
