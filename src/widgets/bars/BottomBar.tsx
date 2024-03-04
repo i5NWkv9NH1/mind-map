@@ -1,12 +1,16 @@
 import { v4 as uuid } from "uuid";
 import { defineComponent, ref } from "vue";
-import { VContainer, VToolbar } from "vuetify/components";
+import { VContainer, VSlideYTransition, VToolbar } from "vuetify/components";
 import { EditOrReadonlySwitch, FullScreenEdit, FullScreenView, MouseBehavior, Position, Scale, SearchNodes, ShowMiniMap, Stats, ThemeSwitch } from "../actions";
 import './BottomBar.scss';
+import { storeToRefs } from "pinia";
+import { useAppStore } from "@/store/app";
 
-export const Bottombar = defineComponent({
+export const BottomBar = defineComponent({
   name: 'BottomBar',
   setup() {
+    const { isZenMode } = storeToRefs(useAppStore())
+
     const defaultActions = ref([
       { id: uuid(), component: <Position /> },
       { id: uuid(), component: <ThemeSwitch /> },
@@ -23,18 +27,19 @@ export const Bottombar = defineComponent({
     ])
 
     return () => (
-      <VToolbar
-        color={'transparent'}
-        class={'bottom-bar'}
-        tag={'footer'}
-        elevation={8}
-        v-slots={{
-          default: () => <>
-            {defaultActions.value.map(item => item.component)}
-            {extendActions.value.map(item => item.component)}
-          </>,
-        }}
-      />
+      <VSlideYTransition>
+        {!isZenMode.value ? <VToolbar
+          class={'bottom-bar'}
+          tag={'footer'}
+          elevation={8}
+          v-slots={{
+            default: () => <>
+              {defaultActions.value.map(item => item.component)}
+              {extendActions.value.map(item => item.component)}
+            </>,
+          }}
+        /> : <div />}
+      </VSlideYTransition>
     )
   }
 })

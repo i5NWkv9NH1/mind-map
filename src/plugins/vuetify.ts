@@ -27,7 +27,7 @@ export default createVuetify({
   },
   defaults: {
     global: {
-      ripple: false,
+      // ripple: false,
     },
   },
   // blueprint: md3

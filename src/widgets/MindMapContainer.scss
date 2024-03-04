@@ -1,17 +1,21 @@
-#MindMapContainer {
-  position: fixed;
-  top: 0;
-
-  #MindMap {
-    position: absolute;
-    width: 100vw;
-    height: 100vh;
-  }
-}
-
-
-#MindMapContainer *,
+// #MindMapContainer *,
 #MindMap * {
   margin: 0;
   padding: 0;
+}
+
+#MindMapContainer {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+
+  #MindMap {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+  }
 }

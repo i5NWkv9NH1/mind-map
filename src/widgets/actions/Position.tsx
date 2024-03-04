@@ -1,12 +1,14 @@
-// TODO: add store
-
+import { useAppStore } from '@/store/app';
 import { mdiCrosshairsGps } from '@mdi/js';
+import { storeToRefs } from 'pinia';
 import { defineComponent } from "vue";
 import { VBtn, VIcon, VTooltip } from 'vuetify/components';
 
 export const Position = defineComponent({
   name: 'Position',
   setup() {
+    const { mindMap } = storeToRefs(useAppStore())
+
     return () => (
       <VTooltip
         transition={'slide-y-transition'}
@@ -19,6 +21,10 @@ export const Position = defineComponent({
               {...props}
               active={isActive}
               icon
+              // @ts-ignore
+              onClick={() => {
+                mindMap.value?.execCommand('RETURN_CENTER')
+              }}
             >
               <VIcon>{mdiCrosshairsGps}</VIcon>
             </VBtn>

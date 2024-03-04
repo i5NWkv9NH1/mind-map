@@ -1,12 +1,16 @@
+import { useAppStore } from "@/store/app";
+import { storeToRefs } from "pinia";
 import { v4 as uuid } from "uuid";
 import { defineComponent, ref } from "vue";
-import { VContainer, VToolbar } from "vuetify/components";
+import { VSlideYTransition, VToolbar } from "vuetify/components";
 import { ChildNode, ContentSaveAs, CreateNewMindMapFile, ExportFile, Folder, FormatBrush, ImportFile, NodeHyperLink, NodeIcons, NodeImage, NodeMath, NodeNote, NodeRelativeLine, NodeSummary, NodeTags, OpenMindMapFile, PeerNode, Redo, RemoveNode, Undo } from "../actions";
 import './TopBar.scss';
 
 export const TopBar = defineComponent({
   name: 'TopBar',
   setup() {
+    const { isZenMode } = storeToRefs(useAppStore())
+
     const defaultActions = ref([
       { id: uuid(), component: <Undo /> },
       { id: uuid(), component: <Redo /> },
@@ -33,20 +37,21 @@ export const TopBar = defineComponent({
     ])
 
     return () => (
-      <VToolbar
-        color={'transparent'}
-        class={'top-bar'}
-        tag={'header'}
-        elevation={8}
-        border
-        v-slots={{
-          default: () =>
-            <>
-              {defaultActions.value.map(item => item.component)}
-              {extendActions.value.map(item => item.component)}
-            </>
-        }}
-      />
+      <VSlideYTransition>
+        {!isZenMode.value ? <VToolbar
+          class={'top-bar'}
+          tag={'header'}
+          elevation={8}
+          border
+          v-slots={{
+            default: () =>
+              <>
+                {defaultActions.value.map(item => item.component)}
+                {extendActions.value.map(item => item.component)}
+              </>
+          }}
+        /> : <div />}
+      </VSlideYTransition>
     )
   }
 })

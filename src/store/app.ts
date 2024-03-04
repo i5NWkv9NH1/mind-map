@@ -36,6 +36,8 @@ export const useAppStore = defineStore('app', () => {
   const canUnod = ref(true)
   const canRedo = ref(true)
 
+  const isShowNodeContextMenu = ref(false)
+
 
 
   onMounted(() => {
@@ -47,6 +49,8 @@ export const useAppStore = defineStore('app', () => {
     mindMapMode, isMindMapReadonly,
     getRoot, getLayout, getTheme, getView, getConfig,
     hasRoot, hasGeneralization, canUnod, canRedo,
+    isZenMode, openNodeRichText, useLeftKeySelectionRightKeyDrag, isShowScrollbar,
+    isShowNodeContextMenu,
   }
 })
 // }, { persist: { enabled: true } })

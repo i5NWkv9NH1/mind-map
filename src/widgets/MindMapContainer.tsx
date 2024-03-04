@@ -24,6 +24,8 @@ import Watermark from 'simple-mind-map/src/plugins/Watermark.js';
 import { nodeRichTextToTextWithWrap } from 'simple-mind-map/src/utils';
 import { Logger, StateLogger, WatchLogger } from "@/helpers";
 import * as mdParse from 'simple-mind-map/src/parse/markdown.js'
+import { MindMapContextMenu, NodeContextMenu } from "./menus";
+import { BottomBar, TopBar } from "./bars";
 
 export const MindMapContainer = defineComponent({
   name: 'MindMapContainer',
@@ -41,6 +43,7 @@ export const MindMapContainer = defineComponent({
     mindMapData.value.layout = exampleData.value.layout
     mindMapData.value.theme = exampleData.value.theme
     mindMapData.value.view = null
+    mindMapData.value.theme.template = 'default'
 
 
     onMounted(() => {
@@ -58,7 +61,8 @@ export const MindMapContainer = defineComponent({
       MindMap.usePlugin(NodeImgAdjust)
       MindMap.usePlugin(Search)
       MindMap.usePlugin(Painter)
-      MindMap.usePlugin(Scrollbar)
+      // ! 节点无法自由拖拽
+      // MindMap.usePlugin(Scrollbar)
       MindMap.usePlugin(Formula)
       MindMap.usePlugin(SimplePlugin)
 
@@ -108,6 +112,10 @@ export const MindMapContainer = defineComponent({
         // watch(getView, () => {
         //   WatchLogger.debug('view 数据已更新', getRoot.value)
         // })
+        Logger.info('view', getView.value)
+        Logger.info('theme', getTheme.value)
+        Logger.info('layout', getLayout.value)
+        Logger.info('config', getConfig.value)
 
         /**
          * # 渲染树数据变化，可以监听该方法获取最新数据
@@ -335,6 +343,7 @@ export const MindMapContainer = defineComponent({
         id={'MindMapContainer'}
       >
         <div id="MindMap" ref={MindMapEl} />
+        {/* # 工具栏 */}
       </div>
     )
   }
