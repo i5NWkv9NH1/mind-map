@@ -21,7 +21,8 @@
       "node",
       "simple-mind-map",
       "vite-plugin-vue-layouts/client",
-      "pinia-plugin-persist"
+      "pinia-plugin-persist",
+      "@types/wicg-file-system-access"
     ],
     "strict": true,
     "noEmit": true,
