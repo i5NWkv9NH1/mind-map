@@ -2,16 +2,14 @@
   setup
   lang="ts"
 >
-import { computed, ref } from 'vue'
-import { useAppStore } from '@/store'
-import { PanelContainer } from '@/components'
-import { v4 as uuid } from 'uuid'
-import { storeToRefs } from 'pinia';
-import { usePresets } from '@/composables';
 import type { MindMapTheme } from '@/@types/mind-map/theme';
+import { PanelContainer } from '@/components';
+import { usePresets } from '@/composables';
+import { mdiCloseCircle } from '@mdi/js';
+import { v4 as uuid } from 'uuid';
+import { computed, ref } from 'vue';
 
-const { togglePanel } = useAppStore()
-const { } = storeToRefs(useAppStore())
+const togglePanel = (_: any) => { }
 const { getClassicThemes, getDarkThemes, getSimpleThemes, } = usePresets()
 const current = ref(0)
 const themeStyles = ref([
@@ -95,7 +93,7 @@ function overwrite() {
         icon
         @click="togglePanel(null)"
       >
-        <VIcon>mdi-close</VIcon>
+        <VIcon>{{ mdiCloseCircle }}</VIcon>
       </VBtn>
     </template>
 

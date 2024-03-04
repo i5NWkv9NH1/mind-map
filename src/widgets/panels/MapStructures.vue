@@ -2,15 +2,14 @@
   setup
   lang="ts"
 >
-import { ref } from 'vue'
-import { useAppStore } from '@/store'
-import PanelContainer from '@/components/PanelContainer.vue'
-import { storeToRefs } from 'pinia';
+import { PanelContainer } from '@/components';
 import { usePresets } from '@/composables';
+import { mdiCloseCircle } from '@mdi/js';
+import { ref } from 'vue';
 
-const { togglePanel } = useAppStore()
 const { LayoutStructureItems } = usePresets()
 const selectLayoutStructure = ref('logicalStructure')
+const togglePanel = (_: any) => { }
 </script>
 
 <template>
@@ -23,7 +22,7 @@ const selectLayoutStructure = ref('logicalStructure')
         icon
         @click="togglePanel(null)"
       >
-        <VIcon>mdi-close</VIcon>
+        <VIcon>{{ mdiCloseCircle }}</VIcon>
       </VBtn>
     </template>
 

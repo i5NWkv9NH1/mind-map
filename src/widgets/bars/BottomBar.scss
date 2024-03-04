@@ -1,0 +1,7 @@
+@use "@/styles/utils/z.scss";
+
+.bottom-bar {
+  position: fixed;
+  z-index: 999;
+  bottom: 0;
+}

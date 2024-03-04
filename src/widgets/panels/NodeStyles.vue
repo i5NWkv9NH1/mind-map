@@ -4,13 +4,15 @@
 >
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
-import { EmptyNode } from '../EmptyNode'
-import { useAppStore } from '@/store'
 import { ColorPicker, MenuSelect, PanelContainer } from '@/components'
+import { Empty } from '@/widgets'
 import { usePresets } from '@/composables'
+import { useSettingsStore } from '@/store/settings'
+import { mdiCloseCircle, mdiFormatBold, mdiFormatColorText, mdiFormatItalic, mdiFormatUnderline, mdiVectorLine } from '@mdi/js'
 
-const { togglePanel } = useAppStore()
-const { isActiveNode, isDark } = storeToRefs(useAppStore())
+const isActiveNode = ref(false)
+const togglePanel = () => { }
+const { isDark } = storeToRefs(useSettingsStore())
 const {
   usedColorItems,
   textUnderlineStyleItems,
@@ -67,9 +69,9 @@ function onFontColorConfirm() {
         color="surface"
         variant="flat"
         icon
-        @click="togglePanel(null)"
+        @click="togglePanel"
       >
-        <VIcon>mdi-close</VIcon>
+        <VIcon>{{ mdiCloseCircle }}</VIcon>
       </VBtn>
     </template>
 
@@ -173,7 +175,7 @@ function onFontColorConfirm() {
             <VRow align="center">
               <VCol>
                 <ColorPicker
-                  v-model="fontColor"
+                  v-model:color="fontColor"
                   :items="usedColorItems"
                   @confirm="onFontColorConfirm"
                 >
@@ -186,7 +188,7 @@ function onFontColorConfirm() {
                       size="small"
                       icon
                     >
-                      <VIcon>mdi-format-color-text</VIcon>
+                      <VIcon>{{ mdiFormatColorText }}</VIcon>
                     </VBtn>
                   </template>
                 </ColorPicker>
@@ -210,7 +212,7 @@ function onFontColorConfirm() {
                       icon
                       @click="isFontBold = !isFontBold"
                     >
-                      <VIcon>mdi-format-bold</VIcon>
+                      <VIcon>{{ mdiFormatBold }}</VIcon>
                     </VBtn>
                   </template>
                   <p>加粗</p>
@@ -235,7 +237,7 @@ function onFontColorConfirm() {
                       icon
                       @click="isFontItalic = !isFontItalic"
                     >
-                      <VIcon>mdi-format-italic</VIcon>
+                      <VIcon>{{ mdiFormatItalic }}</VIcon>
                     </VBtn>
                   </template>
                   <p>斜体</p>
@@ -258,7 +260,7 @@ function onFontColorConfirm() {
                       size="small"
                       icon
                     >
-                      <VIcon>mdi-format-underline</VIcon>
+                      <VIcon>{{mdiFormatUnderline}}</VIcon>
                     </VBtn>
                   </template>
                 </MenuSelect>
@@ -275,11 +277,11 @@ function onFontColorConfirm() {
                 <VLabel class="text-subtitle-2 mb-1">
                   颜色
                 </VLabel>
-                <ColorPicker v-model="borderColor">
+                <ColorPicker v-model:color="borderColor">
 
-                  <template #activator="activator">
+                  <template #activator="args">
                     <VBtn
-                      v-bind="activator.props"
+                      v-bind="args.props"
                       class="d-block"
                       :color="borderColor"
                       elevation="4"
@@ -322,12 +324,7 @@ function onFontColorConfirm() {
                             x2="110"
                             y2="17"
                             stroke-width="2"
-                            :stroke="borderStyle === item.value
-          ? '#409eff'
-          : isDark
-            ? '#fff'
-            : '#000'
-          "
+                            :stroke="borderStyle === item.value ? '#409eff' : isDark ? '#fff' : '#000'"
                             :stroke-dasharray="item.value"
                           />
                         </svg>
@@ -422,7 +419,7 @@ function onFontColorConfirm() {
             </div>
             <VRow>
               <VCol cols="6">
-                <ColorPicker v-model="backgroundColor">
+                <ColorPicker v-model:color="backgroundColor">
 
                   <template #activator="activator">
                     <VBtn
@@ -447,7 +444,7 @@ function onFontColorConfirm() {
               </VCol>
               <VExpandTransition>
                 <VCol v-if="isGradient">
-                  <ColorPicker v-model="gradientStart">
+                  <ColorPicker v-model:color="gradientStart">
 
                     <template #activator="activator">
                       <VBtn
@@ -463,7 +460,7 @@ function onFontColorConfirm() {
               </VExpandTransition>
               <VExpandTransition>
                 <VCol v-if="isGradient">
-                  <ColorPicker v-model="gradientEnd">
+                  <ColorPicker v-model:color="gradientEnd">
 
                     <template #activator="activator">
                       <VBtn
@@ -513,12 +510,7 @@ function onFontColorConfirm() {
                           <path
                             fill="none"
                             :d="shapeMapItems[item.value]"
-                            :stroke="item.value === shape
-          ? '#409eff'
-          : isDark
-            ? '#fff'
-            : '#000'
-          "
+                            :stroke="item.value === shape ? '#409eff' : isDark ? '#fff' : '#000'"
                             stroke-width="2"
                           />
                         </svg>
@@ -539,11 +531,11 @@ function onFontColorConfirm() {
                 <VLabel class="text-subtitle-2 mb-1">
                   颜色
                 </VLabel>
-                <ColorPicker v-model="lineColor">
+                <ColorPicker v-model:color="lineColor">
 
-                  <template #activator="activator">
+                  <template #activator="args">
                     <VBtn
-                      v-bind="activator.props"
+                      v-bind="args.props"
                       :color="lineColor"
                       elevation="4"
                       block
@@ -585,12 +577,7 @@ function onFontColorConfirm() {
                             x2="110"
                             y2="17"
                             stroke-width="2"
-                            :stroke="lineStyle === item.value
-          ? '#409eff'
-          : isDark
-            ? '#fff'
-            : '#000'
-          "
+                            :stroke="lineStyle === item.value ? '#409eff' : isDark ? '#fff' : '#000'"
                             :stroke-dasharray="item.value"
                           />
                         </svg>
@@ -720,9 +707,9 @@ function onFontColorConfirm() {
         </template>
 
         <template v-else>
-          <EmptyNode
+          <Empty
             :size="128"
-            icon="mdi-vector-link"
+            :icon="mdiVectorLine"
             text="请选择一个节点"
           />
         </template>

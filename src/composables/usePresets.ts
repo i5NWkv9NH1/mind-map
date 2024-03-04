@@ -6,25 +6,29 @@ import { themeList } from 'simple-mind-map/src/constants/constant'
 import { v4 as uuid } from 'uuid'
 import { computed, ref } from 'vue'
 import { oreo, shallowSea, lemonBubbles, neonLamp, dark3, dark4, darkNightLceBlade, seaBlueLine, morandi, rose, cactus, classic5, classic6, classic7 } from '../helpers/themes'
+// @ts-ignore
+import simpleMapExampleData from 'simple-mind-map/example/exampleData'
+import type { MindMapData } from '@/@types'
 
-export type UsedColor = string
-export interface FontFamily { id: string, name: string, value: number | string }
-export interface TextUnderlineStyle { id: string, name: string, value: number | string }
-export interface BorderStyle { id: string, name: string, value: string | number }
-export interface BorderWidth { id: string, name: string, value: string | number }
-export interface BorderRedius { id: string, name: string, value: string | number }
 export type ShapeMap = 'rectangle' | 'diamond' | 'parallelogram' | 'roundedRectangle' | 'octagonalRectangle' | 'outerTriangularRectangle' | 'innerTriangularRectangle' | 'ellipse' | 'circle'
-export interface Shape { id: string, name: string, value: ShapeMap }
-export interface LineStyle { id: string, name: string, value: string | number }
-export interface LineWidth { id: string, name: string, value: string | number }
-export interface LineArrowPosition { id: string, name: string, value: string | number }
-export interface MouseBehavior { id: string, name: string, value: 'zoom' | 'move' }
-export interface MouseScrollScale { id: string, name: string, value: boolean }
-export interface CreateNodeBehavior { id: string, name: string, value: string | number }
-export interface BackgroundPosition { id: string, name: string, value: string | number }
-export interface BackgroundRepeat { id: string, name: string, value: string | number }
-export interface BackgroundSize { id: string, name: string, value: string | number }
-export interface LayoutStructure { id: string; name: string; value: string }
+export interface DefaultArrayType<T = number | string> { id: string, name: string, value: T }
+export type UsedColor = string
+export type FontFamily = DefaultArrayType
+export type TextUnderlineStyle = DefaultArrayType
+export type BorderStyle = DefaultArrayType
+export type BorderWidth = DefaultArrayType
+export type BorderRedius = DefaultArrayType
+export type Shape = DefaultArrayType<ShapeMap>
+export type LineStyle = DefaultArrayType
+export type LineWidth = DefaultArrayType
+export type LineArrowPosition = DefaultArrayType
+export type MouseBehavior = DefaultArrayType<'zoom' | 'move'>
+export type MouseScrollScale = DefaultArrayType<boolean>
+export type CreateNodeBehavior = DefaultArrayType
+export type BackgroundPosition = DefaultArrayType
+export type BackgroundRepeat = DefaultArrayType
+export type BackgroundSize = DefaultArrayType
+export type LayoutStructure = DefaultArrayType<string>
 
 export function usePresets() {
   const usedColorItems = ref<UsedColor[]>([
@@ -380,41 +384,35 @@ export function usePresets() {
     '\\begin{cases}3x + 5y +  z \\\\7x - 2y + 4z \\\\-6x + 3y + 2z\\end{cases}'
   ])
 
+  const exampleData = ref<MindMapData>(simpleMapExampleData)
+
   return {
-    // #
     usedColorItems,
-    // #
     fontFamilyItems,
     fontSizeItems,
     fontLineHeightItems,
     textUnderlineStyleItems,
-    // #
     borderStyleItems,
     radiusSizeItems,
     lineWidthSizeItems,
-    // #
     shapeItems,
     shapeMapItems,
-    // #
     lineStyleItems,
     lineArrowPositionItems,
-    // #
     mouseBehaviorItems,
     mouseScrollScaleItems,
     createNodeBehaviorItems,
-    // #
     backgroundPositionItems,
     backgroundRepeatItems,
     backgroundSizeItems,
-    // #
     customThemes,
     internalThemes,
     mindMapThemes,
     getClassicThemes,
     getDarkThemes,
     getSimpleThemes,
-    // #
     LayoutStructureItems,
-    mathItems
+    mathItems,
+    exampleData
   }
 }

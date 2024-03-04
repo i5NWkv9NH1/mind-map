@@ -2,13 +2,13 @@
   setup
   lang="ts"
 >
+import { mdiClose, mdiCloseCircleOutline, mdiContentSaveOutline } from '@mdi/js';
 import { isEmpty } from 'lodash'
-import { storeToRefs } from 'pinia'
 import { v4 as uuid } from 'uuid'
 import { ref, watch } from 'vue'
-import { useAppStore } from '@/store/app'
 
-const { tagDialog } = storeToRefs(useAppStore())
+const tagDialog = ref(false)
+const items = ref<any>([])
 const text = ref('')
 const color = ref('')
 
@@ -17,15 +17,15 @@ watch(text, () => {
 })
 
 function close() {
-  tagDialog.value.status = false
+  tagDialog.value = false
 }
 function confirm() {
-  tagDialog.value.status = false
+  tagDialog.value = false
 }
 function addTag() {
   if (!text.value)
     return
-  tagDialog.value.items.push({
+  items.value.push({
     id: uuid(),
     text: text.value.trim(),
     color: color.value,
@@ -36,7 +36,7 @@ function addTag() {
 
 <template>
   <VDialog
-    v-model="tagDialog.status"
+    v-model="tagDialog"
     transition="scroll-y-transition"
     persistent
   >
@@ -68,11 +68,11 @@ function addTag() {
                 </template>
               </VTextField>
               <div
-                v-if="!isEmpty(tagDialog.items)"
+                v-if="!isEmpty(items)"
                 class="d-flex flex-wrap align-center"
               >
                 <VChip
-                  v-for="tag in tagDialog.items"
+                  v-for="tag in items"
                   :key="tag.id"
                   :color="tag.color"
                   :text="tag.text"
@@ -80,9 +80,10 @@ function addTag() {
                   rounded="lg"
                   :closable="false"
                 >
+
                   <template #close>
                     <VIcon @click.stop="() => console.log('remove tag')">
-                      mdi-close-circle
+                      {{ mdiCloseCircleOutline }}
                     </VIcon>
                   </template>
                 </VChip>
@@ -91,7 +92,7 @@ function addTag() {
             <VCardActions>
               <VBtn @click="close">
                 <VIcon start>
-                  mdi-close
+                  {{ mdiClose }}
                 </VIcon>
                 <span>取消</span>
               </VBtn>
@@ -100,7 +101,7 @@ function addTag() {
                 @click="confirm"
               >
                 <VIcon start>
-                  mdi-content-save-outline
+                  {{ mdiContentSaveOutline }}
                 </VIcon>
                 <span>保存</span>
               </VBtn>

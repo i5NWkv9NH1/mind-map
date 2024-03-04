@@ -2,11 +2,10 @@
   setup
   lang="ts"
 >
-import { storeToRefs } from 'pinia'
-import { ref } from 'vue'
-import { useAppStore } from '@/store'
+import { mdiChevronDown, mdiChevronRight, mdiClose } from '@mdi/js';
+import { ref } from 'vue';
 
-const { searchDialog } = storeToRefs(useAppStore())
+const searchDialog = ref(false)
 const search = ref('')
 const replace = ref('')
 const isReplace = ref(false)
@@ -15,7 +14,7 @@ const isReplace = ref(false)
 <template>
   <VSlideXTransition>
     <VCard
-      v-if="searchDialog.status"
+      v-if="searchDialog"
       width="400"
       rounded="lg"
       position="fixed"
@@ -38,7 +37,7 @@ const isReplace = ref(false)
               @click="isReplace = !isReplace"
             >
               <Transition>
-                <VIcon>{{ isReplace ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</VIcon>
+                <VIcon>{{ isReplace ? mdiChevronRight : mdiChevronDown }}</VIcon>
               </Transition>
             </VBtn>
           </template>
@@ -57,10 +56,10 @@ const isReplace = ref(false)
       <VCardActions>
         <VBtn
           variant="plain"
-          @click="searchDialog.status = false"
+          @click="searchDialog = false"
         >
           <VIcon start>
-            mdi-close
+            {{ mdiClose }}
           </VIcon>
           <span>关闭</span>
         </VBtn>

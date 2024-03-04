@@ -2,29 +2,35 @@
   setup
   lang="ts"
 >
-const props = defineProps<Props>()
+interface Props {
+  items: { id?: string, name: string, value: number | string }[]
+  transition?: string
+  closeOnContentClick?: boolean
+}
+const props = withDefaults(defineProps<Props>(), {
+  items: () => [],
+  transition: 'scroll-y-transition',
+  closeOnContentClick: false
+})
 const modelValue = defineModel<number | string>('modelValue', {
   type: Number,
   required: true,
   default: 0,
 })
-interface Props {
-  items: { id?: string, name: string, value: number | string }[]
-  size?: number
-}
+
 </script>
 
 <template>
   <VMenu
     offset="10"
-    transition="scroll-y-transition"
-    :close-on-content-click="false"
+    :transition="props.transition"
+    :closeOnContentClick="props.closeOnContentClick"
   >
-    <template #activator="menuArgs">
+    <template #activator="args">
       <slot
         name="activator"
-        :props="menuArgs.props"
-        :is-active="menuArgs.isActive"
+        :props="args.props"
+        :isActive="args.isActive"
       />
     </template>
     <VList

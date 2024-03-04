@@ -125,3 +125,25 @@ export interface MindMapOptions {
   customCreateNodePolygon: any
   customTransformNodeLinePath: any
 }
+
+export type RichTextSelectionChange = {
+  hasRange: boolean
+  rectInfo: {
+    left: number
+    top: number
+    right: number
+    bottom: number
+    width: number
+  }
+  formatInfo: {
+    size: string
+    font: string
+    color: string
+  }
+}
+
+export type NodeDragEnd = {
+  overlapNodeUid: string
+  prevNodeUid: string
+  nextNodeUid: string
+}

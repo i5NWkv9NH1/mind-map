@@ -24,7 +24,7 @@ export interface MindMapNode<T = any> {
    * @param isActive
    */
   setStyle: (name: StyleName, value: string | number | any, isActive?: boolean) => void
-  getData: (type: GetDataType) => void
+  getData: (type: GetDataType) => any
 }
 
 export interface SetImage { url: string, title: string, width: number, height: number }

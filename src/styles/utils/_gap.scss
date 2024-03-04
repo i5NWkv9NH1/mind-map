@@ -1,0 +1,7 @@
+$gap: 32;
+
+@for $i from 1 through $gap {
+  .gap-#{$i} {
+    gap: $i*4px !important;
+  }
+}

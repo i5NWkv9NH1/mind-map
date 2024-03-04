@@ -2,22 +2,21 @@
   setup
   lang="ts"
 >
-import { storeToRefs } from 'pinia'
-import { useAppStore } from '@/store/app'
+import { mdiClose, mdiContentSaveOutline } from '@mdi/js';
+import { ref } from 'vue';
 
-const { linkDialog } = storeToRefs(useAppStore())
-
+const linkDialog = ref(false)
 function close() {
-  linkDialog.value.status = false
+  linkDialog.value = false
 }
 function confirm() {
-  linkDialog.value.status = false
+  linkDialog.value = false
 }
 </script>
 
 <template>
   <VDialog
-    v-model="linkDialog.status"
+    v-model="linkDialog"
     transition="scroll-y-transition"
     persistent
   >
@@ -46,7 +45,7 @@ function confirm() {
             <VCardActions>
               <VBtn @click="close">
                 <VIcon start>
-                  mdi-close
+                  {{ mdiClose }}
                 </VIcon>
                 <span>取消</span>
               </VBtn>
@@ -55,7 +54,7 @@ function confirm() {
                 @click="confirm"
               >
                 <VIcon start>
-                  mdi-content-save-outline
+                  {{ mdiContentSaveOutline }}
                 </VIcon>
                 <span>确定</span>
               </VBtn>

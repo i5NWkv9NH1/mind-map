@@ -1,19 +1,20 @@
-import { storeToRefs } from 'pinia'
-import { defineComponent } from 'vue'
+// TODO: add store
+
+import { mdiGestureTapButton, mdiSelectDrag } from '@mdi/js'
+import { defineComponent, ref } from 'vue'
 import { VBtn, VIcon, VTooltip } from 'vuetify/components'
-import { useAppStore } from '@/store'
 
 export const MouseBehavior = defineComponent({
   name: 'MouseBehavior',
   setup() {
-    const { useLeftKeySelectionRightKeyDrag } = storeToRefs(useAppStore())
+    const useLeftKeySelectionRightKeyDrag = ref(false)
 
     return () => (
       <VTooltip
-        transition="slide-y-transition"
-        offset="10"
-        open-delay="100"
-        location="top"
+        transition={'slide-y-transition'}
+        offset={10}
+        openDelay={100}
+        location={'top'}
         v-slots={{
           activator: ({ props }: { props: any }) => (
             <VBtn
@@ -26,18 +27,18 @@ export const MouseBehavior = defineComponent({
               {useLeftKeySelectionRightKeyDrag.value
                 ? (
                   <>
-                    <VIcon>mdi-select-drag</VIcon>
+                    <VIcon>{mdiSelectDrag}</VIcon>
                     |
-                    <VIcon>mdi-gesture-tap-button</VIcon>
+                    <VIcon>{mdiGestureTapButton}</VIcon>
                   </>
-                  )
+                )
                 : (
                   <>
-                    <VIcon>mdi-gesture-tap-button</VIcon>
+                    <VIcon>{mdiGestureTapButton}</VIcon>
                     |
-                    <VIcon>mdi-select-drag</VIcon>
+                    <VIcon>{mdiSelectDrag}</VIcon>
                   </>
-                  )}
+                )}
             </VBtn>
           ),
           default: () => (

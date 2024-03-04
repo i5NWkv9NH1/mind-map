@@ -2,6 +2,7 @@
   setup
   lang="ts"
 >
+import { mdiCloseCircle, mdiCloudUpload } from '@mdi/js';
 import { isEmpty } from 'lodash'
 import { ref, watch } from 'vue'
 
@@ -17,6 +18,9 @@ const props = withDefaults(defineProps<Props>(), {
 // # models
 const src = defineModel<string, string>('src', {
   required: true,
+})
+const name = defineModel<string, string>('name', {
+  required: true
 })
 // # els
 const fileEl = ref<HTMLInputElement>()
@@ -40,6 +44,7 @@ watch(files, () => {
     return
   const blob = URL.createObjectURL(files.value![0])
   src.value = blob
+  name.value = files.value![0].name
 }, { deep: true })
 </script>
 
@@ -108,18 +113,19 @@ watch(files, () => {
     :rounded="props.rounded"
     tabindex="0"
     class="my-4"
-    @drop.prevent="onDrop"
-    @dragover.prevent="dragover = true"
-    @dragenter.prevent="dragover = true"
-    @dragleave.prevent="dragover = false"
     @click="fileEl && fileEl.click()"
   >
     <VExpandTransition>
       <template v-if="!src || dragover">
-        <VCardText>
+        <VCardText
+          @drop.prevent="onDrop"
+          @dragover.prevent="dragover = true"
+          @dragenter.prevent="dragover = true"
+          @dragleave.prevent="dragover = false"
+        >
           <div class="d-flex flex-column align-center justify-center">
             <VIcon size="128">
-              mdi-cloud-upload
+              {{ mdiCloudUpload }}
             </VIcon>
             <p>拖动图片、粘贴或者点击上传图片</p>
           </div>
@@ -139,6 +145,7 @@ watch(files, () => {
               :src="src"
               :rounded="props.rounded"
               :height="props.height"
+              :alt="name"
             >
               <VOverlay
                 :model-value="hoverArgs.isHovering"
@@ -151,7 +158,7 @@ watch(files, () => {
                   icon
                   @click.stop="src = ''"
                 >
-                  <VIcon>mdi-close</VIcon>
+                  <VIcon>{{ mdiCloseCircle }}</VIcon>
                 </VBtn>
               </VOverlay>
             </VImg>

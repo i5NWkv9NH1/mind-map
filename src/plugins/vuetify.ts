@@ -5,9 +5,9 @@
  */
 
 // Styles
-import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
 import * as directives from 'vuetify/directives'
+import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 
 // Composables
 import { createVuetify } from 'vuetify'
@@ -16,6 +16,15 @@ import { createVuetify } from 'vuetify'
 export default createVuetify({
   //
   directives,
+  icons: {
+    defaultSet: 'mdi',
+    aliases: {
+      ...aliases
+    },
+    sets: {
+      mdi,
+    },
+  },
   defaults: {
     global: {
       ripple: false,

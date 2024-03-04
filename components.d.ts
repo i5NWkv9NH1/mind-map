@@ -7,6 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    A: typeof import('./src/components/A.vue')['default']
     ColorPicker: typeof import('./src/components/ColorPicker.vue')['default']
     DraggleUpload: typeof import('./src/components/DraggleUpload.vue')['default']
     DragUpload: typeof import('./src/components/DragUpload.vue')['default']

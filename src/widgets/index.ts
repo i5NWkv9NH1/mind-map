@@ -1,5 +1,7 @@
-export { default as Toolbar } from './Toolbar.vue'
-export { default as Sidebar } from './Sidebar.vue'
-export { default as Bottombar } from './Bottombar.vue'
+export * from './actions'
+export * from './bars'
+export * from './common'
+export * from './dialogs'
 export * from './panels'
-export * from './EmptyNode'
+
+export * from './MindMapContainer'

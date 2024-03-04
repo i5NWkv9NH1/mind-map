@@ -2,25 +2,24 @@
   setup
   lang="ts"
 >
-import { ref } from 'vue'
-import { storeToRefs } from 'pinia'
-import '@toast-ui/editor/dist/toastui-editor.css'
-import { useAppStore } from '@/store/app'
+import { mdiClose, mdiContentSaveOutline } from '@mdi/js';
+import '@toast-ui/editor/dist/toastui-editor.css';
+import { ref } from 'vue';
 
-const { noteDialog } = storeToRefs(useAppStore())
 const el = ref<HTMLElement>()
+const noteDialog = ref(false)
 
 function close() {
-  noteDialog.value.status = false
+  noteDialog.value = false
 }
 function confirm() {
-  noteDialog.value.status = false
+  noteDialog.value = false
 }
 </script>
 
 <template>
   <VDialog
-    v-model="noteDialog.status"
+    v-model="noteDialog"
     transition="scroll-y-transition"
     persistent
   >
@@ -41,7 +40,7 @@ function confirm() {
             <VCardActions>
               <VBtn @click="close">
                 <VIcon start>
-                  mdi-close
+                  {{ mdiClose }}
                 </VIcon>
                 <span>取消</span>
               </VBtn>
@@ -50,7 +49,7 @@ function confirm() {
                 @click="confirm"
               >
                 <VIcon start>
-                  mdi-content-save-outline
+                  {{ mdiContentSaveOutline }}
                 </VIcon>
                 <span>确定</span>
               </VBtn>

@@ -5,15 +5,14 @@
 import { storeToRefs } from 'pinia'
 import { v4 as uuid } from 'uuid'
 import { ref } from 'vue'
-import { useAppStore } from '@/store'
-import PanelContainer from '@/components/PanelContainer.vue'
+import { PanelContainer, ColorPicker, DragUpload } from '@/components'
 import { usePresets } from '@/composables'
-import { ColorPicker } from '@/components'
-import DragUpload from '@/components/DragUpload.vue'
+import { useSettingsStore } from '@/store/settings'
+import { mdiCloseCircle } from '@mdi/js'
 
 // # background
-const { togglePanel } = useAppStore()
-const { isDark } = storeToRefs(useAppStore())
+const { isDark } = storeToRefs(useSettingsStore())
+const togglePanel = () => { }
 const {
   usedColorItems,
   fontFamilyItems,
@@ -96,7 +95,7 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
         icon
         @click="togglePanel(null)"
       >
-        <VIcon>mdi-close</VIcon>
+        <VIcon>{{ mdiCloseCircle }}</VIcon>
       </VBtn>
     </template>
 
@@ -125,7 +124,7 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
             >
               <VWindowItem value="颜色">
                 <ColorPicker
-                  v-model="backgroundColor"
+                  v-model:color="backgroundColor"
                   :items="usedColorItems"
                   @confirm="onBackgroundColorConfirm"
                 >
@@ -145,7 +144,10 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               </VWindowItem>
               <VWindowItem value="图片">
                 <div class="pa-2">
-                  <DragUpload v-model:src="backgroundImage" />
+                  <DragUpload
+                    v-model:src="backgroundImage"
+                    :name="``"
+                  />
                   <VRow>
                     <VCol>
                       <VSelect
@@ -247,7 +249,7 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               颜色
             </VLabel>
             <ColorPicker
-              v-model="lineColor"
+              v-model:color="lineColor"
               location="left center"
             >
 
@@ -344,12 +346,7 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
                         x2="110"
                         y2="17"
                         stroke-width="2"
-                        :stroke="lineStyle === item.value
-          ? '#409eff'
-          : isDark
-            ? '#fff'
-            : '#000'
-          "
+                        :stroke="lineStyle === item.value ? '#409eff' : isDark ? '#fff' : '#000'"
                         :stroke-dasharray="item.value"
                       />
                     </svg>
@@ -380,7 +377,7 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
             <VLabel class="text-subtitle-2 mb-1">
               颜色
             </VLabel>
-            <ColorPicker v-model="summaryLineColor">
+            <ColorPicker v-model:color="summaryLineColor">
 
               <template #activator="activator">
                 <VBtn
@@ -451,11 +448,11 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
             <VLabel class="text-subtitle-2 mb-1">
               颜色
             </VLabel>
-            <ColorPicker v-model="relateLineColor">
+            <ColorPicker v-model:color="relateLineColor">
 
-              <template #activator="activator">
+              <template #activator="args">
                 <VBtn
-                  v-bind="activator.props"
+                  v-bind="args.props"
                   class="d-block"
                   :color="relateLineColor"
                   elevation="4"
@@ -516,11 +513,11 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
             <VLabel class="text-subtitle-2 mb-1">
               激活颜色
             </VLabel>
-            <ColorPicker v-model="relateLineActiveColor">
+            <ColorPicker v-model:color="relateLineActiveColor">
 
-              <template #activator="activator">
+              <template #activator="args">
                 <VBtn
-                  v-bind="activator.props"
+                  v-bind="args.props"
                   class="d-block"
                   :color="relateLineActiveColor"
                   elevation="4"
@@ -618,11 +615,11 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
             <VLabel class="text-subtitle-2 mb-1">
               颜色
             </VLabel>
-            <ColorPicker v-model="relateLineFontColor">
+            <ColorPicker v-model:color="relateLineFontColor">
 
-              <template #activator="activator">
+              <template #activator="args">
                 <VBtn
-                  v-bind="activator.props"
+                  v-bind="args.props"
                   class="d-block"
                   :color="relateLineFontColor"
                   elevation="4"

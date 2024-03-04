@@ -1,12 +1,10 @@
-import { useAppStore } from "@/store";
-import { storeToRefs } from "pinia";
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import { VBtn, VCard, VCardActions, VCardText, VDialog } from "vuetify/components";
 
-export default defineComponent({
+export const MindMapOutlineDialog = defineComponent({
   name: 'MindMapOutlineDialog',
   setup() {
-    const { mindMapData, mindMapOutlineDialog } = storeToRefs(useAppStore())
+    const mindMapData = ref<any>([])
 
     const tree = (_: any) => {
       let marginLeft = 0
@@ -27,7 +25,7 @@ export default defineComponent({
 
     return () => (
       <VDialog
-        v-model={mindMapOutlineDialog.value.status}
+        v-model={false}
         transition={'scroll-y-transition'}
         fullscreen
       >

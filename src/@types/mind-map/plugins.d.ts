@@ -54,8 +54,8 @@ declare module 'simple-mind-map/src/parse/xmind.js' {
   }
 }
 declare module 'simple-mind-map/src/parse/markdown.js' {
-  function transformToMarkdown(): void
-  function transformMarkdownTo(): void
+  function transformToMarkdown(data: Record<string, any>): string
+  function transformMarkdownTo(content: string): Promise<Record<string, any>>
   export {
     transformToMarkdown,
     transformMarkdownTo,
