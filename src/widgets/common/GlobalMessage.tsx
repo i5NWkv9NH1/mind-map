@@ -12,7 +12,7 @@ export const GlobalMessage = defineComponent({
     return () => (
       <VSnackbar
         v-model={message.value.status}
-        closeDelay={message.value.delay}
+        timeout={message.value.delay}
         transition={'slide-y-transition'}
         location={'top end'}
         color={message.value.color}

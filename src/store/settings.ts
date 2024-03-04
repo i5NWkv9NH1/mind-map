@@ -19,7 +19,7 @@ export const useSettingsStore = defineStore('settings', () => {
   }, { immediate: true })
 
   const message = ref({
-    status: true,
+    status: false,
     title: 'Default title',
     text: 'Default text',
     color: 'default',
@@ -30,18 +30,7 @@ export const useSettingsStore = defineStore('settings', () => {
     message.value.title = title
     message.value.text = text
     message.value.delay = delay || 2000
-    switch (type) {
-      case 'info':
-        message.value.color = 'info'
-      case 'success':
-        message.value.color = 'success'
-      case 'error':
-        message.value.color = 'error'
-      case 'warning':
-        message.value.color = 'warning'
-      default:
-        message.value.color = 'default'
-    }
+    message.value.color = type
     message.value.status = true
   }
 

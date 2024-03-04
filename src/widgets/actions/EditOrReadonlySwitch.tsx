@@ -1,5 +1,7 @@
 // TODO: add store
+import { useAppStore } from '@/store/app';
 import { mdiEyeOutline, mdiNoteEditOutline } from '@mdi/js';
+import { storeToRefs } from 'pinia';
 import { computed, defineComponent, ref } from "vue";
 import { VBtn, VIcon, VTooltip } from 'vuetify/components';
 
@@ -8,6 +10,12 @@ export const EditOrReadonlySwitch = defineComponent({
   setup() {
     const mode = ref<'edit' | 'readonly'>('edit')
     const isReadonly = computed(() => mode.value === 'readonly')
+    const { mindMap } = storeToRefs(useAppStore())
+
+    const onModeChange = () => {
+      isReadonly.value ? mode.value = 'edit' : mode.value = 'readonly'
+      mindMap.value?.setMode(mode.value)
+    }
 
     return () => (
       <VTooltip
@@ -19,11 +27,9 @@ export const EditOrReadonlySwitch = defineComponent({
           activator: ({ isActive, props }: { isActive: boolean; props: any }) => (
             <VBtn
               {...props}
-              active={isActive}
-              onClick={() => {
-                if (isReadonly.value) mode.value = 'edit'
-                else mode.value = 'readonly'
-              }}
+              active={isActive || isReadonly.value}
+              color={(isActive || isReadonly.value) ? 'primary' : 'default'}
+              onClick={onModeChange}
               icon
             >
               <VIcon>{isReadonly.value ? mdiEyeOutline : mdiNoteEditOutline}</VIcon>

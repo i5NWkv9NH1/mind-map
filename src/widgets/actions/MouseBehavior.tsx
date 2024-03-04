@@ -1,13 +1,22 @@
 // TODO: add store
 
+import { useAppStore } from '@/store/app'
 import { mdiGestureTapButton, mdiSelectDrag } from '@mdi/js'
+import { storeToRefs } from 'pinia'
 import { defineComponent, ref } from 'vue'
 import { VBtn, VIcon, VTooltip } from 'vuetify/components'
 
 export const MouseBehavior = defineComponent({
   name: 'MouseBehavior',
   setup() {
-    const useLeftKeySelectionRightKeyDrag = ref(false)
+    const { useLeftKeySelectionRightKeyDrag, mindMap } = storeToRefs(useAppStore())
+
+    const toggle = () => {
+      useLeftKeySelectionRightKeyDrag.value = !useLeftKeySelectionRightKeyDrag.value
+      mindMap.value?.updateConfig({
+        useLeftKeySelectionRightKeyDrag: useLeftKeySelectionRightKeyDrag.value
+      })
+    }
 
     return () => (
       <VTooltip
@@ -22,7 +31,7 @@ export const MouseBehavior = defineComponent({
               active={true}
               color="primary"
               class="mx-2"
-              onClick={() => useLeftKeySelectionRightKeyDrag.value = !useLeftKeySelectionRightKeyDrag.value}
+              onClick={toggle}
             >
               {useLeftKeySelectionRightKeyDrag.value
                 ? (

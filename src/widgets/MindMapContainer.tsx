@@ -150,7 +150,7 @@ export const MindMapContainer = defineComponent({
          * # activeHistoryIndex（当前在历史数据数组里的索引）、length（当前历史数据数组的长度）
          */
         mindMap.value?.on('back_forward', (index: number, length: number) => {
-          canUnod.value = index < 0
+          canUnod.value = index <= 0
           canRedo.value = index >= length - 1
         })
         /**

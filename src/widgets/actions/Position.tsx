@@ -23,7 +23,7 @@ export const Position = defineComponent({
               icon
               // @ts-ignore
               onClick={() => {
-                mindMap.value?.execCommand('RETURN_CENTER')
+                mindMap.value?.renderer.setRootNodeCenter()
               }}
             >
               <VIcon>{mdiCrosshairsGps}</VIcon>
