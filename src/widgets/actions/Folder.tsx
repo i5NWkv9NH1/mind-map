@@ -1,16 +1,16 @@
 // TODO: 完善
-import { FileLogger } from "@/helpers";
-import { useSettingsStore } from "@/store/settings";
-import { mdiFileOutline, mdiFolderMinusOutline, mdiFolderOutline, mdiRefresh } from "@mdi/js";
-import { isEmpty } from "lodash";
-import { defineComponent, onMounted, ref, withModifiers } from "vue";
-import { VBtn, VCard, VCardText, VIcon, VList, VListItem, VListItemSubtitle, VMenu, VVirtualScroll } from 'vuetify/components';
-import { Empty } from "../common";
-import { promiseTimeout } from "@vueuse/core";
+import { mdiFileOutline, mdiFolderMinusOutline, mdiFolderOutline, mdiRefresh } from '@mdi/js'
+import { promiseTimeout } from '@vueuse/core'
+import { isEmpty } from 'lodash'
+import { defineComponent, onMounted, ref, withModifiers } from 'vue'
+import { VBtn, VCard, VCardText, VIcon, VList, VListItem, VListItemSubtitle, VMenu, VVirtualScroll } from 'vuetify/components'
+import { Empty } from '../common'
+import { useSettingsStore } from '@/store/settings'
+import { FileLogger } from '@/helpers'
 
-export type IFIle = {
-  id: string;
-  name: string;
+export interface IFIle {
+  id: string
+  name: string
   type: 'file' | 'directory'
   handle: FileSystemDirectoryHandle | FileSystemFileHandle
   leaf: boolean
@@ -26,10 +26,6 @@ export const Folder = defineComponent({
     const items = ref<IFIle[]>([])
     // const fileHandler = ref<FileSystemHandle>()
 
-    function EmptyFolder() {
-      return <Empty text={'目录为空，点击选择'} icon={mdiFolderMinusOutline} onClick={withModifiers(openFolder, ['stop'])} class={'cursor-pointer'} />
-    }
-
     const openLocalFile = async () => {
       // @ts-ignore
       const [fileHandle] = await window.showOpenFilePicker()
@@ -40,9 +36,9 @@ export const Folder = defineComponent({
       toggleLoading(false, {})
     }
 
-
     const openFolder = async () => {
-      if (!isEmpty(items.value)) items.value = []
+      if (!isEmpty(items.value))
+        items.value = []
       try {
         const dir = await window.showDirectoryPicker()
         FileLogger.debug(dir)
@@ -57,12 +53,14 @@ export const Folder = defineComponent({
             handle: value,
             leaf: isFile,
           }
-          if (isFile) items.value!.push(data)
+          if (isFile)
+            items.value!.push(data)
           else dirs.value!.push(data)
         }
         FileLogger.debug('dirs', dirs.value)
         FileLogger.debug('files', items.value)
-      } catch (error) {
+      }
+      catch (error) {
         if (error instanceof DOMException) {
           FileLogger.debug('user abort')
           return
@@ -72,68 +70,83 @@ export const Folder = defineComponent({
       }
     }
 
+    function EmptyFolder() {
+      return <Empty text="目录为空，点击选择" icon={mdiFolderMinusOutline} onClick={withModifiers(openFolder, ['stop'])} class="cursor-pointer" />
+    }
+
     onMounted(async () => {
     })
 
-    return () => <VMenu
-      offset={10}
-      transition={'slide-y-transition'}
-      closeOnContentClick={false}
-      v-slots={{
-        activator: ({ isActive, props }) => <VBtn
-          stacked
-          {...props}
-        >
-          <VIcon>{mdiFolderOutline}</VIcon>
-          <span>目录 (TODO)</span>
-        </VBtn>,
-        default: () => <VCard width={300}>
-          <VCardText>
-            {isEmpty(name.value) ? (
-              <EmptyFolder />
-            ) : <VList class={'pa-0'} density={'compact'} nav slim>
-              <VListItemSubtitle class={'d-flex align-center gap-2'}>
-                <span>{name.value}</span>
-                <VBtn
-                  icon
-                  size={'small'}
-                  variant={'text'}
-                  {...{ onClick: openFolder }}
-                >
-                  <VIcon >{mdiRefresh}</VIcon>
-                </VBtn>
-              </VListItemSubtitle>
-              {isEmpty(items.value) ? (
-                // # 打开的目录为空
-                <VListItem><EmptyFolder /></VListItem>
-              ) : (
-                <>
-                  {/* // TODO: Tree */}
-                  <VVirtualScroll
-                    class={'pt-2'}
-                    items={items.value}
-                    itemHeight={40}
-                    maxHeight={400}
-                    v-slots={{
-                      default({ index, item }) {
-                        return (
-                          <VListItem
-                            key={item.id}
-                            title={item.name}
-                            prependIcon={mdiFileOutline}
-                            onClick={openLocalFile}
-                          />
-                        )
-                      },
-                    }}
-                  />
-                </>
-              )
-              }
-            </VList>}
-          </VCardText>
-        </VCard>
-      }}
-    />
-  }
+    return () => (
+      <VMenu
+        offset={10}
+        transition="slide-y-transition"
+        closeOnContentClick={false}
+        v-slots={{
+          activator: ({ props }) => (
+            <VBtn
+              stacked
+              {...props}
+            >
+              <VIcon>{mdiFolderOutline}</VIcon>
+              <span>目录 (TODO)</span>
+            </VBtn>
+          ),
+          default: () => (
+            <VCard width={300}>
+              <VCardText>
+                {isEmpty(name.value)
+                  ? (
+                    <EmptyFolder />
+                    )
+                  : (
+                    <VList class="pa-0" density="compact" nav slim>
+                      <VListItemSubtitle class="d-flex align-center gap-2">
+                        <span>{name.value}</span>
+                        <VBtn
+                          icon
+                          size="small"
+                          variant="text"
+                          {...{ onClick: openFolder }}
+                        >
+                          <VIcon>{mdiRefresh}</VIcon>
+                        </VBtn>
+                      </VListItemSubtitle>
+                      {isEmpty(items.value)
+                        ? (
+                          // # 打开的目录为空
+                          <VListItem><EmptyFolder /></VListItem>
+                          )
+                        : (
+                          <>
+                            {/* // TODO: Tree */}
+                            <VVirtualScroll
+                              class="pt-2"
+                              items={items.value}
+                              itemHeight={40}
+                              maxHeight={400}
+                              v-slots={{
+                                default({ item }) {
+                                  return (
+                                    <VListItem
+                                      key={item.id}
+                                      title={item.name}
+                                      prependIcon={mdiFileOutline}
+                                      onClick={openLocalFile}
+                                    />
+                                  )
+                                },
+                              }}
+                            />
+                          </>
+                          )}
+                    </VList>
+                    )}
+              </VCardText>
+            </VCard>
+          ),
+        }}
+      />
+    )
+  },
 })

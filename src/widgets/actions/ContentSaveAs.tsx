@@ -1,12 +1,12 @@
 // TODO: 完善
-import { useAppStore } from "@/store/app";
-import { mdiContentSaveOutline } from "@mdi/js";
-import { storeToRefs } from "pinia";
-import { defineComponent, ref } from "vue";
-import { VBtn, VIcon, VTooltip } from 'vuetify/components';
+import { mdiContentSaveOutline } from '@mdi/js'
 import dayjs from 'dayjs'
-import { useSettingsStore } from "@/store/settings";
-import { FileLogger } from "@/helpers";
+import { storeToRefs } from 'pinia'
+import { defineComponent, ref } from 'vue'
+import { VBtn, VIcon, VTooltip } from 'vuetify/components'
+import { useSettingsStore } from '@/store/settings'
+import { useAppStore } from '@/store/app'
+import { FileLogger } from '@/helpers'
 
 export const ContentSaveAs = defineComponent({
   name: 'ContentSaveAs',
@@ -22,10 +22,10 @@ export const ContentSaveAs = defineComponent({
           types: [
             {
               description: '',
-              accept: { 'application/json': ['.smm'] }
-            }
+              accept: { 'application/json': ['.smm'] },
+            },
           ],
-          suggestedName: `${dayjs(new Date()).format('YYYY-MM-DD-HH:mm') + '-思维导图'}`
+          suggestedName: `${`${dayjs(new Date()).format('YYYY-MM-DD-HH:mm')}-思维导图`}`,
         })
         if (!fileHandle.value) {
           toggleMessage('error', { title: '系统错误', text: '无法保存文件, 请检查您的浏览器' })
@@ -38,7 +38,8 @@ export const ContentSaveAs = defineComponent({
         await stream.close()
         toggleLoading(false, {})
         toggleMessage('success', { title: '通知', text: '保存文件成功' })
-      } catch (error: any) {
+      }
+      catch (error: any) {
         // * 异常
         // * - 用户取消
         // * - 其他异常
@@ -50,30 +51,30 @@ export const ContentSaveAs = defineComponent({
         }
         toggleMessage('error', { title: '未知错误', text: `${error}` })
         FileLogger.error(error)
-        return
       }
     }
 
-
     return () => (
       <VTooltip
-        transition={'slide-y-transition'}
+        transition="slide-y-transition"
         offset={10}
         openDelay={100}
-        location={'top'}
+        location="top"
         v-slots={{
-          activator: ({ isActive, props }) => (<VBtn
-            stacked
-            active={isActive}
-            {...{ onClick: onContentSave }}
-            {...props}
-          >
-            <VIcon>{mdiContentSaveOutline}</VIcon>
-            <span>另存为</span>
-          </VBtn>),
-          default: () => <p>对您编辑的数据保存为文件</p>
+          activator: ({ isActive, props }) => (
+            <VBtn
+              stacked
+              active={isActive}
+              {...{ onClick: onContentSave }}
+              {...props}
+            >
+              <VIcon>{mdiContentSaveOutline}</VIcon>
+              <span>另存为</span>
+            </VBtn>
+          ),
+          default: () => <p>对您编辑的数据保存为文件</p>,
         }}
       />
     )
-  }
+  },
 })

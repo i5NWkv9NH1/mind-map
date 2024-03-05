@@ -2,9 +2,9 @@
   setup
   lang="ts"
 >
-import { mdiClose, mdiContentSaveOutline } from '@mdi/js';
-import '@toast-ui/editor/dist/toastui-editor.css';
-import { ref } from 'vue';
+import { mdiClose, mdiContentSaveOutline } from '@mdi/js'
+import '@toast-ui/editor/dist/toastui-editor.css'
+import { ref } from 'vue'
 
 const el = ref<HTMLElement>()
 const noteDialog = ref(false)

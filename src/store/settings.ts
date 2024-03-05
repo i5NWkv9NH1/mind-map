@@ -1,13 +1,13 @@
-import { useDark } from "@vueuse/core";
-import { defineStore } from "pinia";
-import { computed, ref, toRef, toRefs, watch } from "vue";
-import { useTheme } from "vuetify/lib/framework.mjs";
+import { useDark } from '@vueuse/core'
+import { defineStore } from 'pinia'
+import { computed, ref, watch } from 'vue'
+import { useTheme } from 'vuetify/lib/framework.mjs'
 
 export type Message = 'default' | 'info' | 'success' | 'error' | 'warning'
-export type ToggleMessage = {
-  title: string;
-  text: string;
-  delay?: number;
+export interface ToggleMessage {
+  title: string
+  text: string
+  delay?: number
 }
 
 export const useSettingsStore = defineStore('settings', () => {
@@ -23,14 +23,14 @@ export const useSettingsStore = defineStore('settings', () => {
     title: 'Default title',
     text: 'Default text',
     color: 'default',
-    delay: 2000
+    delay: 2000,
   })
 
   const loading = ref({
     status: false,
     color: 'primary',
     size: 70,
-    width: 7
+    width: 7,
   })
 
   function toggleMessage(type: Message, { title, text, delay }: ToggleMessage) {
@@ -48,9 +48,12 @@ export const useSettingsStore = defineStore('settings', () => {
   }
 
   return {
-    isDark, theme, vuetify, message, loading,
+    isDark,
+    theme,
+    vuetify,
+    message,
+    loading,
     toggleMessage,
-    toggleLoading
+    toggleLoading,
   }
-
 }, { persist: { enabled: true } })

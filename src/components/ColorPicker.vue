@@ -2,10 +2,10 @@
   setup
   lang="ts"
 >
-import type { Anchor } from '@/@types';
-import { mdiSquareRounded } from '@mdi/js';
+import { mdiSquareRounded } from '@mdi/js'
 import { isEmpty } from 'lodash'
 import { ref } from 'vue'
+import type { Anchor } from '@/@types'
 
 // # props
 interface Props {
@@ -32,9 +32,9 @@ const props = withDefaults(defineProps<Props>(), {
   closeOnContentClick: false,
   persistent: false,
   location: 'left top',
-  transition: "scroll-y-transition",
+  transition: 'scroll-y-transition',
   hideCanvas: false,
-  showActions: true
+  showActions: true,
 })
 // # emits
 // * confirm: 弹窗点击确定时回调
@@ -43,7 +43,7 @@ const emits = defineEmits(['close', 'confirm'])
 // * v-model:color 颜色
 const color = defineModel('color', {
   type: String,
-  required: true
+  required: true,
 })
 const isMenuOpen = ref(false)
 // ? 复制一份临时的颜色
@@ -62,7 +62,6 @@ function onConfirm() {
 }
 // * 打开 Dialog
 // # modelValue
-
 </script>
 
 <template>
@@ -70,7 +69,7 @@ function onConfirm() {
     v-model="isMenuOpen"
     offset="10"
     :transition="props.transition"
-    :closeOnContentClick="props.closeOnContentClick"
+    :close-on-content-click="props.closeOnContentClick"
     :persistent="props.persistent"
     :location="props.location"
   >
@@ -79,7 +78,7 @@ function onConfirm() {
       <slot
         name="activator"
         :props="args.props"
-        :isActive="args.isActive"
+        :is-active="args.isActive"
       />
     </template>
     <VCard>
@@ -93,7 +92,7 @@ function onConfirm() {
           <VListSubheader>常用颜色</VListSubheader>
           <div
             class="d-flex flex-wrap align-center px-4"
-            :style="{ width: props.width + 'px' }"
+            :style="{ width: `${props.width}px` }"
           >
             <VIcon
               v-for="item in props.items"

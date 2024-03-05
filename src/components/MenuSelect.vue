@@ -10,27 +10,26 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   items: () => [],
   transition: 'scroll-y-transition',
-  closeOnContentClick: false
+  closeOnContentClick: false,
 })
 const modelValue = defineModel<number | string>('modelValue', {
   type: Number,
   required: true,
   default: 0,
 })
-
 </script>
 
 <template>
   <VMenu
     offset="10"
     :transition="props.transition"
-    :closeOnContentClick="props.closeOnContentClick"
+    :close-on-content-click="props.closeOnContentClick"
   >
     <template #activator="args">
       <slot
         name="activator"
         :props="args.props"
-        :isActive="args.isActive"
+        :is-active="args.isActive"
       />
     </template>
     <VList

@@ -2,8 +2,8 @@
   setup
   lang="ts"
 >
-import { mdiChevronDown, mdiChevronRight, mdiClose } from '@mdi/js';
-import { ref } from 'vue';
+import { mdiChevronDown, mdiChevronRight, mdiClose } from '@mdi/js'
+import { ref } from 'vue'
 
 const searchDialog = ref(false)
 const search = ref('')

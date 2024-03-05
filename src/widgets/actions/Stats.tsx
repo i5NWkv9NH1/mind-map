@@ -1,8 +1,7 @@
-import type { MindMapData, MindMapNode } from "@/@types";
-import { useAppStore } from "@/store/app";
-import { isEmpty } from "lodash";
-import { storeToRefs } from "pinia";
-import { defineComponent, onMounted, ref } from "vue";
+import { isEmpty } from 'lodash'
+import { defineComponent, onMounted, ref } from 'vue'
+import type { MindMapData } from '@/@types'
+import { useMindMap } from '@/composables'
 
 export const Stats = defineComponent({
   name: 'Stats',
@@ -10,15 +9,15 @@ export const Stats = defineComponent({
     const words = ref(100)
     const nodes = ref(40)
     const textStr = ref('')
-    const { mindMap } = storeToRefs(useAppStore())
+    const { mindMap } = useMindMap()
 
     const onDataChange = (data: MindMapData['root']) => {
       const walk = (_data: MindMapData['root']) => {
         nodes.value++
         textStr.value += String(_data.data.text) || ''
-        if (isEmpty(_data.children)) {
+        if (isEmpty(_data.children))
           return
-        }
+
         _data.children.forEach((item: MindMapData['root']) => {
           walk(item)
         })
@@ -41,7 +40,7 @@ export const Stats = defineComponent({
     })
 
     return () => (
-      <div class={'px-4 d-flex align-center gap-4 text-subtitle-2 text-teal'}>
+      <div class="px-4 d-flex align-center gap-4 text-subtitle-2 text-teal">
         <div>
           <span>字数：</span>
           <span>{words.value}</span>
@@ -52,5 +51,5 @@ export const Stats = defineComponent({
         </div>
       </div>
     )
-  }
+  },
 })

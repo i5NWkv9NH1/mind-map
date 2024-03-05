@@ -2,9 +2,9 @@
   setup
   lang="ts"
 >
-import { DragUpload } from '@/components';
-import { mdiClose, mdiContentSaveOutline } from '@mdi/js';
-import { ref, watch } from 'vue';
+import { mdiClose, mdiContentSaveOutline } from '@mdi/js'
+import { ref, watch } from 'vue'
+import { DragUpload } from '@/components'
 
 const uploadImageDialog = ref(false)
 const activeNode = ref<any>({})
@@ -12,8 +12,8 @@ const activeNodes = ref<any[]>([])
 const formEl = ref()
 const fileSrc = ref('')
 const fileName = ref('')
-const webImageUrl = ref('')
-const webImageName = ref('')
+const _webImageUrl = ref('')
+const _webImageName = ref('')
 
 watch(uploadImageDialog, () => {
   if (uploadImageDialog.value) {
@@ -30,12 +30,12 @@ function close() {
 }
 function confirm() {
   // const { isValid, validate } = formEl.value
-  activeNodes.value?.forEach(node => {
+  activeNodes.value?.forEach((node) => {
     node.setImage({
       url: fileSrc.value,
       title: fileName.value,
       width: 100,
-      height: 100
+      height: 100,
     })
   })
   uploadImageDialog.value = false
@@ -57,7 +57,6 @@ function paste(e: ClipboardEvent) {
 const rules = ref([
   (v: string) => !!v || '图片地址不能为空',
 ])
-
 </script>
 
 <template>

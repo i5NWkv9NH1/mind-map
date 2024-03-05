@@ -2,15 +2,15 @@
   setup
   lang="ts"
 >
-import type { MindMapTheme } from '@/@types/mind-map/theme';
-import { PanelContainer } from '@/components';
-import { usePresets } from '@/composables';
-import { mdiCloseCircle } from '@mdi/js';
-import { v4 as uuid } from 'uuid';
-import { computed, ref } from 'vue';
+import { mdiCloseCircle } from '@mdi/js'
+import { v4 as uuid } from 'uuid'
+import { computed, ref } from 'vue'
+import type { MindMapTheme } from '@/@types/mind-map/theme'
+import { PanelContainer } from '@/components'
+import { usePresets } from '@/composables'
 
-const togglePanel = (_: any) => { }
-const { getClassicThemes, getDarkThemes, getSimpleThemes, } = usePresets()
+function togglePanel(_: any) { }
+const { getClassicThemes, getDarkThemes, getSimpleThemes } = usePresets()
 const current = ref(0)
 const themeStyles = ref([
   { id: uuid(), name: '经典', value: 0 },
@@ -128,7 +128,7 @@ function overwrite() {
           >
             <VCardText class="text-center">
               <VImg
-                :src="'/img/themes/' + theme.value + '.jpg'"
+                :src="`/img/themes/${theme.value}.jpg`"
                 width="100%"
                 height="120"
               />

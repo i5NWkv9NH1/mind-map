@@ -1,13 +1,14 @@
 /**
  * @description May be replaced by api
  */
-import type { MindMapTheme } from '@/@types/mind-map/theme'
 import { themeList } from 'simple-mind-map/src/constants/constant'
 import { v4 as uuid } from 'uuid'
 import { computed, ref } from 'vue'
-import { oreo, shallowSea, lemonBubbles, neonLamp, dark3, dark4, darkNightLceBlade, seaBlueLine, morandi, rose, cactus, classic5, classic6, classic7 } from '../helpers/themes'
-// @ts-ignore
 import simpleMapExampleData from 'simple-mind-map/example/exampleData'
+import { cactus, classic5, classic6, classic7, dark3, dark4, darkNightLceBlade, lemonBubbles, morandi, neonLamp, oreo, rose, seaBlueLine, shallowSea } from '../helpers/themes'
+
+// @ts-ignore
+import type { MindMapTheme } from '@/@types/mind-map/theme'
 import type { MindMapData } from '@/@types'
 
 export type ShapeMap = 'rectangle' | 'diamond' | 'parallelogram' | 'roundedRectangle' | 'octagonalRectangle' | 'outerTriangularRectangle' | 'innerTriangularRectangle' | 'ellipse' | 'circle'
@@ -199,92 +200,92 @@ export function usePresets() {
     { id: uuid(), name: '保持', value: 'contain' },
   ])
   const customThemes = ref<MindMapTheme[]>([
-    //#region // # expand
+    // #region // # expand
     {
       name: '奥利奥',
       value: 'oreo',
       theme: oreo,
-      dark: false
+      dark: false,
     },
     {
       name: '浅海',
       value: 'shallowSea',
       theme: shallowSea,
-      dark: false
+      dark: false,
     },
     {
       name: '柠檬气泡',
       value: 'lemonBubbles',
       theme: lemonBubbles,
-      dark: false
+      dark: false,
     },
     {
       name: '玫瑰',
       value: 'rose',
       theme: rose,
-      dark: false
+      dark: false,
     },
     {
       name: '海蓝线',
       value: 'seaBlueLine',
       theme: seaBlueLine,
-      dark: false
+      dark: false,
     },
     {
       name: '霓虹灯',
       value: 'neonLamp',
       theme: neonLamp,
-      dark: true
+      dark: true,
     },
     {
       name: '暗夜冰刃',
       value: 'darkNightLceBlade',
       theme: darkNightLceBlade,
-      dark: true
+      dark: true,
     },
     {
       name: '莫兰迪',
       value: 'morandi',
       theme: morandi,
-      dark: false
+      dark: false,
     },
     {
       name: '脑图经典5',
       value: 'classic5',
       theme: classic5,
-      dark: false
+      dark: false,
     },
     {
       name: '暗色3',
       value: 'dark3',
       theme: dark3,
-      dark: true
+      dark: true,
     },
     {
       name: '暗色4',
       value: 'dark4',
       theme: dark4,
-      dark: true
+      dark: true,
     },
     {
       name: '仙人掌',
       value: 'cactus',
       theme: cactus,
-      dark: false
+      dark: false,
     },
     {
       name: '脑图经典6',
       value: 'classic6',
       theme: classic6,
-      dark: false
+      dark: false,
     },
     {
       name: '脑图经典7',
       value: 'classic7',
       theme: classic7,
-      dark: false
-    }
-    //#endregion
+      dark: false,
+    },
+    // #endregion
   ])
   const internalThemes = ref<any[]>(themeList)
   const mindMapThemes = computed(() => customThemes.value.concat(internalThemes.value))
@@ -302,64 +303,63 @@ export function usePresets() {
     'freshRed',
     'romanticPurple',
     'pinkGrape',
-    'mint'
+    'mint',
   ]
   const getClassicThemes = computed(() => mindMapThemes.value.filter(theme => !theme.dark))
   const getDarkThemes = computed(() => mindMapThemes.value.filter(theme => theme.dark))
   const getSimpleThemes = computed(() => {
     const items: MindMapTheme[] = []
-    mindMapThemes.value.forEach(theme => {
-      if (baiduThemes.includes(theme.value)) {
+    mindMapThemes.value.forEach((theme) => {
+      if (baiduThemes.includes(theme.value))
         items.push(theme)
-      }
     })
     return items
   })
 
   // # 逻辑结构图
   const LayoutStructureItems = ref<LayoutStructure[]>([
-    //#region // # expand
+    // #region // # expand
     {
       id: uuid(),
       name: '逻辑结构图',
-      value: 'logicalStructure'
+      value: 'logicalStructure',
     },
     {
       id: uuid(),
       name: '思维导图',
-      value: 'mindMap'
+      value: 'mindMap',
     },
     {
       id: uuid(),
       name: '组织结构图',
-      value: 'organizationStructure'
+      value: 'organizationStructure',
     },
     {
       id: uuid(),
       name: '目录组织图',
-      value: 'catalogOrganization'
+      value: 'catalogOrganization',
     },
     {
       id: uuid(),
       name: '时间轴',
-      value: 'timeline'
+      value: 'timeline',
     },
     {
       id: uuid(),
       name: '时间轴2',
-      value: 'timeline2'
+      value: 'timeline2',
     },
     {
       id: uuid(),
       name: '竖向时间轴',
-      value: 'verticalTimeline'
+      value: 'verticalTimeline',
     },
     {
       id: uuid(),
       name: '鱼骨图',
-      value: 'fishbone'
-    }
-    //#endregion
+      value: 'fishbone',
+    },
+    // #endregion
   ])
   const mathItems = ref<string[]>([
     'a^2',
@@ -381,7 +381,7 @@ export function usePresets() {
     '\\frac{1}{2}=0.5',
     '\\binom{n}{k}',
     '\\begin{matrix}x & y \\\\z & v\\end{matrix}',
-    '\\begin{cases}3x + 5y +  z \\\\7x - 2y + 4z \\\\-6x + 3y + 2z\\end{cases}'
+    '\\begin{cases}3x + 5y +  z \\\\7x - 2y + 4z \\\\-6x + 3y + 2z\\end{cases}',
   ])
 
   const exampleData = ref<MindMapData>(simpleMapExampleData)
@@ -413,6 +413,6 @@ export function usePresets() {
     getSimpleThemes,
     LayoutStructureItems,
     mathItems,
-    exampleData
+    exampleData,
   }
 }

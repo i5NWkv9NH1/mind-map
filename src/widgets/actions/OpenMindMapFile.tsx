@@ -1,17 +1,14 @@
 // TODO: 完善
-import { FileLogger } from "@/helpers";
-import { useAppStore } from "@/store/app";
-import { useSettingsStore } from "@/store/settings";
-import { mdiFileUploadOutline } from "@mdi/js";
-import { storeToRefs } from "pinia";
-import { defineComponent, ref } from "vue";
-import { VBtn, VIcon, VTooltip } from 'vuetify/components';
+import { mdiFileUploadOutline } from '@mdi/js'
+import { defineComponent, ref } from 'vue'
+import { VBtn, VIcon, VTooltip } from 'vuetify/components'
+import { useSettingsStore } from '@/store/settings'
+import { FileLogger } from '@/helpers'
 
 export const OpenMindMapFile = defineComponent({
   name: 'OpenMindMapFile',
   setup() {
-    const { mindMapData } = storeToRefs(useAppStore())
-    const { toggleLoading, toggleMessage } = useSettingsStore()
+    const { toggleMessage } = useSettingsStore()
     const fileHandle = ref<FileSystemFileHandle>()
 
     const openLocalFile = async () => {
@@ -21,12 +18,12 @@ export const OpenMindMapFile = defineComponent({
             {
               description: '',
               accept: {
-                'application/json': ['.smm']
-              }
-            }
+                'application/json': ['.smm'],
+              },
+            },
           ],
           excludeAcceptAllOption: true,
-          multiple: false
+          multiple: false,
         })
         if (!fileHandle.value) {
           toggleMessage('error', { title: '系统错误', text: '无法打开文件, 请检查您的浏览器' })
@@ -47,11 +44,12 @@ export const OpenMindMapFile = defineComponent({
           toggleMessage('success', {
             title: '通知',
             text: `当前正在编辑你本机的【${file.name}】文件`,
-            delay: 4000
+            delay: 4000,
           })
         }
         fileReader.readAsText(file)
-      } catch (error: any) {
+      }
+      catch (error: any) {
         const errorString = error.toString() as string
         const isUserAbort = errorString.includes('aborted')
         if (isUserAbort) {
@@ -60,31 +58,30 @@ export const OpenMindMapFile = defineComponent({
         }
         toggleMessage('error', { title: '未知错误', text: `${error}` })
         FileLogger.error(error)
-        return
       }
     }
 
-
-    return () =>
-
+    return () => (
       <VTooltip
-        transition={'slide-y-transition'}
+        transition="slide-y-transition"
         offset={10}
         openDelay={100}
-        location={'top'}
+        location="top"
         v-slots={{
-          activator: ({ isActive, props }) => (<VBtn
-            stacked
-            active={isActive}
-            {...props}
-            {...{ onClick: openLocalFile }}
-          // @ts-ignore
-          >
-            <VIcon>{mdiFileUploadOutline}</VIcon>
-            <span>打开</span>
-          </VBtn>),
-          default: () => <p>打开本地的 SM 文件</p>
+          activator: ({ isActive, props }) => (
+            <VBtn
+              stacked
+              active={isActive}
+              {...props}
+              {...{ onClick: openLocalFile }}
+            >
+              <VIcon>{mdiFileUploadOutline}</VIcon>
+              <span>打开</span>
+            </VBtn>
+          ),
+          default: () => <p>打开本地的 SM 文件</p>,
         }}
       />
-  }
+    )
+  },
 })

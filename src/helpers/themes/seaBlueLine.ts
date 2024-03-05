@@ -1,4 +1,4 @@
-import type { ThemeDefinition } from "@/@types/mind-map/theme";
+import type { ThemeDefinition } from '@/@types/mind-map/theme'
 
 // 海蓝线
 export default {
@@ -17,7 +17,7 @@ export default {
     borderColor: '#fff',
     borderWidth: 3,
     fontSize: 24,
-    shape: 'roundedRectangle'
+    shape: 'roundedRectangle',
   },
   // 二级节点样式
   second: {
@@ -26,12 +26,12 @@ export default {
     borderColor: '',
     borderWidth: 3,
     fontSize: 18,
-    shape: 'roundedRectangle'
+    shape: 'roundedRectangle',
   },
   // 三级及以下节点样式
   node: {
     fontSize: 14,
-    color: 'rgb(0, 66, 157)'
+    color: 'rgb(0, 66, 157)',
   },
   // 概要节点样式
   generalization: {
@@ -39,6 +39,6 @@ export default {
     fillColor: '#fff',
     borderColor: 'rgb(0, 155, 255)',
     borderWidth: 2,
-    color: 'rgb(0, 155, 255)'
-  }
+    color: 'rgb(0, 155, 255)',
+  },
 } as ThemeDefinition

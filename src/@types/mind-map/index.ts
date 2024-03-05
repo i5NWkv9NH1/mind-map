@@ -126,7 +126,7 @@ export interface MindMapOptions {
   customTransformNodeLinePath: any
 }
 
-export type RichTextSelectionChange = {
+export interface RichTextSelectionChange {
   hasRange: boolean
   rectInfo: {
     left: number
@@ -142,7 +142,7 @@ export type RichTextSelectionChange = {
   }
 }
 
-export type NodeDragEnd = {
+export interface NodeDragEnd {
   overlapNodeUid: string
   prevNodeUid: string
   nextNodeUid: string

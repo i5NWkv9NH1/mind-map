@@ -1,20 +1,19 @@
-import { useAppStore } from '@/store/app';
-import { mdiCrosshairsGps } from '@mdi/js';
-import { storeToRefs } from 'pinia';
-import { defineComponent } from "vue";
-import { VBtn, VIcon, VTooltip } from 'vuetify/components';
+import { mdiCrosshairsGps } from '@mdi/js'
+import { defineComponent } from 'vue'
+import { VBtn, VIcon, VTooltip } from 'vuetify/components'
+import { useMindMap } from '@/composables'
 
 export const Position = defineComponent({
   name: 'Position',
   setup() {
-    const { mindMap } = storeToRefs(useAppStore())
+    const { mindMap } = useMindMap()
 
     return () => (
       <VTooltip
-        transition={'slide-y-transition'}
+        transition="slide-y-transition"
         offset={10}
         openDelay={100}
-        location={'top'}
+        location="top"
         v-slots={{
           activator: ({ isActive, props }) => (
             <VBtn
@@ -29,9 +28,9 @@ export const Position = defineComponent({
               <VIcon>{mdiCrosshairsGps}</VIcon>
             </VBtn>
           ),
-          default: () => <p>回到根节点</p>
+          default: () => <p>回到根节点</p>,
         }}
       />
     )
-  }
+  },
 })

@@ -2,12 +2,12 @@
   setup
   lang="ts"
 >
-import PanelContainer from '@/components/PanelContainer.vue';
-import { mdiArrowDownThick, mdiArrowExpandVertical, mdiArrowRightTop, mdiArrowULeftTop, mdiArrowUpThick, mdiCloseCircle, mdiContentCopy, mdiContentPaste, mdiContentSaveEditOutline, mdiCrosshairsGps, mdiGridLarge, mdiImageSizeSelectLarge, mdiLoupe, mdiMagnify, mdiMinusThick, mdiPlusThick, mdiSelectAll, mdiSelectMultiple, mdiTrashCanOutline, mdiTune, mdiVectorPolyline, mdiVectorPolylinePlus, mdiVectorSquareRemove, mdiWidgetsOutline, mdiWrap } from '@mdi/js';
-import { v4 as uuid } from 'uuid';
-import { ref } from 'vue';
+import { mdiArrowDownThick, mdiArrowExpandVertical, mdiArrowRightTop, mdiArrowULeftTop, mdiArrowUpThick, mdiCloseCircle, mdiContentCopy, mdiContentPaste, mdiContentSaveEditOutline, mdiCrosshairsGps, mdiGridLarge, mdiImageSizeSelectLarge, mdiLoupe, mdiMagnify, mdiMinusThick, mdiPlusThick, mdiSelectAll, mdiSelectMultiple, mdiTrashCanOutline, mdiTune, mdiVectorPolyline, mdiVectorPolylinePlus, mdiVectorSquareRemove, mdiWidgetsOutline, mdiWrap } from '@mdi/js'
+import { v4 as uuid } from 'uuid'
+import { ref } from 'vue'
+import PanelContainer from '@/components/PanelContainer.vue'
 
-const togglePanel = (_: any) => { }
+function togglePanel(_: any) { }
 const keys = ref([
   {
     id: uuid(),

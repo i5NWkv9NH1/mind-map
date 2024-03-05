@@ -1,9 +1,9 @@
-import { useSettingsStore } from '@/store/settings'
 import { mdiWeatherNight, mdiWeatherSunny } from '@mdi/js'
 import { useToggle } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { computed, defineComponent } from 'vue'
 import { VBtn, VIcon, VTooltip } from 'vuetify/components'
+import { useSettingsStore } from '@/store/settings'
 
 export const ThemeSwitch = defineComponent({
   name: 'ThemeSwitch',
@@ -13,10 +13,10 @@ export const ThemeSwitch = defineComponent({
     const toggle = useToggle(isDark)
     return () => (
       <VTooltip
-        transition={'slide-y-transition'}
+        transition="slide-y-transition"
         offset={10}
         openDelay={100}
-        location={'top'}
+        location="top"
         v-slots={{
           activator: ({ isActive, props }: { isActive: boolean, props: any }) => (
             <VBtn

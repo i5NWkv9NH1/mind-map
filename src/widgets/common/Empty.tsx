@@ -1,10 +1,10 @@
-import { mdiBedEmpty } from '@mdi/js';
+import { mdiBedEmpty } from '@mdi/js'
 import { VAvatar, VIcon, VSheet } from 'vuetify/lib/components/index.mjs'
 
 export interface EmptyProps {
-  size?: number;
-  icon?: string;
-  text?: string;
+  size?: number
+  icon?: string
+  text?: string
   onClick?: () => void
   [index: string]: any
 }
@@ -12,7 +12,8 @@ export interface EmptyProps {
 export function Empty(props: EmptyProps) {
   return (
     <VSheet class="fill-height d-flex justify-center align-center flex-column" style={{ opacity: '.5' }}>
-      <VAvatar size={props.size || 128}
+      <VAvatar
+        size={props.size || 128}
         {...{ onClick: props.onClick || null }}
         {...props}
       >

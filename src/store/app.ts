@@ -1,18 +1,16 @@
-import type { MindMapData, MindMapNode } from "@/@types";
-import { isEmpty } from "lodash";
-import { defineStore } from "pinia";
-import MindMap from "simple-mind-map";
-import { computed, onMounted, ref } from "vue";
+import { isEmpty } from 'lodash'
+import { defineStore } from 'pinia'
+import { computed, onMounted, ref } from 'vue'
+import type { MindMapData, MindMapNode } from '@/@types'
 
 export const useAppStore = defineStore('app', () => {
   // ! cannot persist store
-  const mindMap = ref<MindMap>()
   const mindMapData = ref<MindMapData>({
     root: {},
     layout: {},
     theme: {},
     view: {},
-    config: {}
+    config: {},
   })
   const isZenMode = ref(false)
   const openNodeRichText = ref(false)
@@ -38,20 +36,31 @@ export const useAppStore = defineStore('app', () => {
 
   const isShowNodeContextMenu = ref(false)
 
-
-
   onMounted(() => {
 
   })
 
   return {
-    mindMapData, mindMap, activeNodes, activeNode, isActiveNode,
-    mindMapMode, isMindMapReadonly,
-    getRoot, getLayout, getTheme, getView, getConfig,
-    hasRoot, hasGeneralization, canUnod, canRedo,
-    isZenMode, openNodeRichText, useLeftKeySelectionRightKeyDrag, isShowScrollbar,
+    mindMapData,
+    activeNodes,
+    activeNode,
+    isActiveNode,
+    mindMapMode,
+    isMindMapReadonly,
+    getRoot,
+    getLayout,
+    getTheme,
+    getView,
+    getConfig,
+    hasRoot,
+    hasGeneralization,
+    canUnod,
+    canRedo,
+    isZenMode,
+    openNodeRichText,
+    useLeftKeySelectionRightKeyDrag,
+    isShowScrollbar,
     isShowNodeContextMenu,
   }
-})
-// }, { persist: { enabled: true } })
-
+  // })
+}, { persist: { enabled: true } })

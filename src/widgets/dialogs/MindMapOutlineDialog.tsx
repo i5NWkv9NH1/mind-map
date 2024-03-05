@@ -1,5 +1,5 @@
-import { defineComponent, ref } from "vue";
-import { VBtn, VCard, VCardActions, VCardText, VDialog } from "vuetify/components";
+import { defineComponent, ref } from 'vue'
+import { VBtn, VCard, VCardActions, VCardText, VDialog } from 'vuetify/components'
 
 export const MindMapOutlineDialog = defineComponent({
   name: 'MindMapOutlineDialog',
@@ -11,7 +11,7 @@ export const MindMapOutlineDialog = defineComponent({
       if (_.children.length > 0) {
         marginLeft += 16
         return (
-          <ul class={'items'} style={{ marginLeft: marginLeft + 'px' }}>
+          <ul class="items" style={{ marginLeft: `${marginLeft}px` }}>
             {_.children.map((item: any) => (
               <li>
                 {item.data.text}
@@ -26,7 +26,7 @@ export const MindMapOutlineDialog = defineComponent({
     return () => (
       <VDialog
         v-model={false}
-        transition={'scroll-y-transition'}
+        transition="scroll-y-transition"
         fullscreen
       >
         <VCard>
@@ -42,7 +42,7 @@ export const MindMapOutlineDialog = defineComponent({
           </VCardText>
           <VCardActions>
             <VBtn
-              //@ts-ignore
+              // @ts-ignore
               onClick={() => mindMapOutlineDialog.value.status = false}
             >
               关闭
@@ -51,5 +51,5 @@ export const MindMapOutlineDialog = defineComponent({
         </VCard>
       </VDialog>
     )
-  }
+  },
 })

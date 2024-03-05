@@ -1,30 +1,28 @@
-import type { MindMapNode } from './node'
-
 // ? data
 
-export type ViewDataChange = {
+export interface ViewDataChange {
   state: {
-    "scale": number
-    "x": number
-    "y": number
-    "sx": number
-    "sy": number
+    scale: number
+    x: number
+    y: number
+    sx: number
+    sy: number
   }
   transform: {
-    "scaleX": number
-    "scaleY": number
-    "shear": number
-    "rotate": number
-    "translateX": number
-    "translateY": number
-    "originX": number
-    "originY": number
-    "a": number
-    "b": number
-    "c": number
-    "d": number
-    "e": number
-    "f": number
+    scaleX: number
+    scaleY: number
+    shear: number
+    rotate: number
+    translateX: number
+    translateY: number
+    originX: number
+    originY: number
+    a: number
+    b: number
+    c: number
+    d: number
+    e: number
+    f: number
   }
 }
 export type MindMapData = Record<'root' | 'layout' | 'theme' | 'view' | 'config', any>

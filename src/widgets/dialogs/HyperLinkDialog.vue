@@ -2,8 +2,8 @@
   setup
   lang="ts"
 >
-import { mdiClose, mdiContentSaveOutline } from '@mdi/js';
-import { ref } from 'vue';
+import { mdiClose, mdiContentSaveOutline } from '@mdi/js'
+import { ref } from 'vue'
 
 const linkDialog = ref(false)
 function close() {

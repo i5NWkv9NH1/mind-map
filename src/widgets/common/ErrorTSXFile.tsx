@@ -1,16 +1,19 @@
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue'
 
 export const ErrorTSXFile = defineComponent({
-  name: "Error",
+  name: 'Error',
   props: {
     name: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   setup(props) {
     return () => (
-      <div class={'text-error text-h6'}>{props.name}.tsx Error</div>
+      <div class="text-error text-h6">
+        {props.name}
+        .tsx Error
+      </div>
     )
-  }
+  },
 })

@@ -4,14 +4,14 @@
 >
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
+import { mdiCloseCircle, mdiFormatBold, mdiFormatColorText, mdiFormatItalic, mdiFormatUnderline, mdiVectorLine } from '@mdi/js'
 import { ColorPicker, MenuSelect, PanelContainer } from '@/components'
 import { Empty } from '@/widgets'
 import { usePresets } from '@/composables'
 import { useSettingsStore } from '@/store/settings'
-import { mdiCloseCircle, mdiFormatBold, mdiFormatColorText, mdiFormatItalic, mdiFormatUnderline, mdiVectorLine } from '@mdi/js'
 
 const isActiveNode = ref(false)
-const togglePanel = () => { }
+function togglePanel() { }
 const { isDark } = storeToRefs(useSettingsStore())
 const {
   usedColorItems,
@@ -126,7 +126,6 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
-
                   <template #item="{ item, props }">
                     <VList
                       density="compact"
@@ -155,7 +154,6 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
-
                   <template #item="{ item, props }">
                     <VList
                       density="compact"
@@ -179,7 +177,6 @@ function onFontColorConfirm() {
                   :items="usedColorItems"
                   @confirm="onFontColorConfirm"
                 >
-
                   <template #activator="activator">
                     <VBtn
                       v-bind="activator.props"
@@ -200,7 +197,6 @@ function onFontColorConfirm() {
                   open-delay="100"
                   location="top"
                 >
-
                   <template #activator="{ props }">
                     <VBtn
                       v-bind="props"
@@ -225,7 +221,6 @@ function onFontColorConfirm() {
                   open-delay="100"
                   location="top"
                 >
-
                   <template #activator="{ props }">
                     <VBtn
                       v-bind="props"
@@ -249,7 +244,6 @@ function onFontColorConfirm() {
                   :items="textUnderlineStyleItems"
                   :close-on-content-click="true"
                 >
-
                   <template #activator="activator">
                     <VBtn
                       v-bind="activator.props"
@@ -260,7 +254,7 @@ function onFontColorConfirm() {
                       size="small"
                       icon
                     >
-                      <VIcon>{{mdiFormatUnderline}}</VIcon>
+                      <VIcon>{{ mdiFormatUnderline }}</VIcon>
                     </VBtn>
                   </template>
                 </MenuSelect>
@@ -278,7 +272,6 @@ function onFontColorConfirm() {
                   颜色
                 </VLabel>
                 <ColorPicker v-model:color="borderColor">
-
                   <template #activator="args">
                     <VBtn
                       v-bind="args.props"
@@ -303,7 +296,6 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
-
                   <template #item="{ item, props }">
                     <VList
                       density="compact"
@@ -348,7 +340,6 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
-
                   <template #item="{ item, props }">
                     <VList
                       density="compact"
@@ -394,7 +385,6 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
-
                   <template #item="{ item, props }">
                     <VList
                       density="compact"
@@ -420,7 +410,6 @@ function onFontColorConfirm() {
             <VRow>
               <VCol cols="6">
                 <ColorPicker v-model:color="backgroundColor">
-
                   <template #activator="activator">
                     <VBtn
                       v-bind="activator.props"
@@ -445,7 +434,6 @@ function onFontColorConfirm() {
               <VExpandTransition>
                 <VCol v-if="isGradient">
                   <ColorPicker v-model:color="gradientStart">
-
                     <template #activator="activator">
                       <VBtn
                         v-bind="activator.props"
@@ -461,7 +449,6 @@ function onFontColorConfirm() {
               <VExpandTransition>
                 <VCol v-if="isGradient">
                   <ColorPicker v-model:color="gradientEnd">
-
                     <template #activator="activator">
                       <VBtn
                         v-bind="activator.props"
@@ -492,7 +479,6 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
-
                   <template #item="{ item, props }">
                     <VList
                       density="compact"
@@ -532,7 +518,6 @@ function onFontColorConfirm() {
                   颜色
                 </VLabel>
                 <ColorPicker v-model:color="lineColor">
-
                   <template #activator="args">
                     <VBtn
                       v-bind="args.props"
@@ -556,7 +541,6 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
-
                   <template #item="{ item, props }">
                     <VList
                       density="compact"
@@ -601,7 +585,6 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
-
                   <template #item="{ item, props }">
                     <VList
                       density="compact"
@@ -647,7 +630,6 @@ function onFontColorConfirm() {
                   :variant="isDark ? 'outlined' : 'solo'"
                   hide-details
                 >
-
                   <template #item="{ item, props }">
                     <VList
                       density="compact"
@@ -680,7 +662,6 @@ function onFontColorConfirm() {
                   thumb-label
                   hide-details
                 >
-
                   <template #prepend>
                     <span>水平</span>
                   </template>
@@ -696,7 +677,6 @@ function onFontColorConfirm() {
                   thumb-label
                   hide-details
                 >
-
                   <template #prepend>
                     <span>垂直</span>
                   </template>

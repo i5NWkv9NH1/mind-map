@@ -2,7 +2,7 @@
   setup
   lang="ts"
 >
-import { mdiClose, mdiCloseCircleOutline, mdiContentSaveOutline } from '@mdi/js';
+import { mdiClose, mdiCloseCircleOutline, mdiContentSaveOutline } from '@mdi/js'
 import { isEmpty } from 'lodash'
 import { v4 as uuid } from 'uuid'
 import { ref, watch } from 'vue'
@@ -80,7 +80,6 @@ function addTag() {
                   rounded="lg"
                   :closable="false"
                 >
-
                   <template #close>
                     <VIcon @click.stop="() => console.log('remove tag')">
                       {{ mdiCloseCircleOutline }}

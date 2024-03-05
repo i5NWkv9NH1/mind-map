@@ -19,7 +19,7 @@ export interface ThemeDefinition {
     borderWidth: number
     fontSize: number
     shape: string
-  },
+  }
   // 二级节点样式
   second: {
     fillColor: string
@@ -28,12 +28,12 @@ export interface ThemeDefinition {
     borderWidth: number
     fontSize: number
     shape: string
-  },
+  }
   // 三级及以下节点样式
   node: {
     fontSize: number
     color: string
-  },
+  }
   // 概要节点样式
   generalization: {
     fontSize: number
@@ -43,4 +43,4 @@ export interface ThemeDefinition {
     color: string
   }
 }
-export type MindMapTheme = { name: string; value: string; dark: boolean; theme?: ThemeDefinition; }
+export interface MindMapTheme { name: string, value: string, dark: boolean, theme?: ThemeDefinition }

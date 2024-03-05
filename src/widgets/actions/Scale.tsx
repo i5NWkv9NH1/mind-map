@@ -1,16 +1,15 @@
 // TODO: add store
 
-import { defineComponent, onMounted, ref } from "vue";
-import { VBtn, VIcon, VTooltip } from 'vuetify/components'
 import { mdiMinusThick, mdiPlusThick } from '@mdi/js'
-import { storeToRefs } from "pinia";
-import { useAppStore } from "@/store/app";
+import { defineComponent, onMounted, ref } from 'vue'
+import { VBtn, VIcon, VTooltip } from 'vuetify/components'
+import { useMindMap } from '@/composables'
 
 export const Scale = defineComponent({
   name: 'Scale',
   setup() {
     const scale = ref('100')
-    const { mindMap } = storeToRefs(useAppStore())
+    const { mindMap } = useMindMap()
 
     onMounted(() => {
       mindMap.value?.on('scale', (_: number) => {
@@ -19,14 +18,14 @@ export const Scale = defineComponent({
     })
 
     return () => (
-      <div class={'d-flex align-center gap-4'}>
+      <div class="d-flex align-center gap-4">
         <VTooltip
-          transition={'slide-y-transition'}
+          transition="slide-y-transition"
           offset={10}
           openDelay={100}
-          location={'top'}
+          location="top"
           v-slots={{
-            activator: ({ isActive, props }) => (
+            activator: ({ props }) => (
               <VBtn
                 {...props}
                 icon
@@ -36,30 +35,30 @@ export const Scale = defineComponent({
                 <VIcon>{mdiMinusThick}</VIcon>
               </VBtn>
             ),
-            default: () => <p>缩小比例</p>
+            default: () => <p>缩小比例</p>,
           }}
         />
         <span>{scale.value}</span>
         <VTooltip
-          transition={'slide-y-transition'}
+          transition="slide-y-transition"
           offset={10}
           openDelay={100}
-          location={'top'}
+          location="top"
           v-slots={{
-            activator: ({ isActive, props }) => (
+            activator: ({ props }) => (
               <VBtn
                 {...props}
                 icon
-                //@ts-ignore
+                // @ts-ignore
                 onClick={() => mindMap.value?.view.enlarge()}
               >
                 <VIcon>{mdiPlusThick}</VIcon>
               </VBtn>
             ),
-            default: () => <p>放大比例</p>
+            default: () => <p>放大比例</p>,
           }}
         />
       </div>
     )
-  }
+  },
 })

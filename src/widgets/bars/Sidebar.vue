@@ -2,13 +2,13 @@
   setup
   lang="ts"
 >
-import { v4 as uuid } from 'uuid';
-import { computed, ref } from 'vue';
-import { BaseStyles, MapShortKeys, MapStructures, MapThemes, NodeStyles } from '../panels';
-import { mdiAutoFix, mdiKeyboardOutline, mdiSitemapOutline, mdiStarShootingOutline, mdiTshirtCrewOutline } from '@mdi/js';
+import { v4 as uuid } from 'uuid'
+import { computed, ref } from 'vue'
+import { mdiAutoFix, mdiKeyboardOutline, mdiSitemapOutline, mdiStarShootingOutline, mdiTshirtCrewOutline } from '@mdi/js'
+import { BaseStyles, MapShortKeys, MapStructures, MapThemes, NodeStyles } from '../panels'
 
 const panel = ref(1)
-const togglePanel = () => { }
+function togglePanel() { }
 const items = ref([
   { id: uuid(), name: '节点样式', color: 'primary', icon: mdiStarShootingOutline, value: 1 },
   { id: uuid(), name: '基础样式', color: 'primary', icon: mdiAutoFix, value: 2 },

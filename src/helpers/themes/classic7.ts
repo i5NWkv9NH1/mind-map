@@ -1,4 +1,4 @@
-import type { ThemeDefinition } from "@/@types/mind-map/theme";
+import type { ThemeDefinition } from '@/@types/mind-map/theme'
 
 // 经典7
 export default {
@@ -20,7 +20,7 @@ export default {
     color: '#fff',
     borderColor: '',
     borderWidth: 0,
-    fontSize: 24
+    fontSize: 24,
   },
   // 二级节点样式
   second: {
@@ -28,12 +28,12 @@ export default {
     color: '#fff',
     borderColor: '',
     borderWidth: 0,
-    fontSize: 18
+    fontSize: 18,
   },
   // 三级及以下节点样式
   node: {
     fontSize: 14,
-    color: 'rgb(43, 118, 239)'
+    color: 'rgb(43, 118, 239)',
   },
   // 概要节点样式
   generalization: {
@@ -41,6 +41,6 @@ export default {
     fillColor: '#fff',
     borderColor: '',
     borderWidth: 0,
-    color: 'rgb(43, 118, 239)'
-  }
+    color: 'rgb(43, 118, 239)',
+  },
 } as ThemeDefinition

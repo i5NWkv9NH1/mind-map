@@ -2,14 +2,14 @@
   setup
   lang="ts"
 >
-import { PanelContainer } from '@/components';
-import { usePresets } from '@/composables';
-import { mdiCloseCircle } from '@mdi/js';
-import { ref } from 'vue';
+import { mdiCloseCircle } from '@mdi/js'
+import { ref } from 'vue'
+import { PanelContainer } from '@/components'
+import { usePresets } from '@/composables'
 
 const { LayoutStructureItems } = usePresets()
 const selectLayoutStructure = ref('logicalStructure')
-const togglePanel = (_: any) => { }
+function togglePanel(_: any) { }
 </script>
 
 <template>

@@ -2,7 +2,7 @@
   setup
   lang="ts"
 >
-import { MindMapContainer, TopBar, BottomBar, NodeContextMenu, MindMapContextMenu, NodeRichTextMenu } from '@/widgets'
+import { BottomBar, MindMapContainer, MindMapContextMenu, NodeContextMenu, NodeRichTextMenu, TopBar } from '@/widgets'
 </script>
 
 <template>

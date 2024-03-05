@@ -1,4 +1,4 @@
-import type { ThemeDefinition } from "@/@types/mind-map/theme";
+import type { ThemeDefinition } from '@/@types/mind-map/theme'
 
 // 霓虹灯
 export default {
@@ -21,7 +21,7 @@ export default {
     borderColor: 'rgb(255, 0, 214)',
     borderWidth: 3,
     fontSize: 24,
-    shape: 'roundedRectangle'
+    shape: 'roundedRectangle',
   },
   // 二级节点样式
   second: {
@@ -29,12 +29,12 @@ export default {
     color: 'rgb(248, 177, 237)',
     borderColor: '',
     borderWidth: 3,
-    fontSize: 18
+    fontSize: 18,
   },
   // 三级及以下节点样式
   node: {
     fontSize: 14,
-    color: '#fff'
+    color: '#fff',
   },
   // 概要节点样式
   generalization: {
@@ -42,6 +42,6 @@ export default {
     fillColor: '#fff',
     borderColor: 'rgb(255, 181, 0)',
     borderWidth: 2,
-    color: 'rgb(17, 17, 84)'
-  }
+    color: 'rgb(17, 17, 84)',
+  },
 } as ThemeDefinition

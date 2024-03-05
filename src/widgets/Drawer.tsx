@@ -1,6 +1,7 @@
-import { mdiBlockHelper, mdiHeart } from '@mdi/js';
-import { computed, defineComponent, ref } from "vue";
-import { VBtn, VIcon, VNavigationDrawer, VSlideXTransition } from 'vuetify/lib/components/index.mjs';
+import { mdiBlockHelper, mdiHeart } from '@mdi/js'
+import { computed, defineComponent, ref } from 'vue'
+import { VBtn, VIcon, VNavigationDrawer, VSlideXTransition } from 'vuetify/lib/components/index.mjs'
+
 export const Drawer = defineComponent({
   name: 'Drawer',
   setup() {
@@ -22,20 +23,24 @@ export const Drawer = defineComponent({
       }
     })
 
-    return () => <VNavigationDrawer
-      location="right"
-      permanent
-      width="300"
-    >
-      {Array.from({ length: 3 }).map((item, index) => (
-        <VBtn
-          //@ts-ignore
-          onClick={() => current.value = index + 1}
-        >{item}</VBtn>
-      ))}
-      <VSlideXTransition>
-        {component.value}
-      </VSlideXTransition>
-    </VNavigationDrawer>
-  }
+    return () => (
+      <VNavigationDrawer
+        location="right"
+        permanent
+        width="300"
+      >
+        {Array.from({ length: 3 }).map((item, index) => (
+          <VBtn
+          // @ts-ignore
+            onClick={() => current.value = index + 1}
+          >
+            {item}
+          </VBtn>
+        ))}
+        <VSlideXTransition>
+          {component.value}
+        </VSlideXTransition>
+      </VNavigationDrawer>
+    )
+  },
 })

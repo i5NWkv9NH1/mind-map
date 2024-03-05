@@ -1,7 +1,7 @@
-import { useSettingsStore } from "@/store/settings";
-import { storeToRefs } from "pinia";
-import { defineComponent } from "vue";
-import { VDialog, VProgressCircular } from "vuetify/lib/components/index.mjs";
+import { storeToRefs } from 'pinia'
+import { defineComponent } from 'vue'
+import { VDialog, VProgressCircular } from 'vuetify/lib/components/index.mjs'
+import { useSettingsStore } from '@/store/settings'
 
 export const GlobalLoading = defineComponent({
   name: 'GlobalLoading',
@@ -13,8 +13,8 @@ export const GlobalLoading = defineComponent({
         modelValue={loading.value.status}
         maxWidth={400}
         persistent
-        contentClass={'d-flex align-center justify-center'}
-        transition={'fab-transition'}
+        contentClass="d-flex align-center justify-center"
+        transition="fab-transition"
       >
         <VProgressCircular
           color={loading.value.color}
@@ -24,5 +24,5 @@ export const GlobalLoading = defineComponent({
         />
       </VDialog>
     )
-  }
+  },
 })

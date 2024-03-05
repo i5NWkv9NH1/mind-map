@@ -1,4 +1,5 @@
-import { ref } from "vue";
+import { ref } from 'vue'
+
 // import { transformToMarkdown } from 'simple-mind-map/src/parse/markdown.js'
 /**
  * # 对文件进行处理
@@ -10,17 +11,18 @@ export function useFileHandle() {
 
   function toMarkdown(file: File) {
     fileReader.value.readAsText(file)
-    fileReader.value.onload = (ev) => {
+    fileReader.value.onload = (_) => {
       try {
         const result = fileReader.value.result as (string | null)
-        if (!result) {
+        if (!result)
           throw new Error('File result not exist')
-        }
+
         const data = JSON.parse(result)
         // TODO:
         // return transformToMarkdown(data)
         return data
-      } catch (error) {
+      }
+      catch (error) {
         console.error(error)
       }
     }

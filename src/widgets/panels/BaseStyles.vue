@@ -5,14 +5,14 @@
 import { storeToRefs } from 'pinia'
 import { v4 as uuid } from 'uuid'
 import { ref } from 'vue'
-import { PanelContainer, ColorPicker, DragUpload } from '@/components'
+import { mdiCloseCircle } from '@mdi/js'
+import { ColorPicker, DragUpload, PanelContainer } from '@/components'
 import { usePresets } from '@/composables'
 import { useSettingsStore } from '@/store/settings'
-import { mdiCloseCircle } from '@mdi/js'
 
 // # background
 const { isDark } = storeToRefs(useSettingsStore())
-const togglePanel = () => { }
+function togglePanel() { }
 const {
   usedColorItems,
   fontFamilyItems,
@@ -146,7 +146,7 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
                 <div class="pa-2">
                   <DragUpload
                     v-model:src="backgroundImage"
-                    :name="``"
+                    name=""
                   />
                   <VRow>
                     <VCol>
@@ -159,7 +159,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
                         :variant="isDark ? 'outlined' : 'solo'"
                         hide-details
                       >
-
                         <template #item="{ item, props }">
                           <VList
                             density="compact"
@@ -187,7 +186,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
                         :variant="isDark ? 'outlined' : 'solo'"
                         hide-details
                       >
-
                         <template #item="{ item, props }">
                           <VList
                             density="compact"
@@ -215,7 +213,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
                         :variant="isDark ? 'outlined' : 'solo'"
                         hide-details
                       >
-
                         <template #item="{ item, props }">
                           <VList
                             density="compact"
@@ -252,7 +249,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               v-model:color="lineColor"
               location="left center"
             >
-
               <template #activator="activator">
                 <VBtn
                   v-bind="activator.props"
@@ -277,7 +273,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
-
               <template #item="{ item, props }">
                 <VList
                   density="compact"
@@ -325,7 +320,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
-
               <template #item="{ item, props }">
                 <VList
                   density="compact"
@@ -378,7 +372,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               颜色
             </VLabel>
             <ColorPicker v-model:color="summaryLineColor">
-
               <template #activator="activator">
                 <VBtn
                   v-bind="activator.props"
@@ -403,7 +396,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
-
               <template #item="{ item, props }">
                 <VList
                   density="compact"
@@ -449,7 +441,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               颜色
             </VLabel>
             <ColorPicker v-model:color="relateLineColor">
-
               <template #activator="args">
                 <VBtn
                   v-bind="args.props"
@@ -474,7 +465,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
-
               <template #item="{ item, props }">
                 <VList
                   density="compact"
@@ -514,7 +504,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               激活颜色
             </VLabel>
             <ColorPicker v-model:color="relateLineActiveColor">
-
               <template #activator="args">
                 <VBtn
                   v-bind="args.props"
@@ -539,7 +528,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
-
               <template #item="{ item, props }">
                 <VList
                   density="compact"
@@ -593,7 +581,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
-
               <template #item="{ item, props }">
                 <VList
                   density="compact"
@@ -616,7 +603,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               颜色
             </VLabel>
             <ColorPicker v-model:color="relateLineFontColor">
-
               <template #activator="args">
                 <VBtn
                   v-bind="args.props"
@@ -641,7 +627,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               :variant="isDark ? 'outlined' : 'solo'"
               hide-details
             >
-
               <template #item="{ item, props }">
                 <VList
                   density="compact"
@@ -690,7 +675,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               thumb-label
               hide-details
             >
-
               <template #prepend>
                 <span>水平</span>
               </template>
@@ -703,7 +687,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               thumb-label
               hide-details
             >
-
               <template #prepend>
                 <span>水平</span>
               </template>
@@ -726,7 +709,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               thumb-label
               hide-details
             >
-
               <template #prepend>
                 <span>水平</span>
               </template>
@@ -739,7 +721,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               thumb-label
               hide-details
             >
-
               <template #prepend>
                 <span>水平</span>
               </template>
@@ -762,7 +743,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               thumb-label
               hide-details
             >
-
               <template #prepend>
                 <span>大小</span>
               </template>
@@ -802,7 +782,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
                   thumb-label
                   hide-details
                 >
-
                   <template #prepend>
                     <span>水平</span>
                   </template>
@@ -815,7 +794,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
                   thumb-label
                   hide-details
                 >
-
                   <template #prepend>
                     <span>水平</span>
                   </template>
@@ -830,7 +808,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
                   thumb-label
                   hide-details
                 >
-
                   <template #prepend>
                     <span>水平</span>
                   </template>
@@ -843,7 +820,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
                   thumb-label
                   hide-details
                 >
-
                   <template #prepend>
                     <span>水平</span>
                   </template>
@@ -903,7 +879,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               density="compact"
               hide-details
             >
-
               <template #item="{ item, props }">
                 <VList
                   density="compact"
@@ -934,7 +909,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
                 density="compact"
                 hide-details
               >
-
                 <template #item="{ item, props }">
                   <VList
                     density="compact"
@@ -965,7 +939,6 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               density="compact"
               hide-details
             >
-
               <template #item="{ item, props }">
                 <VList
                   density="compact"

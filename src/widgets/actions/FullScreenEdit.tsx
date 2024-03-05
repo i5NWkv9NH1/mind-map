@@ -1,10 +1,8 @@
 // TODO: add store
-import { useAppStore } from '@/store/app';
-import { useSettingsStore } from '@/store/settings';
-import { mdiVectorSquareEdit } from '@mdi/js';
-import { storeToRefs } from 'pinia';
-import { computed, defineComponent, ref, watch } from "vue";
-import { VBtn, VIcon, VTooltip } from 'vuetify/components';
+import { mdiVectorSquareEdit } from '@mdi/js'
+import { defineComponent, ref } from 'vue'
+import { VBtn, VIcon, VTooltip } from 'vuetify/components'
+import { useSettingsStore } from '@/store/settings'
 
 export const FullScreenEdit = defineComponent({
   name: 'FullScreenEdit',
@@ -29,12 +27,12 @@ export const FullScreenEdit = defineComponent({
 
     return () => (
       <VTooltip
-        transition={'slide-y-transition'}
+        transition="slide-y-transition"
         offset={10}
         openDelay={100}
-        location={'top'}
+        location="top"
         v-slots={{
-          activator: ({ isActive, props }: { isActive: boolean; props: any }) => (
+          activator: ({ isActive, props }: { isActive: boolean, props: any }) => (
             <VBtn
               {...props}
               active={isActive || isFullScreen.value}
@@ -45,11 +43,13 @@ export const FullScreenEdit = defineComponent({
               <VIcon>{mdiVectorSquareEdit}</VIcon>
             </VBtn>
           ),
-          default: () => <p>
-            {isFullScreen.value ? '退出全屏编辑' : '打开全屏编辑'}
-          </p>
+          default: () => (
+            <p>
+              {isFullScreen.value ? '退出全屏编辑' : '打开全屏编辑'}
+            </p>
+          ),
         }}
       />
     )
-  }
+  },
 })

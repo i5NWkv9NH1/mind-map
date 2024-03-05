@@ -2,7 +2,7 @@
   setup
   lang="ts"
 >
-import { mdiCloseCircle, mdiCloudUpload } from '@mdi/js';
+import { mdiCloseCircle, mdiCloudUpload } from '@mdi/js'
 import { isEmpty } from 'lodash'
 import { ref, watch } from 'vue'
 
@@ -20,7 +20,7 @@ const src = defineModel<string, string>('src', {
   required: true,
 })
 const name = defineModel<string, string>('name', {
-  required: true
+  required: true,
 })
 // # els
 const fileEl = ref<HTMLInputElement>()

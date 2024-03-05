@@ -1,4 +1,4 @@
-import type { ThemeDefinition } from "@/@types/mind-map/theme";
+import type { ThemeDefinition } from '@/@types/mind-map/theme'
 
 // 暗夜冰刃
 export default {
@@ -21,7 +21,7 @@ export default {
     borderColor: '#fff',
     borderWidth: 3,
     fontSize: 24,
-    shape: 'parallelogram'
+    shape: 'parallelogram',
   },
   // 二级节点样式
   second: {
@@ -30,12 +30,12 @@ export default {
     borderColor: '#fff',
     borderWidth: 3,
     fontSize: 18,
-    shape: 'diamond'
+    shape: 'diamond',
   },
   // 三级及以下节点样式
   node: {
     fontSize: 14,
-    color: '#fff'
+    color: '#fff',
   },
   // 概要节点样式
   generalization: {
@@ -43,6 +43,6 @@ export default {
     fillColor: '#fff',
     borderColor: 'rgb(0, 117, 255)',
     borderWidth: 2,
-    color: 'rgb(0, 21, 21)'
-  }
+    color: 'rgb(0, 21, 21)',
+  },
 } as ThemeDefinition
