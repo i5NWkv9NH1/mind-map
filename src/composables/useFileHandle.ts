@@ -1,5 +1,5 @@
 import { ref } from "vue";
-import { transformToMarkdown } from 'simple-mind-map/src/parse/markdown.js'
+// import { transformToMarkdown } from 'simple-mind-map/src/parse/markdown.js'
 /**
  * # 对文件进行处理
  */
@@ -17,7 +17,9 @@ export function useFileHandle() {
           throw new Error('File result not exist')
         }
         const data = JSON.parse(result)
-        return transformToMarkdown(data)
+        // TODO:
+        // return transformToMarkdown(data)
+        return data
       } catch (error) {
         console.error(error)
       }

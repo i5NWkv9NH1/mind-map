@@ -13,9 +13,9 @@ import type { MindMapData } from '@/@types'
 export type ShapeMap = 'rectangle' | 'diamond' | 'parallelogram' | 'roundedRectangle' | 'octagonalRectangle' | 'outerTriangularRectangle' | 'innerTriangularRectangle' | 'ellipse' | 'circle'
 export interface DefaultArrayType<T = number | string> { id: string, name: string, value: T }
 export type UsedColor = string
-export type FontFamily = DefaultArrayType
-export type TextUnderlineStyle = DefaultArrayType
-export type BorderStyle = DefaultArrayType
+export type FontFamily = DefaultArrayType<string>
+export type TextUnderlineStyle = DefaultArrayType<string>
+export type BorderStyle = DefaultArrayType<string>
 export type BorderWidth = DefaultArrayType
 export type BorderRedius = DefaultArrayType
 export type Shape = DefaultArrayType<ShapeMap>

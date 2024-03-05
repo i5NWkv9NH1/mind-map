@@ -258,7 +258,8 @@ export const MindMapContainer = defineComponent({
         /**
          * # 节点文本编辑框即将打开事件
          */
-        mindMap.value?.on('before_show_text_edit', () => { })
+        mindMap.value?.on('before_show_text_edit', () => {
+        })
         /**
          * # 节点文本编辑框关闭事件
          * # node: any 节点实例

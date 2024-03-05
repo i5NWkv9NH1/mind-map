@@ -9,3 +9,9 @@ html::-webkit-scrollbar {
 body>div:nth-child(5) {
   color: black;
 }
+
+// ! stopDisable click event propagation
+.v-color-picker-canvas>canvas,
+.v-color-picker-canvas>.v-color-picker-canvas__dot {
+  pointer-events: none;
+}

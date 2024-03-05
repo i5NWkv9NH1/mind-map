@@ -22,6 +22,8 @@ interface Props {
   // # Dialog 定位
   location?: Anchor
   transition?: string
+  hideCanvas?: boolean
+  showActions?: boolean
 }
 const props = withDefaults(defineProps<Props>(), {
   items: () => [],
@@ -30,7 +32,9 @@ const props = withDefaults(defineProps<Props>(), {
   closeOnContentClick: false,
   persistent: false,
   location: 'left top',
-  transition: "scroll-y-transition"
+  transition: "scroll-y-transition",
+  hideCanvas: false,
+  showActions: true
 })
 // # emits
 // * confirm: 弹窗点击确定时回调
@@ -82,6 +86,7 @@ function onConfirm() {
       <VCardText>
         <VColorPicker
           v-model="color"
+          :hide-canvas="props.hideCanvas"
           class="my-4"
         />
         <VList v-if="!isEmpty(props.items)">
@@ -95,14 +100,14 @@ function onConfirm() {
               :key="item"
               :color="item"
               :size="props.size"
-              @click="color = item"
+              @click.stop="color = item"
             >
               {{ mdiSquareRounded }}
             </VIcon>
           </div>
         </VList>
       </VCardText>
-      <VCardActions>
+      <VCardActions v-if="props.showActions">
         <VBtn @click="onClose">
           取消
         </VBtn>
