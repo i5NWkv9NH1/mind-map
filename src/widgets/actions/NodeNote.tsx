@@ -3,20 +3,23 @@
 import { mdiCloseCircleOutline, mdiContentSaveOutline, mdiNotePlusOutline } from '@mdi/js'
 import { defineComponent, nextTick, ref, shallowRef } from 'vue'
 import { VBtn, VCard, VCardActions, VCardText, VCardTitle, VCol, VContainer, VDialog, VIcon, VRow } from 'vuetify/components'
-import { EditorCore } from '@toast-ui/editor'
+
+// import { EditorCore } from '@toast-ui/editor'
+import Editor from '@toast-ui/editor'
 import '@toast-ui/editor/dist/toastui-editor.css'
 import '@toast-ui/editor/dist/theme/toastui-editor-dark.css'
 import { storeToRefs } from 'pinia'
 import { useAppStore } from '@/store/app'
+import { withEventModifiers } from '@/directives'
 
 export const NodeNote = defineComponent({
   name: 'NodeNote',
   setup() {
-    const { isActiveNode } = storeToRefs(useAppStore())
+    const { isActiveNode, activeNodes } = storeToRefs(useAppStore())
 
     const dialog = ref(false)
     const editorEl = ref(null)
-    const editor = shallowRef<EditorCore | null>(null)
+    const editor = shallowRef<Editor | null>(null)
     const note = ref('')
 
     // const onInitEditor = () => {
@@ -39,7 +42,8 @@ export const NodeNote = defineComponent({
     const onInitEditor = () => {
       nextTick(() => {
         if (editorEl.value) {
-          editor.value = new EditorCore({
+          // editor.value = new EditorCore({
+          editor.value = new Editor({
             el: editorEl.value,
             height: '500px',
             initialEditType: 'markdown',
@@ -51,14 +55,22 @@ export const NodeNote = defineComponent({
     }
 
     const onConfirm = () => {
-      const markdown = editor.value?.getMarkdown()
-      console.log(markdown)
+      note.value = editor.value?.getMarkdown() || ''
+      if (!activeNodes.value)
+        return
+      activeNodes.value.forEach((node) => {
+        node.setNote(note.value)
+      })
+      dialog.value = false
     }
     const onAbort = () => {
       dialog.value = false
     }
     const openDialog = () => {
       dialog.value = true
+      if (activeNodes.value)
+        note.value = activeNodes.value[0].getData('note') || ''
+
       onInitEditor()
     }
 
@@ -76,7 +88,15 @@ export const NodeNote = defineComponent({
                     备注
                   </VCardTitle>
                   <VCardText>
-                    <div ref={editorEl}>Editor</div>
+                    <div
+                      ref={editorEl}
+                      {...withEventModifiers({
+                        onkeydown: () => { },
+                        onkeyup: () => { },
+                      }, ['stop'])}
+                    >
+                      Editor
+                    </div>
                   </VCardText>
                   <VCardActions>
                     <VBtn
@@ -105,7 +125,9 @@ export const NodeNote = defineComponent({
           stacked
           disabled={!isActiveNode.value}
           // @ts-ignore
-          onClick={openDialog}
+          {...withEventModifiers({
+            onclick: openDialog,
+          }, ['stop'])}
         >
           <VIcon>{mdiNotePlusOutline}</VIcon>
           <span>备注</span>

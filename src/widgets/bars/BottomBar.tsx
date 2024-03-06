@@ -2,7 +2,7 @@ import { storeToRefs } from 'pinia'
 import { v4 as uuid } from 'uuid'
 import { defineComponent, ref } from 'vue'
 import { VSlideYTransition, VToolbar } from 'vuetify/components'
-import { EditOrReadonlySwitch, FullScreenEdit, FullScreenView, MouseBehavior, Position, Scale, SearchNodes, ShowMiniMap, Stats, ThemeSwitch } from '../actions'
+import { EditOrReadonlySwitch, FullScreenEdit, FullScreenView, MindMapReRender, MouseBehavior, Position, Scale, SearchNodes, ShowMiniMap, Stats, ThemeSwitch } from '../actions'
 import { useAppStore } from '@/store/app'
 import './BottomBar.scss'
 
@@ -24,6 +24,7 @@ export const BottomBar = defineComponent({
     const extendActions = ref([
       { id: uuid(), component: <MouseBehavior /> },
       { id: uuid(), component: <Stats /> },
+      { id: uuid(), component: <MindMapReRender /> },
     ])
 
     return () => (
@@ -43,7 +44,7 @@ export const BottomBar = defineComponent({
                 ),
               }}
             />
-            )
+          )
           : <div />}
       </VSlideYTransition>
     )

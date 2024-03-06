@@ -81,7 +81,10 @@ export const NodeTags = defineComponent({
                       disabled={isMaxTags.value}
                       {...withEventModifiers({
                         onkeyup: onAddTag,
-                      }, ['enter'])}
+                      }, ['enter', 'stop'])}
+                      {...withEventModifiers({
+                        onkeydown: () => { },
+                      }, ['stop'])}
                       v-slots={{
                         'append-inner': () => (
                           <VBtn

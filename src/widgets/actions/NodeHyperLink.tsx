@@ -1,13 +1,14 @@
 // TODO: support multiple nodes seleceted
 import { mdiCloseCircleOutline, mdiContentSaveOutline, mdiLinkVariantPlus } from '@mdi/js'
+import { storeToRefs } from 'pinia'
 import { defineComponent, onMounted, ref } from 'vue'
 import { VBtn, VCard, VCardActions, VCardText, VCardTitle, VContainer, VDialog, VForm, VIcon, VTextField } from 'vuetify/components'
-import { storeToRefs } from 'pinia'
 
 // @ts-ignore
 
 // import { useSettingsStore } from '@/store/settings'
 import { useMindMap } from '@/composables'
+import { withEventModifiers } from '@/directives'
 import { useAppStore } from '@/store/app'
 
 export const NodeHyperLink = defineComponent({
@@ -75,6 +76,10 @@ export const NodeHyperLink = defineComponent({
                     variant="solo"
                     clearable
                     persistentPlaceholder
+                    {...withEventModifiers({
+                      onkeydown: () => { },
+                      onkeyup: () => { },
+                    }, ['stop'])}
                   />
                   <VTextField
                     v-model={title.value}
@@ -83,6 +88,10 @@ export const NodeHyperLink = defineComponent({
                     variant="solo"
                     clearable
                     persistentPlaceholder
+                    {...withEventModifiers({
+                      onkeydown: () => { },
+                      onkeyup: () => { },
+                    }, ['stop'])}
                   />
                 </VForm>
               </VCardText>

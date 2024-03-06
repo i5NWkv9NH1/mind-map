@@ -12,6 +12,7 @@ import katex from 'katex'
 import { useMindMap, usePresets } from '@/composables'
 import { useAppStore } from '@/store/app'
 import 'katex/dist/katex.min.css'
+import { withEventModifiers } from '@/directives'
 
 export const NodeMath = defineComponent({
   name: 'NodeMath',
@@ -68,6 +69,10 @@ export const NodeMath = defineComponent({
                         maxRows={5}
                         variant="solo"
                         density="compact"
+                        {...withEventModifiers({
+                          onkeydown: () => { },
+                          onkeyup: () => { },
+                        }, ['stop'])}
                       />
                       <div class="d-flex flex-wrap gap-2">
                         {usedFormluaItems.value.map(item => (
