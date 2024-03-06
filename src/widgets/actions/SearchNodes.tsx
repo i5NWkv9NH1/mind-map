@@ -1,10 +1,11 @@
 // TODO: 优化
 import { mdiChevronDown, mdiChevronRight, mdiCloseCircle, mdiMagnify } from '@mdi/js'
 import { storeToRefs } from 'pinia'
-import { defineComponent, nextTick, onMounted, ref, withKeys } from 'vue'
+import { defineComponent, nextTick, onMounted, ref } from 'vue'
 import { VBtn, VCard, VCardActions, VCardText, VCardTitle, VExpandTransition, VIcon, VSlideXTransition, VSlideYTransition, VTextField, VTooltip } from 'vuetify/components'
 import { useAppStore } from '@/store/app'
 import { useMindMap } from '@/composables'
+import { withEventModifiers } from '@/directives'
 
 export const SearchNodes = defineComponent({
   name: 'SearchNodes',
@@ -102,20 +103,23 @@ export const SearchNodes = defineComponent({
                   variant="solo"
                   loading={loading.value}
                   disabled={isMindMapReadonly.value}
-                  // @ts-ignore
-                  // @ts-ignore
-                  // onKeydown={withKeys(onSearchNext, ['native', 'enter', 'stop'])}
-                  onKeyup={withKeys(onSearchNext, ['native', 'enter', 'stop'])}
-                  onKeydown={withKeys(() => { searchDialog.value = false }, ['native', 'esc', 'stop'])}
+                  {...withEventModifiers({
+                    onkeyup: onSearchNext,
+                  }, ['enter', 'stop'])}
+                  {...withEventModifiers({
+                    onkeydown: () => { searchDialog.value = false },
+                  }, ['esc', 'stop'])}
                   v-slots={{
                     'prepend-inner': () => (
                       <>
                         <VBtn
                           variant="text"
                           // @ts-ignore
-                          onClick={() => {
-                            showReplace.value = !showReplace.value
-                          }}
+                          {...withEventModifiers({
+                            onclick: () => {
+                              showReplace.value = !showReplace.value
+                            },
+                          }, ['stop'])}
                           size="small"
                           icon
                         >
@@ -155,19 +159,29 @@ export const SearchNodes = defineComponent({
                       label="替换内容"
                       variant="solo"
                       persistentPlaceholder
+                      {...withEventModifiers({
+                        onkeyup: replace,
+                      }, ['enter', 'stop'])}
+                      {...withEventModifiers({
+                        onkeydown: () => { },
+                      }, ['stop'])}
                       v-slots={{
                         'append-inner': () => (
                           <>
                             <VBtn
                               class="mr-2"
                               // @ts-ignore
-                              onClick={replace}
+                              {...withEventModifiers({
+                                onclick: replace,
+                              }, ['stop'])}
                             >
                               替换
                             </VBtn>
                             <VBtn
                               // @ts-ignore
-                              onClick={replaceAll}
+                              {...withEventModifiers({
+                                onclick: replaceAll,
+                              }, ['stop'])}
                             >
                               全部替换
                             </VBtn>

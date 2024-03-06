@@ -27,7 +27,7 @@ export const TopBar = defineComponent({
       { id: uuid(), component: <NodeRelativeLine /> },
       { id: uuid(), component: <NodeMath /> },
     ])
-    const extendActions = ref([
+    const _extendActions = ref([
       { id: uuid(), component: <Folder /> },
       { id: uuid(), component: <CreateNewMindMapFile /> },
       { id: uuid(), component: <OpenMindMapFile /> },
@@ -49,12 +49,12 @@ export const TopBar = defineComponent({
                 default: () => (
                   <>
                     {defaultActions.value.map(item => item.component)}
-                    {extendActions.value.map(item => item.component)}
+                    {/* {extendActions.value.map(item => item.component)} */}
                   </>
                 ),
               }}
             />
-            )
+          )
           : <div />}
       </VSlideYTransition>
     )

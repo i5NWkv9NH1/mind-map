@@ -10,12 +10,6 @@ body>div:nth-child(5) {
   color: black;
 }
 
-// ! stopDisable click event propagation
-.v-color-picker-canvas>canvas,
-.v-color-picker-canvas>.v-color-picker-canvas__dot {
-  pointer-events: none;
-}
-
 .fill-width {
   width: 100% !important;
 }

@@ -7,6 +7,7 @@ import { VBtn, VCard, VCardActions, VExpandTransition, VIcon, VList, VListItem, 
 import { useMindMap, usePresets } from '@/composables'
 import ColorPicker from '@/components/ColorPicker.vue'
 import './NodeRichTextMenu.scss'
+import { withEventModifiers } from '@/directives'
 
 export interface NodeFormat {
   bold: boolean
@@ -176,7 +177,7 @@ export const NodeRichTextMenu = defineComponent({
                                 <VBtn
                                   variant="text"
                                   block
-                                // @ts-ignore
+                                  // @ts-ignore
                                   onClick={() => {
                                     currentFormat.value.font = item.value
                                     mindMap.value?.richText.formatText({
@@ -260,7 +261,7 @@ export const NodeRichTextMenu = defineComponent({
                                 <VBtn
                                   variant="text"
                                   height={`${36 + item}px`}
-                                // @ts-ignore
+                                  // @ts-ignore
                                   onClick={withModifiers(() => {
                                     currentFormat.value.size = item
                                     mindMap.value?.richText.formatText({
@@ -382,9 +383,10 @@ export const NodeRichTextMenu = defineComponent({
 
     onMounted(() => {
       mindMap.value?.on('rich_text_selection_change', (hasRange: boolean, rect: Rect, formatInfo: any) => {
-        try {
-          // currentFormat.value = formatInfo
-          // # 处理
+        // ! 是否更新位置
+        // ! 需要判断, 不然抛出异常: DOM Exception
+        // ! Failed to execute 'setStart' on 'Range': The offset 4294967295 is larger than the node's length (2).
+        if (hasRange) {
           currentFormat.value.bold = formatInfo?.bold ?? false
           currentFormat.value.italic = formatInfo?.italic ?? false
           currentFormat.value.underline = formatInfo?.underline ?? false
@@ -398,28 +400,27 @@ export const NodeRichTextMenu = defineComponent({
           // @ts-ignore // * 必有的字段
           currentFormat.value.bgColor = formatInfo?.background ?? ''
           position.value = rect
-          isShow.value = hasRange
         }
-        catch (error) {
-          // ! qull editor error
-          // ? Uncaught DOMException: Failed to execute 'setStart' on 'Range': The offset  is larger than the node's length (4).
-        }
+        isShow.value = hasRange
       })
     })
 
     return () => (
       <VExpandTransition>
         {isShow.value && (
-          <VCard style={{
-            top: `${position.value.top - 80}px`,
-            left: `${position.value.left + position.value.width / 2}px`,
-            right: `${position.value.right}px`,
-            bottom: `${position.value.bottom}px`,
-            position: 'fixed',
-            width: 'max-content',
-            height: 'max-content',
-            // width: position.value.width,
-          }}
+          <VCard
+            {...withEventModifiers({
+              onclick: () => { },
+            }, ['stop', 'passive'])}
+            style={{
+              top: `${position.value.top - 80}px`,
+              left: `${position.value.left + position.value.width / 2}px`,
+              right: `${position.value.right}px`,
+              bottom: `${position.value.bottom}px`,
+              position: 'fixed',
+              width: 'max-content',
+              height: 'max-content',
+            }}
           >
             <VCardActions>
               {items.value.map((item) => {
@@ -439,7 +440,9 @@ export const NodeRichTextMenu = defineComponent({
                           rounded="lg"
                           color={item.active ? 'primary' : 'default'}
                           {...props}
-                          {...{ onClick: withModifiers(item.action, ['stop']) }}
+                          {...withEventModifiers({
+                            onclick: item.action,
+                          }, ['stop'])}
                         >
                           <VIcon>{item.icon}</VIcon>
                         </VBtn>

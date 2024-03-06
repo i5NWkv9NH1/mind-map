@@ -87,6 +87,7 @@ function onConfirm() {
           v-model="color"
           :hide-canvas="props.hideCanvas"
           class="my-4"
+          @click.stop
         />
         <VList v-if="!isEmpty(props.items)">
           <VListSubheader>常用颜色</VListSubheader>
