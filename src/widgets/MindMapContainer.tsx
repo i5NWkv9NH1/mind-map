@@ -27,7 +27,7 @@ export const MindMapContainer = defineComponent({
   name: 'MindMapContainer',
   setup() {
     const { mindMapData, getRoot, activeNode, activeNodes, canUnod, canRedo } = storeToRefs(useAppStore())
-    const { exampleData, customThemes } = usePresets()
+    const { exampleData, customThemes, extendedIconGroupsItems } = usePresets()
     const MindMapEl = ref<HTMLElement | null>(null)
     const { mindMap } = useMindMap()
 
@@ -95,6 +95,7 @@ export const MindMapContainer = defineComponent({
             }
           },
           handleIsSplitByWrapOnPasteCreateNewNode: () => { },
+          iconList: extendedIconGroupsItems.value,
         })
         // # 注册完毕
 

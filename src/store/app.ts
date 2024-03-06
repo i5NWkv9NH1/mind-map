@@ -62,5 +62,5 @@ export const useAppStore = defineStore('app', () => {
     isShowScrollbar,
     isShowNodeContextMenu,
   }
-  // })
-}, { persist: { enabled: true } })
+})
+// }, { persist: { enabled: true } })

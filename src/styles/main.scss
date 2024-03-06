@@ -15,3 +15,17 @@ body>div:nth-child(5) {
 .v-color-picker-canvas>.v-color-picker-canvas__dot {
   pointer-events: none;
 }
+
+.fill-width {
+  width: 100% !important;
+}
+
+.overflow-y {
+  overflow-y: scroll;
+}
+
+// # VIcon > svg
+.v-icon>svg {
+  width: max-content;
+  height: max-content
+}

@@ -47,3 +47,25 @@ export type GetNodeDataNoStyleField = 'text' |
   'associativeLineTargetControlOffsets' |
   'associativeLinePoint' |
   'associativeLineText'
+
+export interface NodeIcon {
+  name: string
+  icon: string
+}
+
+export interface NodeIconGroup {
+  name: string
+  type: string
+  list: NodeIcon[]
+}
+
+export interface NodeSticker {
+  url: string
+  width: number
+  height: number
+}
+
+export interface NodeStickerGroup {
+  name: string
+  list: NodeSticker[]
+}

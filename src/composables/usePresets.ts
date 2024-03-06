@@ -4,18 +4,25 @@
 import { themeList } from 'simple-mind-map/src/constants/constant'
 import { v4 as uuid } from 'uuid'
 import { computed, ref } from 'vue'
-import simpleMapExampleData from 'simple-mind-map/example/exampleData'
-import { cactus, classic5, classic6, classic7, dark3, dark4, darkNightLceBlade, lemonBubbles, morandi, neonLamp, oreo, rose, seaBlueLine, shallowSea } from '../helpers/themes'
 
 // @ts-ignore
+import simpleMapExampleData from 'simple-mind-map/example/exampleData'
+
+// @ts-ignore
+import { nodeIconList } from 'simple-mind-map/src/svg/icons'
+import { cactus, classic5, classic6, classic7, dark3, dark4, darkNightLceBlade, lemonBubbles, morandi, neonLamp, oreo, rose, seaBlueLine, shallowSea } from '../helpers/themes'
+import stickers from './images'
+
+// @ts-ignore
+import { extendedIconGroups } from './icons'
 import type { MindMapTheme } from '@/@types/mind-map/theme'
-import type { MindMapData } from '@/@types'
+import type { MindMapData, NodeIconGroup, NodeStickerGroup } from '@/@types'
 
 export type ShapeMap = 'rectangle' | 'diamond' | 'parallelogram' | 'roundedRectangle' | 'octagonalRectangle' | 'outerTriangularRectangle' | 'innerTriangularRectangle' | 'ellipse' | 'circle'
 export interface DefaultArrayType<T = number | string> { id: string, name: string, value: T }
 export type UsedColor = string
 export type FontFamily = DefaultArrayType<string>
-export type TextUnderlineStyle = DefaultArrayType<string>
+export type TextUnderlineStyle = DefaultArrayType<number>
 export type BorderStyle = DefaultArrayType<string>
 export type BorderWidth = DefaultArrayType
 export type BorderRedius = DefaultArrayType
@@ -385,6 +392,32 @@ export function usePresets() {
   ])
 
   const exampleData = ref<MindMapData>(simpleMapExampleData)
+  const internalIconGroupItems = ref<NodeIconGroup[]>(nodeIconList)
+  const extendedIconGroupsItems = ref<NodeIconGroup[]>(extendedIconGroups)
+  const iconGroupItems = computed<NodeIconGroup[]>(() => [...internalIconGroupItems.value, ...extendedIconGroupsItems.value])
+  const stickerGroupItems = ref<NodeStickerGroup[]>(stickers)
+  const usedFormluaItems = ref<string[]>([
+    'a^2',
+    'a_2',
+    'a^{2+2}',
+    'a_{i,j}',
+    'x_2^3',
+    '\\overbrace{1+2+\\cdots+100}',
+    '\\sum_{k=1}^N k^2',
+    '\\lim_{n \\to \\infty}x_n',
+    '\\int_{-N}^{N} e^x\\, dx',
+    '\\sqrt{3}',
+    '\\sqrt[n]{3}',
+    '\\sin\\theta',
+    '\\log X',
+    '\\log_{10}',
+    '\\log_\\alpha X',
+    '\\lim_{t\\to n}T',
+    '\\frac{1}{2}=0.5',
+    '\\binom{n}{k}',
+    '\\begin{matrix}x & y \\\\z & v\\end{matrix}',
+    '\\begin{cases}3x + 5y +  z \\\\7x - 2y + 4z \\\\-6x + 3y + 2z\\end{cases}',
+  ])
 
   return {
     usedColorItems,
@@ -414,5 +447,10 @@ export function usePresets() {
     LayoutStructureItems,
     mathItems,
     exampleData,
+    internalIconGroupItems,
+    extendedIconGroupsItems,
+    iconGroupItems,
+    stickerGroupItems,
+    usedFormluaItems,
   }
 }

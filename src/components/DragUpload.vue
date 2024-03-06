@@ -2,18 +2,20 @@
   setup
   lang="ts"
 >
-import { mdiCloseCircle, mdiCloudUpload } from '@mdi/js'
+import { mdiClose, mdiCloudUpload } from '@mdi/js'
 import { isEmpty } from 'lodash'
 import { ref, watch } from 'vue'
 
 interface Props {
   height?: number
   rounded?: string
+  closeIcon?: string
 }
 const props = withDefaults(defineProps<Props>(), {
   // # image height
   height: 200,
   rounded: 'lg',
+  closeIcon: mdiClose,
 })
 // # models
 const src = defineModel<string, string>('src', {
@@ -158,7 +160,7 @@ watch(files, () => {
                   icon
                   @click.stop="src = ''"
                 >
-                  <VIcon>{{ mdiCloseCircle }}</VIcon>
+                  <VIcon>{{ props.closeIcon || mdiClose }}</VIcon>
                 </VBtn>
               </VOverlay>
             </VImg>
