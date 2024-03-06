@@ -11,7 +11,7 @@ import type { MindMapNode } from '@/@types'
 export const MindMapContextMenu = defineComponent({
   name: 'MindMapContextMenu',
   setup() {
-    const { isZenMode } = storeToRefs(useAppStore())
+    const { mindMapConfig } = storeToRefs(useAppStore())
     const { mindMap } = useMindMap()
 
     // # 节点数据
@@ -91,13 +91,13 @@ export const MindMapContextMenu = defineComponent({
           {
             id: uuid(),
             name: '专注模式',
-            icon: isZenMode.value ? mdiImageFilterCenterFocusStrong : mdiImageFilterCenterFocusStrongOutline,
+            icon: mindMapConfig.value.isZenMode ? mdiImageFilterCenterFocusStrong : mdiImageFilterCenterFocusStrongOutline,
             shortKey: '',
             action: () => {
-              isZenMode.value = !isZenMode.value
-              mindMap.value?.updateConfig({ isZenMode: isZenMode.value })
+              mindMapConfig.value.isZenMode = !mindMapConfig.value.isZenMode
+              mindMap.value?.updateConfig({ isZenMode: mindMapConfig.value.isZenMode })
             },
-            isActived: isZenMode.value,
+            isActived: mindMapConfig.value.isZenMode,
           },
           { id: uuid(), name: '一键去除所有节点自定义样式', icon: mdiFormatClear, shortKey: '', action: () => mindMap.value?.execCommand('REMOVE_ALL_NODE_CUSTOM_STYLES') },
         ]
@@ -176,7 +176,7 @@ export const MindMapContextMenu = defineComponent({
                 }
               })}
             </VList>
-            )
+          )
           : <div />}
       </VScrollYTransition>
     )

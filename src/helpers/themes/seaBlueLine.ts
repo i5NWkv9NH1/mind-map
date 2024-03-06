@@ -1,5 +1,4 @@
-import type { ThemeDefinition } from '@/@types/mind-map/theme'
-
+import type { ThemeDefinition } from '@/@types'
 // 海蓝线
 export default {
   backgroundColor: 'rgb(231, 245, 255)',

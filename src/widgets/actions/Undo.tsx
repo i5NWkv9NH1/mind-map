@@ -8,14 +8,14 @@ import { useMindMap } from '@/composables'
 export const Undo = defineComponent({
   name: 'Undo',
   setup() {
-    const { canUnod, isMindMapReadonly } = storeToRefs(useAppStore())
+    const { canUnod, mindMapConfig } = storeToRefs(useAppStore())
     const { mindMap } = useMindMap()
 
     return () => (
       <VBtn
         stacked
-        disabled={canUnod.value || isMindMapReadonly.value}
-      // @ts-ignore
+        disabled={canUnod.value || mindMapConfig.value.readonly}
+        // @ts-ignore
         onClick={() => {
           mindMap.value?.execCommand('BACK')
         }}

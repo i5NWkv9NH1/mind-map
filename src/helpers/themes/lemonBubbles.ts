@@ -1,5 +1,4 @@
-import type { ThemeDefinition } from '@/@types/mind-map/theme'
-
+import type { ThemeDefinition } from '@/@types'
 // 柠檬气泡
 export default {
   backgroundColor: 'rgb(236, 254, 255)',

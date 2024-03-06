@@ -2,6 +2,7 @@
 export interface MindMapNode<T = any> {
   uid: string
   nodeData: T
+  text: string
   layerIndex: number
   width: number
   height: number

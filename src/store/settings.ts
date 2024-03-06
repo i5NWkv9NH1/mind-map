@@ -47,13 +47,24 @@ export const useSettingsStore = defineStore('settings', () => {
     loading.value.status = value
   }
 
+  const panel = ref<{ status: null | number, title: string }>({
+    status: null,
+    title: '',
+  })
+  function togglePanel(status: null | number = null, title = '') {
+    panel.value.status = status
+    panel.value.title = title
+  }
+
   return {
     isDark,
     theme,
     vuetify,
     message,
     loading,
+    panel,
     toggleMessage,
     toggleLoading,
+    togglePanel,
   }
 }, { persist: { enabled: true } })

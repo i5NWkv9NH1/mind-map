@@ -5,9 +5,10 @@
 import { mdiArrowDownThick, mdiArrowExpandVertical, mdiArrowRightTop, mdiArrowULeftTop, mdiArrowUpThick, mdiCloseCircle, mdiContentCopy, mdiContentPaste, mdiContentSaveEditOutline, mdiCrosshairsGps, mdiGridLarge, mdiImageSizeSelectLarge, mdiLoupe, mdiMagnify, mdiMinusThick, mdiPlusThick, mdiSelectAll, mdiSelectMultiple, mdiTrashCanOutline, mdiTune, mdiVectorPolyline, mdiVectorPolylinePlus, mdiVectorSquareRemove, mdiWidgetsOutline, mdiWrap } from '@mdi/js'
 import { v4 as uuid } from 'uuid'
 import { ref } from 'vue'
-import PanelContainer from '@/components/PanelContainer.vue'
+import { useSettingsStore } from '@/store/settings'
+import { PanelContainer } from '@/components'
 
-function togglePanel(_: any) { }
+const { togglePanel } = useSettingsStore()
 const keys = ref([
   {
     id: uuid(),

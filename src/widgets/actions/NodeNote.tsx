@@ -11,11 +11,13 @@ import '@toast-ui/editor/dist/theme/toastui-editor-dark.css'
 import { storeToRefs } from 'pinia'
 import { useAppStore } from '@/store/app'
 import { withEventModifiers } from '@/directives'
+import { useMindMap } from '@/composables'
 
 export const NodeNote = defineComponent({
   name: 'NodeNote',
   setup() {
-    const { isActiveNode, activeNodes } = storeToRefs(useAppStore())
+    const { isActiveNode } = storeToRefs(useAppStore())
+    const { activeNodes } = useMindMap()
 
     const dialog = ref(false)
     const editorEl = ref(null)
@@ -56,8 +58,6 @@ export const NodeNote = defineComponent({
 
     const onConfirm = () => {
       note.value = editor.value?.getMarkdown() || ''
-      if (!activeNodes.value)
-        return
       activeNodes.value.forEach((node) => {
         node.setNote(note.value)
       })
@@ -68,9 +68,7 @@ export const NodeNote = defineComponent({
     }
     const openDialog = () => {
       dialog.value = true
-      if (activeNodes.value)
-        note.value = activeNodes.value[0].getData('note') || ''
-
+      note.value = activeNodes.value[0].getData('note') || ''
       onInitEditor()
     }
 

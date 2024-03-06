@@ -1,4 +1,3 @@
-import { defineComponent, onMounted, ref, watch } from 'vue'
 import './MindMapContainer.scss'
 
 // ! plugins
@@ -18,29 +17,44 @@ import Select from 'simple-mind-map/src/plugins/Select.js'
 import TouchEvent from 'simple-mind-map/src/plugins/TouchEvent.js'
 import Watermark from 'simple-mind-map/src/plugins/Watermark.js'
 import { nodeRichTextToTextWithWrap } from 'simple-mind-map/src/utils'
+import { defineComponent, onMounted, ref } from 'vue'
 import { useAppStore } from '@/store/app'
 import { SimplePlugin } from '@/plugins/mindmap'
 import { useMindMap, usePresets } from '@/composables'
-import { StateLogger } from '@/helpers'
+import type { MindMapNode } from '@/@types'
 
 export const MindMapContainer = defineComponent({
   name: 'MindMapContainer',
   setup() {
-    const { mindMapData, getRoot, activeNode, activeNodes, canUnod, canRedo } = storeToRefs(useAppStore())
-    const { exampleData, customThemes, extendedIconGroupsItems } = usePresets()
+    const {
+      mindMapRoot,
+      mindMapTheme,
+      mindMapThemeConfig,
+      mindMapConfig,
+      mindMapLayout,
+      mindMapView,
+      canUnod,
+      canRedo,
+    } = storeToRefs(useAppStore())
+    const { customThemes, extendedIconGroupsItems } = usePresets()
+    const { mindMap, activeNode, activeNodes } = useMindMap()
     const MindMapEl = ref<HTMLElement | null>(null)
-    const { mindMap } = useMindMap()
 
-    mindMapData.value.root = {
-      data: {
-        text: 'Root',
-      },
-      children: [],
-    }
-    mindMapData.value.layout = exampleData.value.layout
-    mindMapData.value.theme = exampleData.value.theme
-    mindMapData.value.view = null
-    mindMapData.value.theme.template = 'default'
+    /**
+     * TODO: 初始化时，判断是否打开文件
+     */
+    // mindMapRoot.value = {
+    //   data: {
+    //     text: 'Root',
+    //   },
+    //   children: [],
+    // }
+    // ! 忽略本地保存的数据
+    // ! 这里每次初始化先使用库提供的数据
+    // mindMapRoot.value = exampleData.value.root
+    // mindMapLayout.value = exampleData.value.layout
+    // mindMapTheme.value = exampleData.value.theme.template
+    // mindMapThemeConfig.value = exampleData.value.theme.config
 
     onMounted(() => {
       // # plugins
@@ -67,24 +81,25 @@ export const MindMapContainer = defineComponent({
       })
 
       if (MindMapEl.value) {
+        // TODO: 添加 store 配置
         mindMap.value = new MindMap({
-          // @ts-ignore
           el: MindMapEl.value,
-          data: mindMapData.value.root,
+          // @ts-ignore
+          data: mindMapRoot.value,
           fit: false,
-          layout: mindMapData.value.layout,
-          theme: mindMapData.value.theme.template,
-          themeConfig: mindMapData.value.theme.config,
-          viewData: mindMapData.value.view,
+          layout: mindMapLayout.value,
+          theme: mindMapTheme.value,
+          themeConfig: mindMapThemeConfig.value,
+          viewData: mindMapView.value,
           nodeTextEditZIndex: 1000,
           nodeNoteTooltipZIndex: 1000,
           defaultNodeImage: '/img/图片加载失败.svg',
-          ...(mindMapData.value.config || {}),
           useLeftKeySelectionRightKeyDrag: false,
           customInnerElsAppendTo: null,
           enableAutoEnterTextEditWhenKeydown: true,
           initRootNodePosition: ['center', 'center'],
-          errorHandler: (code: string | 'export_error', _error) => {
+          ...mindMapConfig.value,
+          errorHandler: (code: string | 'export_error', _error: any) => {
             switch (code) {
               case 'export_error': {
                 break
@@ -98,13 +113,6 @@ export const MindMapContainer = defineComponent({
           iconList: extendedIconGroupsItems.value,
         })
         // # 注册完毕
-
-        watch(getRoot, () => {
-        }, { immediate: true })
-        // * 视图更新频繁
-        // watch(getView, () => {
-        //   WatchLogger.debug('view 数据已更新', getRoot.value)
-        // })
         /**
          * # 渲染树数据变化，可以监听该方法获取最新数据
          * # data: MindMapData.root
@@ -124,14 +132,14 @@ export const MindMapContainer = defineComponent({
           }
           walk(rootData)
           // TODO: update to store
-          mindMapData.value.root = rootData
+          mindMapRoot.value = rootData
         })
         /**
          * # 视图变化数据，比如拖动或缩放时会触发
          * # view: 当前视图状态数据
          */
         mindMap.value?.on('view_data_change', (view: any) => {
-          mindMapData.value.view = view
+          mindMapView.value = view
         })
         /**
          * # 前进或回退
@@ -233,8 +241,9 @@ export const MindMapContainer = defineComponent({
          * # node: any 节点实例
          * # items: any[] 当前激活的所有节点列表
          */
-        mindMap.value?.on('node_active', (node: any, nodes: any[]) => {
-          StateLogger.info('node active update')
+        // ! 无法实时 ref
+        mindMap.value?.on('node_active', (node: MindMapNode, nodes: MindMapNode[]) => {
+          // StateLogger.info('node active update')
           activeNode.value = node
           activeNodes.value = nodes
         })
@@ -291,7 +300,6 @@ export const MindMapContainer = defineComponent({
          * # 节点树渲染完毕事件
          */
         mindMap.value?.on('node_tree_render_end', () => {
-
         })
         /**
          * # 当注册了 RichText 插件时可用。当节点编辑时，文本选区发生改变时触发
@@ -333,7 +341,6 @@ export const MindMapContainer = defineComponent({
         id="MindMapContainer"
       >
         <div id="MindMap" ref={MindMapEl} />
-        {/* # 工具栏 */}
       </div>
     )
   },

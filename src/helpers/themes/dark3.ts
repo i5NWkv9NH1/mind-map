@@ -1,4 +1,4 @@
-import type { ThemeDefinition } from '@/@types/mind-map/theme'
+import type { ThemeDefinition } from '@/@types'
 
 // 暗色3
 export default {

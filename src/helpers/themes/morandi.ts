@@ -1,5 +1,4 @@
-import type { ThemeDefinition } from '@/@types/mind-map/theme'
-
+import type { ThemeDefinition } from '@/@types'
 // 莫兰迪
 export default {
   backgroundColor: 'rgb(252, 245, 241)',

@@ -10,7 +10,7 @@ import { withEventModifiers } from '@/directives'
 export const SearchNodes = defineComponent({
   name: 'SearchNodes',
   setup() {
-    const { isMindMapReadonly } = storeToRefs(useAppStore())
+    const { mindMapConfig } = storeToRefs(useAppStore())
     const { mindMap } = useMindMap()
 
     const searchDialog = ref(false)
@@ -102,7 +102,6 @@ export const SearchNodes = defineComponent({
                   persistentPlaceholder
                   variant="solo"
                   loading={loading.value}
-                  disabled={isMindMapReadonly.value}
                   {...withEventModifiers({
                     onkeyup: onSearchNext,
                   }, ['enter', 'stop'])}
@@ -155,7 +154,7 @@ export const SearchNodes = defineComponent({
                     <VTextField
                       v-model={replaceText.value}
                       rounded="lg"
-                      disabled={isMindMapReadonly.value}
+                      disabled={mindMapConfig.value.readonly}
                       label="替换内容"
                       variant="solo"
                       persistentPlaceholder

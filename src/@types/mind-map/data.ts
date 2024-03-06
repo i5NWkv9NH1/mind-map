@@ -1,31 +1,29 @@
 // ? data
+import type { ThemeDefinition } from '../'
+import type { MindMapNode } from './node'
 
-export interface ViewDataChange {
-  state: {
-    scale: number
-    x: number
-    y: number
-    sx: number
-    sy: number
+// TODO: remove
+export interface MindMapData {
+  /** 根节点和所有子节点的数据 */
+  root: {
+    data: {
+      text: string
+      [index: string]: any
+    }
+    children: MindMapNode[] | []
   }
-  transform: {
-    scaleX: number
-    scaleY: number
-    shear: number
-    rotate: number
-    translateX: number
-    translateY: number
-    originX: number
-    originY: number
-    a: number
-    b: number
-    c: number
-    d: number
-    e: number
-    f: number
+  layout: string
+  /** 主题设置 */
+  theme: {
+    /** 已在 mindMap 中注册的主题名称 */
+    template: string
+    /** 主题的基础样式 */
+    config: Record<string, any>
   }
+  /** 画布移动偏移量 */
+  view: any
 }
-export type MindMapData = Record<'root' | 'layout' | 'theme' | 'view' | 'config', any>
+
 // # 节点数据中非样式的字段
 export type GetNodeDataNoStyleField = 'text' |
   'image' |
@@ -49,13 +47,18 @@ export type GetNodeDataNoStyleField = 'text' |
   'associativeLineText'
 
 export interface NodeIcon {
+  /** 图标的名称 */
   name: string
+  /** url / base64 / svg */
   icon: string
 }
 
 export interface NodeIconGroup {
+  /** 图标分组的名称 */
   name: string
+  /** 图标分组的值 */
   type: string
+  /** 分组下的图标列表，数组的每一项为一个对象 */
   list: NodeIcon[]
 }
 
@@ -69,3 +72,4 @@ export interface NodeStickerGroup {
   name: string
   list: NodeSticker[]
 }
+export interface MindMapTheme { name: string, value: string, dark: boolean, theme?: ThemeDefinition }

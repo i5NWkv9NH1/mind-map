@@ -10,13 +10,13 @@ import { useMindMap } from '@/composables'
 export const MouseBehavior = defineComponent({
   name: 'MouseBehavior',
   setup() {
-    const { useLeftKeySelectionRightKeyDrag } = storeToRefs(useAppStore())
+    const { mindMapConfig } = storeToRefs(useAppStore())
     const { mindMap } = useMindMap()
 
     const toggle = () => {
-      useLeftKeySelectionRightKeyDrag.value = !useLeftKeySelectionRightKeyDrag.value
+      mindMapConfig.value.useLeftKeySelectionRightKeyDrag = !mindMapConfig.value.useLeftKeySelectionRightKeyDrag
       mindMap.value?.updateConfig({
-        useLeftKeySelectionRightKeyDrag: useLeftKeySelectionRightKeyDrag.value,
+        useLeftKeySelectionRightKeyDrag: mindMapConfig.value.useLeftKeySelectionRightKeyDrag,
       })
     }
 
@@ -35,7 +35,7 @@ export const MouseBehavior = defineComponent({
               class="mx-2"
               onClick={toggle}
             >
-              {useLeftKeySelectionRightKeyDrag.value
+              {mindMapConfig.value.useLeftKeySelectionRightKeyDrag
                 ? (
                   <>
                     <VIcon>{mdiSelectDrag}</VIcon>
@@ -55,7 +55,7 @@ export const MouseBehavior = defineComponent({
           default: () => (
             <>
               <p>
-                {useLeftKeySelectionRightKeyDrag.value ? '当前：左键选择节点，右键拖动画布' : '当前：左键拖动画布，右键选择节点'}
+                {mindMapConfig.value.useLeftKeySelectionRightKeyDrag ? '当前：左键选择节点，右键拖动画布' : '当前：左键拖动画布，右键选择节点'}
               </p>
             </>
           ),

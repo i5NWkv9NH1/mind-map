@@ -12,13 +12,14 @@ import { DragUpload } from '@/components'
 // import { useSettingsStore } from '@/store/settings'
 // import { useMindMap } from '@/composables'
 import { useAppStore } from '@/store/app'
+import { useMindMap } from '@/composables'
 
 export const NodeImage = defineComponent({
   name: 'NodeImage',
   setup() {
-    // const { mindMap } = useMindMap()
+    const { activeNodes } = useMindMap()
     // const { toggleMessage } = useSettingsStore()
-    const { activeNodes, isActiveNode } = storeToRefs(useAppStore())
+    const { isActiveNode } = storeToRefs(useAppStore())
 
     const _tab = ref(0)
     const dialog = ref(false)
@@ -62,13 +63,13 @@ export const NodeImage = defineComponent({
     }
 
     watch(isActiveNode, () => {
-      if (isEmpty(activeNodes.value))
-        return
-      const image = activeNodes.value![0].getData('image') as string || ''
-      const imageTitle = activeNodes.value![0].getData('imageTitle') || ''
-      // ! 判断是哪种类型的图片
-      fileSrc.value = image
-      fileName.value = imageTitle
+      if (isActiveNode.value) {
+        const image = activeNodes.value![0].getData('image') as string || ''
+        const imageTitle = activeNodes.value![0].getData('imageTitle') || ''
+        // ! 判断是哪种类型的图片
+        fileSrc.value = image
+        fileName.value = imageTitle
+      }
     }, { immediate: true })
 
     return () => (

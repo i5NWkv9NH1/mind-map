@@ -2,26 +2,31 @@
   setup
   lang="ts"
 >
-import { mdiCloseCircle } from '@mdi/js'
+import { mdiCloseCircle, mdiCloseCircleOutline, mdiContentSaveOutline } from '@mdi/js'
 import { v4 as uuid } from 'uuid'
-import { computed, ref } from 'vue'
-import type { MindMapTheme } from '@/@types/mind-map/theme'
+import { computed, onMounted, ref, watch } from 'vue'
+import { storeToRefs } from 'pinia'
+import { isEmpty } from 'lodash'
+import type { MindMapTheme } from '@/@types/mind-map'
 import { PanelContainer } from '@/components'
-import { usePresets } from '@/composables'
+import { useMindMap, usePresets } from '@/composables'
+import { useSettingsStore } from '@/store/settings'
+import { useAppStore } from '@/store/app'
 
-function togglePanel(_: any) { }
-const { getClassicThemes, getDarkThemes, getSimpleThemes } = usePresets()
+const { mindMap } = useMindMap()
+const { getClassicThemes, getDarkThemes, getSimpleThemes, mindMapThemes } = usePresets()
+const { isDark } = storeToRefs(useSettingsStore())
+const { mindMapTheme, mindMapThemeConfig } = storeToRefs(useAppStore())
+const { togglePanel } = useSettingsStore()
+
 const current = ref(0)
 const themeStyles = ref([
   { id: uuid(), name: '经典', value: 0 },
   { id: uuid(), name: '深色', value: 1 },
   { id: uuid(), name: '朴素', value: 2 },
 ])
-const confirmDialog = ref({
-  status: false,
-})
-const selected = ref('default')
-const isHasModify = ref(false)
+
+const confirmDialog = ref(false)
 const themes = computed<MindMapTheme[]>(() => {
   switch (current.value) {
     case 0: return getClassicThemes.value
@@ -31,24 +36,67 @@ const themes = computed<MindMapTheme[]>(() => {
   }
 })
 
-function handleChange(themeName: string) {
-  if (isHasModify.value) {
-    confirmDialog.value.status = true
+watch(mindMapTheme, () => {
+  // * is Dark
+  const target = mindMapThemes.value.find(item => item.value === mindMapTheme.value)
+  isDark.value = target.dark
+})
+
+function onViewThemeChange() {
+  mindMapTheme.value = mindMap.value?.getTheme()
+}
+
+function onSwitchTheme(theme: string) {
+  if (theme === mindMapTheme.value)
     return
+  // # 先进行更改, 再进行合并自定义设置到 mindMap
+  mindMapTheme.value = theme
+  const customThemeConfig = mindMap.value?.getCustomThemeConfig()
+  // # 是否存在配置
+  if (!isEmpty(customThemeConfig)) {
+    confirmDialog.value = true
+    mindMapThemeConfig.value = customThemeConfig
+    // ? -> confirm dialog
   }
-  selected.value = themeName
+  else {
+    // # 不存在自定义配置, 直接设置主题
+    mindMap.value?.setTheme(mindMapTheme.value)
+    // TODO: 保存到 store
+    mindMapThemeConfig.value = customThemeConfig
+  }
 }
-function reserve() {
-  confirmDialog.value.status = false
+// # 不保留自定义配置
+function onNotSaveThemeConfig() {
+  mindMap.value?.setTheme(mindMapTheme.value)
+  confirmDialog.value = false
+  mindMapThemeConfig.value = {}
+  // TODO: 保存到 store
+  // store.updateThemeCofig({
+  //   template: selectedTheme.value,
+  //   config: themeConfig.value
+  // })
 }
-function overwrite() {
-  confirmDialog.value.status = false
+// # 保留自定义配置，覆盖主题
+function onOverWriteTheme() {
+  mindMap.value?.setThemeConfig({}, true)
+  mindMap.value?.setTheme(mindMapTheme.value)
+  confirmDialog.value = false
+  // TODO: 保存到 store
+  // store.updateThemeCofig({
+  //   template: selectedTheme.value,
+  //   config: themeConfig.value
+  // })
 }
+
+onMounted(() => {
+  mindMapTheme.value = mindMap.value?.getTheme() || 'default'
+  mindMap.value?.on('view_theme_change', onViewThemeChange)
+})
 </script>
 
 <template>
   <VDialog
-    v-model="confirmDialog.status"
+    v-model="confirmDialog"
     persistent
   >
     <VContainer class="fill-height">
@@ -64,19 +112,23 @@ function overwrite() {
               提示
             </VCardTitle>
             <VCardText>
-              你当前自定义过基础样式，是否覆盖？
+              你当前自定义过基础样式，是否保留自定义配置
             </VCardText>
             <VCardActions>
-              <VSpacer />
-              <VBtn @click="reserve">
-                保留
+              <VBtn @click="onNotSaveThemeConfig">
+                <VIcon start>
+                  {{ mdiCloseCircleOutline }}
+                </VIcon>
+                <span>不保留，直接设置主题</span>
               </VBtn>
               <VBtn
-                variant="elevated"
-                color="primary"
-                @click="overwrite"
+                color="warn"
+                @click="onOverWriteTheme"
               >
-                覆盖
+                <VIcon start>
+                  {{ mdiContentSaveOutline }}
+                </VIcon>
+                <span>保留，使用自定义配置覆盖主题</span>
               </VBtn>
             </VCardActions>
           </VCard>
@@ -121,10 +173,10 @@ function overwrite() {
           <VCard
             v-for="theme in themes"
             :key="theme.name"
-            :color="theme.value === selected ? 'primary' : 'default'"
+            :color="theme.value === mindMapTheme ? 'primary' : 'default'"
             elevation="4"
             class="my-4"
-            @click="handleChange(theme.value)"
+            @click="onSwitchTheme(theme.value)"
           >
             <VCardText class="text-center">
               <VImg

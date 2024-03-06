@@ -3,13 +3,27 @@
   lang="ts"
 >
 import { mdiCloseCircle } from '@mdi/js'
-import { ref } from 'vue'
+import { onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
 import { PanelContainer } from '@/components'
-import { usePresets } from '@/composables'
+import { useMindMap, usePresets } from '@/composables'
+import { useSettingsStore } from '@/store/settings'
+import { useAppStore } from '@/store/app'
 
+const { mindMap } = useMindMap()
+const { mindMapLayout } = storeToRefs(useAppStore())
 const { LayoutStructureItems } = usePresets()
-const selectLayoutStructure = ref('logicalStructure')
-function togglePanel(_: any) { }
+const { togglePanel } = useSettingsStore()
+
+function onSwitchLayout(layout: string) {
+  mindMapLayout.value = layout
+  mindMap.value?.setLayout(mindMapLayout.value)
+  // * update to store
+}
+
+onMounted(() => {
+  mindMapLayout.value = mindMap.value?.getLayout() || 'logicalStructure'
+})
 </script>
 
 <template>
@@ -31,9 +45,9 @@ function togglePanel(_: any) { }
         <VCard
           v-for="item in LayoutStructureItems"
           :key="item.id"
-          :color="item.value === selectLayoutStructure ? 'primary' : 'default'"
+          :color="item.value === mindMapLayout ? 'primary' : 'default'"
           class="my-4"
-          @click="selectLayoutStructure = item.value"
+          @click="onSwitchLayout(item.value)"
         >
           <VCardText class="text-center">
             <VImg
@@ -41,7 +55,7 @@ function togglePanel(_: any) { }
               width="100%"
               height="200"
             />
-            <p>逻辑结构图</p>
+            <p>{{ item.name }}</p>
           </VCardText>
         </VCard>
       </VSheet>

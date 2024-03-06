@@ -9,7 +9,7 @@ import './BottomBar.scss'
 export const BottomBar = defineComponent({
   name: 'BottomBar',
   setup() {
-    const { isZenMode } = storeToRefs(useAppStore())
+    const { mindMapConfig } = storeToRefs(useAppStore())
 
     const defaultActions = ref([
       { id: uuid(), component: <Position /> },
@@ -29,7 +29,7 @@ export const BottomBar = defineComponent({
 
     return () => (
       <VSlideYTransition>
-        {!isZenMode.value
+        {!mindMapConfig.value.isZenMode
           ? (
             <VToolbar
               class="bottom-bar"
@@ -44,7 +44,7 @@ export const BottomBar = defineComponent({
                 ),
               }}
             />
-          )
+            )
           : <div />}
       </VSlideYTransition>
     )

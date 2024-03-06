@@ -2,7 +2,8 @@
   setup
   lang="ts"
 >
-import { BottomBar, MindMapContainer, MindMapContextMenu, NodeContextMenu, NodeIconContextMenu, NodeImagePreview, NodeRichTextMenu, TopBar } from '@/widgets'
+import { BottomBar, MindMapContainer, MindMapContextMenu, NodeContextMenu, NodeIconContextMenu, NodeImagePreview, NodeRichTextMenu, SideBar, TopBar }
+  from '@/widgets'
 </script>
 
 <template>
@@ -10,6 +11,7 @@ import { BottomBar, MindMapContainer, MindMapContextMenu, NodeContextMenu, NodeI
   <!-- # Action bar -->
   <TopBar />
   <BottomBar />
+  <SideBar />
   <!-- # Menus -->
   <NodeContextMenu />
   <MindMapContextMenu />

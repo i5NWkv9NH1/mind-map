@@ -30,13 +30,13 @@ export {
 } from './classic6'
 export {
   default as classic7,
-} from './classic6'
+} from './classic7'
 export {
   default as dark3,
-} from './classic6'
+} from './dark3'
 export {
   default as dark4,
-} from './classic6'
+} from './dark4'
 export {
   default as cactus,
-} from './classic6'
+} from './cactus'

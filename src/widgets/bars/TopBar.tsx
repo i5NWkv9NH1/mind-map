@@ -9,7 +9,7 @@ import './TopBar.scss'
 export const TopBar = defineComponent({
   name: 'TopBar',
   setup() {
-    const { isZenMode } = storeToRefs(useAppStore())
+    const { mindMapConfig } = storeToRefs(useAppStore())
 
     const defaultActions = ref([
       { id: uuid(), component: <Undo /> },
@@ -38,7 +38,7 @@ export const TopBar = defineComponent({
 
     return () => (
       <VSlideYTransition>
-        {!isZenMode.value
+        {!mindMapConfig.value.isZenMode
           ? (
             <VToolbar
               class="top-bar"

@@ -1,6 +1,5 @@
 import { isEmpty } from 'lodash'
 import { defineComponent, onMounted, ref } from 'vue'
-import type { MindMapData } from '@/@types'
 import { useMindMap } from '@/composables'
 
 export const Stats = defineComponent({
@@ -11,14 +10,14 @@ export const Stats = defineComponent({
     const textStr = ref('')
     const { mindMap } = useMindMap()
 
-    const onDataChange = (data: MindMapData['root']) => {
-      const walk = (_data: MindMapData['root']) => {
+    const onDataChange = (data: any) => {
+      const walk = (_data: any) => {
         nodes.value++
         textStr.value += String(_data.data.text) || ''
         if (isEmpty(_data.children))
           return
 
-        _data.children.forEach((item: MindMapData['root']) => {
+        _data.children.forEach((item: any) => {
           walk(item)
         })
       }

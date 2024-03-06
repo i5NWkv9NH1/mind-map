@@ -19,13 +19,13 @@ export const NodeTags = defineComponent({
   name: 'NodeTags',
   setup() {
     // const { toggleMessage } = useSettingsStore()
-    const { mindMap } = useMindMap()
-    const { isActiveNode, activeNodes } = storeToRefs(useAppStore())
+    const { mindMap, activeNodes } = useMindMap()
+    const { isActiveNode, mindMapConfig } = storeToRefs(useAppStore())
 
     const dialog = ref(false)
     const text = ref('')
     const items = ref<string[]>([])
-    const isMaxTags = computed(() => items.value.length >= 5)
+    const isMaxTags = computed(() => items.value.length >= mindMapConfig.value.maxTag)
 
     const onReset = () => {
       dialog.value = false
@@ -39,7 +39,7 @@ export const NodeTags = defineComponent({
       else onReset()
     }
     const onConfirm = () => {
-      activeNodes.value!.forEach(node => node.setTag(items.value))
+      activeNodes.value.forEach(node => node.setTag(items.value))
       dialog.value = false
     }
     const onAddTag = () => {

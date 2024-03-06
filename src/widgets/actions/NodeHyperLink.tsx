@@ -14,9 +14,9 @@ import { useAppStore } from '@/store/app'
 export const NodeHyperLink = defineComponent({
   name: 'NodeHyperLink',
   setup() {
-    const { mindMap } = useMindMap()
+    const { mindMap, activeNodes } = useMindMap()
     // const { toggleMessage } = useSettingsStore()
-    const { activeNodes, isActiveNode } = storeToRefs(useAppStore())
+    const { isActiveNode } = storeToRefs(useAppStore())
 
     const dialog = ref(false)
     const link = ref('')

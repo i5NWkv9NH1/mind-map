@@ -15,8 +15,7 @@ import stickers from './images'
 
 // @ts-ignore
 import { extendedIconGroups } from './icons'
-import type { MindMapTheme } from '@/@types/mind-map/theme'
-import type { MindMapData, NodeIconGroup, NodeStickerGroup } from '@/@types'
+import type { MindMapTheme, NodeIconGroup, NodeStickerGroup } from '@/@types'
 
 export type ShapeMap = 'rectangle' | 'diamond' | 'parallelogram' | 'roundedRectangle' | 'octagonalRectangle' | 'outerTriangularRectangle' | 'innerTriangularRectangle' | 'ellipse' | 'circle'
 export interface DefaultArrayType<T = number | string> { id: string, name: string, value: T }
@@ -295,7 +294,7 @@ export function usePresets() {
     // #endregion
   ])
   const internalThemes = ref<any[]>(themeList)
-  const mindMapThemes = computed(() => customThemes.value.concat(internalThemes.value))
+  const mindMapThemes = computed(() => [...customThemes.value, ...internalThemes.value])
   const baiduThemes = [
     'default',
     'skyGreen',
@@ -391,7 +390,7 @@ export function usePresets() {
     '\\begin{cases}3x + 5y +  z \\\\7x - 2y + 4z \\\\-6x + 3y + 2z\\end{cases}',
   ])
 
-  const exampleData = ref<MindMapData>(simpleMapExampleData)
+  const exampleData = ref<any>(simpleMapExampleData)
   const internalIconGroupItems = ref<NodeIconGroup[]>(nodeIconList)
   const extendedIconGroupsItems = ref<NodeIconGroup[]>(extendedIconGroups)
   const iconGroupItems = computed<NodeIconGroup[]>(() => [...internalIconGroupItems.value, ...extendedIconGroupsItems.value])

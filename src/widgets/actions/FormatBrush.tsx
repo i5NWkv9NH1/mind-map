@@ -33,7 +33,7 @@ export const FormatBrush = defineComponent({
           onclick: () => {
             mindMap.value?.painter.startPainter()
           },
-        }, ['prevent'])}
+        }, ['stop'])}
       >
         <VIcon>{mdiBrushVariant}</VIcon>
         <span>格式刷</span>

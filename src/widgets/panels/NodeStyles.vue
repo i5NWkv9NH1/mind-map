@@ -2,16 +2,17 @@
   setup
   lang="ts"
 >
+import { mdiCloseCircle, mdiFormatBold, mdiFormatColorText, mdiFormatItalic, mdiFormatUnderline, mdiVectorLine } from '@mdi/js'
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
-import { mdiCloseCircle, mdiFormatBold, mdiFormatColorText, mdiFormatItalic, mdiFormatUnderline, mdiVectorLine } from '@mdi/js'
 import { ColorPicker, MenuSelect, PanelContainer } from '@/components'
-import { Empty } from '@/widgets'
 import { usePresets } from '@/composables'
 import { useSettingsStore } from '@/store/settings'
+import { Empty } from '@/widgets'
+import { useAppStore } from '@/store/app'
 
-const isActiveNode = ref(false)
-function togglePanel() { }
+const { isActiveNode } = storeToRefs(useAppStore())
+const { togglePanel } = useSettingsStore()
 const { isDark } = storeToRefs(useSettingsStore())
 const {
   usedColorItems,

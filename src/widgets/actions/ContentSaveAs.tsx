@@ -11,7 +11,7 @@ import { FileLogger } from '@/helpers'
 export const ContentSaveAs = defineComponent({
   name: 'ContentSaveAs',
   setup() {
-    const { mindMapData } = storeToRefs(useAppStore())
+    const { mindMapRoot } = storeToRefs(useAppStore())
     const { toggleLoading, toggleMessage } = useSettingsStore()
     const fileHandle = ref<FileSystemFileHandle>()
     // * 获取数据
@@ -32,7 +32,7 @@ export const ContentSaveAs = defineComponent({
           return
         }
         toggleLoading(true, {})
-        const json = mindMapData.value
+        const json = mindMapRoot.value
         const stream = await fileHandle.value.createWritable()
         await stream.write(JSON.stringify(json))
         await stream.close()

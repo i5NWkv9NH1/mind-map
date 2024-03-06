@@ -1,5 +1,4 @@
-// TODO: add store
-
+// TODO: 初始化设置
 import { mdiMinusThick, mdiPlusThick } from '@mdi/js'
 import { defineComponent, onMounted, ref } from 'vue'
 import { VBtn, VIcon, VTooltip } from 'vuetify/components'

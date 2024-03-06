@@ -8,13 +8,13 @@ import { useMindMap } from '@/composables'
 export const Redo = defineComponent({
   name: 'Redo',
   setup() {
-    const { canRedo, isMindMapReadonly } = storeToRefs(useAppStore())
+    const { canRedo, mindMapConfig } = storeToRefs(useAppStore())
     const { mindMap } = useMindMap()
     return () => (
       <VBtn
         stacked
-        disabled={canRedo.value || isMindMapReadonly.value}
-      // @ts-ignore
+        disabled={canRedo.value || mindMapConfig.value.readonly}
+        // @ts-ignore
         onClick={() => {
           mindMap.value?.execCommand('FORWARD')
         }}

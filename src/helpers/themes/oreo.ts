@@ -1,5 +1,4 @@
-import type { ThemeDefinition } from '@/@types/mind-map/theme'
-
+import type { ThemeDefinition } from '@/@types'
 // 奥利奥
 export default {
   // 连线的颜色

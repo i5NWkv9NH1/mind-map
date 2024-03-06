@@ -17,10 +17,10 @@ import { withEventModifiers } from '@/directives'
 export const NodeMath = defineComponent({
   name: 'NodeMath',
   setup() {
-    const { mindMap } = useMindMap()
+    const { mindMap, activeNodes } = useMindMap()
     // const { toggleMessage } = useSettingsStore()
     const { usedFormluaItems } = usePresets()
-    const { activeNodes, isActiveNode, hasGeneralization } = storeToRefs(useAppStore())
+    const { isActiveNode, hasGeneralization } = storeToRefs(useAppStore())
 
     const dialog = ref(false)
     const text = ref('')
@@ -42,10 +42,10 @@ export const NodeMath = defineComponent({
       onReset()
     }
     const onConfirm = () => {
-      if (!isActiveNode.value)
-        return
-      mindMap.value?.execCommand('INSERT_FORMULA', text.value, activeNodes.value)
-      onReset()
+      if (isActiveNode.value) {
+        mindMap.value?.execCommand('INSERT_FORMULA', text.value, activeNodes.value)
+        onReset()
+      }
     }
 
     return () => {

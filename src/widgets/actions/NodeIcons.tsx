@@ -6,13 +6,14 @@ import { storeToRefs } from 'pinia'
 import { v4 as uuid } from 'uuid'
 import { useAppStore } from '@/store/app'
 import type { NodeIcon, NodeIconGroup, NodeSticker, NodeStickerGroup } from '@/@types'
-import { usePresets } from '@/composables'
+import { useMindMap, usePresets } from '@/composables'
 
 export const NodeIcons = defineComponent({
   name: 'NodeIcons',
   setup() {
     const { iconGroupItems, stickerGroupItems } = usePresets()
-    const { isActiveNode, activeNodes } = storeToRefs(useAppStore())
+    const { isActiveNode } = storeToRefs(useAppStore())
+    const { activeNodes } = useMindMap()
 
     const dialog = ref(false)
     const tab = ref(0)
@@ -26,14 +27,8 @@ export const NodeIcons = defineComponent({
 
     watchEffect(() => {
       if (isActiveNode.value) {
-        if (activeNodes.value!.length > 0) {
-          currentNodeIcons.value = activeNodes.value![0].getData('icon') || []
-          currentNodeImage.value = activeNodes.value![0].getData('image') || ''
-        }
-        else {
-          currentNodeIcons.value = []
-          currentNodeImage.value = ''
-        }
+        currentNodeIcons.value = activeNodes.value![0].getData('icon') || []
+        currentNodeImage.value = activeNodes.value![0].getData('image') || ''
       }
       else {
         currentNodeIcons.value = []

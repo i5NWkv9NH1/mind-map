@@ -2,17 +2,17 @@
   setup
   lang="ts"
 >
+import { mdiCloseCircle } from '@mdi/js'
 import { storeToRefs } from 'pinia'
 import { v4 as uuid } from 'uuid'
 import { ref } from 'vue'
-import { mdiCloseCircle } from '@mdi/js'
-import { ColorPicker, DragUpload, PanelContainer } from '@/components'
-import { usePresets } from '@/composables'
 import { useSettingsStore } from '@/store/settings'
+import { usePresets } from '@/composables'
+import { ColorPicker, DragUpload, PanelContainer } from '@/components'
 
 // # background
 const { isDark } = storeToRefs(useSettingsStore())
-function togglePanel() { }
+const { togglePanel } = useSettingsStore()
 const {
   usedColorItems,
   fontFamilyItems,
