@@ -1,4 +1,5 @@
 import type { ThemeDefinition } from '@/@types'
+
 // 暗色4
 export default {
   backgroundColor: 'rgb(32, 34, 43)',

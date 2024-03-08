@@ -2,7 +2,29 @@ import { storeToRefs } from 'pinia'
 import { v4 as uuid } from 'uuid'
 import { defineComponent, ref } from 'vue'
 import { VSlideYTransition, VToolbar } from 'vuetify/components'
-import { ChildNode, ContentSaveAs, CreateNewMindMapFile, ExportFile, Folder, FormatBrush, ImportFile, NodeHyperLink, NodeIcons, NodeImage, NodeMath, NodeNote, NodeRelativeLine, NodeSummary, NodeTags, OpenMindMapFile, PeerNode, Redo, RemoveNode, Undo } from '../actions'
+import {
+  ChildNode,
+  ContentSaveAs,
+  CreateNewMindMapFile,
+  ExportFile,
+  Folder,
+  FormatBrush,
+  ImportFile,
+  MindMapOutline,
+  NodeHyperLink,
+  NodeIcons,
+  NodeImage,
+  NodeMath,
+  NodeNote,
+  NodeRelativeLine,
+  NodeSummary,
+  NodeTags,
+  OpenMindMapFile,
+  PeerNode,
+  Redo,
+  RemoveNode,
+  Undo,
+} from '../actions'
 import { useAppStore } from '@/store/app'
 import './TopBar.scss'
 
@@ -26,6 +48,7 @@ export const TopBar = defineComponent({
       { id: uuid(), component: <NodeSummary /> },
       { id: uuid(), component: <NodeRelativeLine /> },
       { id: uuid(), component: <NodeMath /> },
+      { id: uuid(), component: <MindMapOutline /> },
     ])
     const _extendActions = ref([
       { id: uuid(), component: <Folder /> },
@@ -54,7 +77,7 @@ export const TopBar = defineComponent({
                 ),
               }}
             />
-          )
+            )
           : <div />}
       </VSlideYTransition>
     )

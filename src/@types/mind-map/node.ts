@@ -27,6 +27,7 @@ export interface MindMapNode<T = any> {
   setStyle: (name: StyleName, value: string | number | any, isActive?: boolean) => void
   getData: (type: GetDataType) => any
   getRect: () => Rect
+  getStyle: (key: string, noRerender?: boolean) => string | number | boolean | object | any
 }
 
 export interface SetImage { url: string, title?: string, width: number, height: number }

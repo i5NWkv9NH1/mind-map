@@ -4,7 +4,7 @@
 >
 import { mdiCloseCircle, mdiCloseCircleOutline, mdiContentSaveOutline } from '@mdi/js'
 import { v4 as uuid } from 'uuid'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { isEmpty } from 'lodash'
 import type { MindMapTheme } from '@/@types/mind-map'
@@ -37,60 +37,46 @@ const themes = computed<MindMapTheme[]>(() => {
 })
 
 watch(mindMapTheme, () => {
-  // * is Dark
+  mindMap.value?.setTheme(mindMapTheme.value)
   const target = mindMapThemes.value.find(item => item.value === mindMapTheme.value)
   isDark.value = target.dark
 })
 
-function onViewThemeChange() {
-  mindMapTheme.value = mindMap.value?.getTheme()
-}
-
 function onSwitchTheme(theme: string) {
   if (theme === mindMapTheme.value)
     return
-  // # 先进行更改, 再进行合并自定义设置到 mindMap
   mindMapTheme.value = theme
   const customThemeConfig = mindMap.value?.getCustomThemeConfig()
   // # 是否存在配置
   if (!isEmpty(customThemeConfig)) {
+    console.log('存在主题配置', customThemeConfig)
     confirmDialog.value = true
-    mindMapThemeConfig.value = customThemeConfig
-    // ? -> confirm dialog
   }
   else {
-    // # 不存在自定义配置, 直接设置主题
-    mindMap.value?.setTheme(mindMapTheme.value)
-    // TODO: 保存到 store
-    mindMapThemeConfig.value = customThemeConfig
+    console.log('不存在主题配置', customThemeConfig)
+    mindMap.value?.setTheme(mindMapTheme.value, true)
+    mindMap.value?.setThemeConfig({}, true)
   }
 }
-// # 不保留自定义配置
 function onNotSaveThemeConfig() {
   mindMap.value?.setTheme(mindMapTheme.value)
-  confirmDialog.value = false
-  mindMapThemeConfig.value = {}
-  // TODO: 保存到 store
-  // store.updateThemeCofig({
-  //   template: selectedTheme.value,
-  //   config: themeConfig.value
-  // })
-}
-// # 保留自定义配置，覆盖主题
-function onOverWriteTheme() {
   mindMap.value?.setThemeConfig({}, true)
-  mindMap.value?.setTheme(mindMapTheme.value)
+  mindMapThemeConfig.value = mindMap.value?.getThemeConfig()
   confirmDialog.value = false
-  // TODO: 保存到 store
-  // store.updateThemeCofig({
-  //   template: selectedTheme.value,
-  //   config: themeConfig.value
-  // })
+}
+function onOverWriteTheme() {
+  mindMap.value?.setTheme(mindMapTheme.value)
+  // TODO: 设置主题后替换原来保存的自定义配置
+  // TODO: 目前自定义设置的对象数据中还包括原来主题的...
+  mindMap.value?.setThemeConfig(mindMapThemeConfig.value, true)
+  confirmDialog.value = false
 }
 
 onMounted(() => {
   mindMapTheme.value = mindMap.value?.getTheme() || 'default'
-  mindMap.value?.on('view_theme_change', onViewThemeChange)
+  mindMap.value?.on('view_theme_change', () => {
+    mindMapThemeConfig.value = mindMap.value?.getThemeConfig()
+  })
 })
 </script>
 
@@ -111,24 +97,29 @@ onMounted(() => {
             <VCardTitle>
               提示
             </VCardTitle>
-            <VCardText>
-              你当前自定义过基础样式，是否保留自定义配置
-            </VCardText>
+            <VCardSubtitle>你当前自定义过基础样式，是否保留自定义配置</VCardSubtitle>
+            <VCardText />
             <VCardActions>
-              <VBtn @click="onNotSaveThemeConfig">
+              <VBtn
+                @click="() => {
+                  onNotSaveThemeConfig()
+                }"
+              >
                 <VIcon start>
                   {{ mdiCloseCircleOutline }}
                 </VIcon>
-                <span>不保留，直接设置主题</span>
+                <span>不保留</span>
               </VBtn>
               <VBtn
-                color="warn"
-                @click="onOverWriteTheme"
+                color="warning"
+                @click="() => {
+                  onOverWriteTheme()
+                }"
               >
                 <VIcon start>
                   {{ mdiContentSaveOutline }}
                 </VIcon>
-                <span>保留，使用自定义配置覆盖主题</span>
+                <span>保留</span>
               </VBtn>
             </VCardActions>
           </VCard>
@@ -143,7 +134,7 @@ onMounted(() => {
         color="surface"
         variant="flat"
         icon
-        @click="togglePanel(null)"
+        @click="() => togglePanel(null)"
       >
         <VIcon>{{ mdiCloseCircle }}</VIcon>
       </VBtn>

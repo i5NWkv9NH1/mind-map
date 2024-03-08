@@ -86,10 +86,10 @@ export const NodeIcons = defineComponent({
                 {item.icon.startsWith('<svg')
                   ? (
                     <VIcon v-html={item.icon} size={24} />
-                  )
+                    )
                   : (
                     <img src={item.icon} width={24} height={24} />
-                  )}
+                    )}
               </VBtn>
             )
           })}

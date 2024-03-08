@@ -2,7 +2,7 @@
   setup
   lang="ts"
 >
-import { mdiSquareRounded } from '@mdi/js'
+import { mdiCloseCircleOutline, mdiContentSaveOutline, mdiSquareRounded } from '@mdi/js'
 import { isEmpty } from 'lodash'
 import { ref } from 'vue'
 import type { Anchor } from '@/@types'
@@ -11,10 +11,11 @@ import type { Anchor } from '@/@types'
 interface Props {
   // # 常用颜色
   items?: string[]
-  // # 常用颜色大小
-  size?: number
+  // # 常用颜色图标大小
+  iconSize?: number
   // # 常用颜色一栏的宽度
   width?: number
+  disabled?: boolean
   // # 点击内容时关闭
   closeOnContentClick?: boolean
   // # 是否强制停留 Dialog
@@ -23,45 +24,47 @@ interface Props {
   location?: Anchor
   transition?: string
   hideCanvas?: boolean
-  showActions?: boolean
+  mode?: 'rgb' | 'rgba' | 'hsl' | 'hsla' | 'hex' | 'hexa'
+  tip?: string
+  icon?: string
 }
 const props = withDefaults(defineProps<Props>(), {
   items: () => [],
   size: 24,
   width: 300,
+  disabled: false,
   closeOnContentClick: false,
   persistent: false,
-  location: 'left top',
+  location: 'left bottom',
   transition: 'scroll-y-transition',
   hideCanvas: false,
-  showActions: true,
+  mode: 'rgba',
+  icon: '',
+  tip: '',
 })
 // # emits
 // * confirm: 弹窗点击确定时回调
 const emits = defineEmits(['close', 'confirm'])
 // # state
 // * v-model:color 颜色
-const color = defineModel('color', {
+const isMenuOpen = ref(false)
+const color = defineModel<string>('color', {
   type: String,
   required: true,
 })
-const isMenuOpen = ref(false)
-// ? 复制一份临时的颜色
-// ? 如果使用 confirm 回调函数，则即使选择了颜色，但是还没有确定该颜色
-// ? 关闭 Dialog 时还原
-const tempColor = ref(color.value)
-// # actions
-// * 关闭 Dialog
+const tempColor = ref('')
+watch(color, () => {
+  tempColor.value = color.value
+}, { immediate: true })
 function onClose() {
-  color.value = tempColor.value
+  tempColor.value = color.value
   isMenuOpen.value = false
 }
 function onConfirm() {
   isMenuOpen.value = false
+  color.value = tempColor.value
   emits('confirm')
 }
-// * 打开 Dialog
-// # modelValue
 </script>
 
 <template>
@@ -72,20 +75,43 @@ function onConfirm() {
     :close-on-content-click="props.closeOnContentClick"
     :persistent="props.persistent"
     :location="props.location"
+    :disabled="props.disabled"
   >
-    <template #activator="args">
+    <template #activator="arg">
       <!-- ! 不解构,避免冲突 -->
       <slot
         name="activator"
-        :props="args.props"
-        :is-active="args.isActive"
-      />
+        :props="arg.props"
+        :is-active="arg.isActive"
+        :color="tempColor"
+      >
+        <VTooltip
+          :transition="props.transition"
+          offset="10"
+          open-delay="100"
+          location="top"
+        >
+          <template #activator="tip">
+            <VBtn
+              v-bind="{ ...arg.props, ...tip.props }"
+              :color="tempColor"
+              rounded="lg"
+              size="small"
+              icon
+            >
+              <VIcon>{{ props.icon }}</VIcon>
+            </VBtn>
+          </template>
+          <p>{{ props.tip }}</p>
+        </VTooltip>
+      </slot>
     </template>
     <VCard>
       <VCardText>
         <VColorPicker
-          v-model="color"
+          v-model="tempColor"
           :hide-canvas="props.hideCanvas"
+          :mode="props.mode"
           class="my-4"
           @click.stop
         />
@@ -99,23 +125,29 @@ function onConfirm() {
               v-for="item in props.items"
               :key="item"
               :color="item"
-              :size="props.size"
-              @click.stop="color = item"
+              :size="props.iconSize"
+              @click.stop="tempColor = item"
             >
               {{ mdiSquareRounded }}
             </VIcon>
           </div>
         </VList>
       </VCardText>
-      <VCardActions v-if="props.showActions">
+      <VCardActions>
         <VBtn @click="onClose">
-          取消
+          <VIcon start>
+            {{ mdiCloseCircleOutline }}}
+          </VIcon>
+          <span>取消</span>
         </VBtn>
         <VBtn
           color="primary"
           @click="onConfirm"
         >
-          确定
+          <VIcon start>
+            {{ mdiContentSaveOutline }}}
+          </VIcon>
+          <span>确定</span>
         </VBtn>
       </VCardActions>
     </VCard>

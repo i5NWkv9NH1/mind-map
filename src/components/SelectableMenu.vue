@@ -13,9 +13,7 @@ const props = withDefaults(defineProps<Props>(), {
   closeOnContentClick: false,
 })
 const modelValue = defineModel<number | string>('modelValue', {
-  type: Number,
   required: true,
-  default: 0,
 })
 </script>
 

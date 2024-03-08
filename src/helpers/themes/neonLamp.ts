@@ -1,4 +1,5 @@
 import type { ThemeDefinition } from '@/@types'
+
 // 霓虹灯
 export default {
   backgroundColor: 'rgb(17, 17, 84)',

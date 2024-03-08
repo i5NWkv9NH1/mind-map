@@ -18,6 +18,7 @@ import TouchEvent from 'simple-mind-map/src/plugins/TouchEvent.js'
 import Watermark from 'simple-mind-map/src/plugins/Watermark.js'
 import { nodeRichTextToTextWithWrap } from 'simple-mind-map/src/utils'
 import { defineComponent, onMounted, ref } from 'vue'
+import { isEmpty } from 'lodash'
 import { useAppStore } from '@/store/app'
 import { SimplePlugin } from '@/plugins/mindmap'
 import { useMindMap, usePresets } from '@/composables'
@@ -43,12 +44,14 @@ export const MindMapContainer = defineComponent({
     /**
      * TODO: 初始化时，判断是否打开文件
      */
-    // mindMapRoot.value = {
-    //   data: {
-    //     text: 'Root',
-    //   },
-    //   children: [],
-    // }
+    if (isEmpty(mindMapRoot.value)) {
+      mindMapRoot.value = {
+        data: {
+          text: 'Root',
+        },
+        children: [],
+      }
+    }
     // ! 忽略本地保存的数据
     // ! 这里每次初始化先使用库提供的数据
     // mindMapRoot.value = exampleData.value.root
@@ -112,6 +115,12 @@ export const MindMapContainer = defineComponent({
           handleIsSplitByWrapOnPasteCreateNewNode: () => { },
           iconList: extendedIconGroupsItems.value,
         })
+
+        // ! 初始化，如果本地的主题自定义设置为空，则为 mind map 的主题配置
+        // ! 更新时，只更新 UI 上提供的配置
+        if (isEmpty(mindMapThemeConfig.value))
+          mindMapThemeConfig.value = mindMap.value?.getThemeConfig()
+
         // # 注册完毕
         /**
          * # 渲染树数据变化，可以监听该方法获取最新数据

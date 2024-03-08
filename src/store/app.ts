@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import type { MindMapConfig, MindMapRoot, MindMapThemeConfig, MindMapView, MindMapWaterConfig } from '@/@types'
+import type { MindMapConfig, MindMapRoot, MindMapView, MindMapWaterConfig } from '@/@types'
 import { useMindMap } from '@/composables'
 
 export const useAppStore = defineStore('app', () => {
-  const { activeNodes } = useMindMap()
+  const { activeNodes, activeNode } = useMindMap()
 
   // ! cannot persist store
   /** #根节点数据和所有子节点数据 */
@@ -13,13 +13,14 @@ export const useAppStore = defineStore('app', () => {
   const mindMapLayout = ref<string>('logicalStructure')
   /** #主题配置，包括主题名和基础样式 */
   const mindMapTheme = ref<string>('default')
-  const mindMapThemeConfig = ref<MindMapThemeConfig>({
+  const mindMapThemeConfig = ref<Record<string, any>>({
   })
+  const mindMapThemeCustomConfig = ref<Record<string, any>>({})
   /** #画布移动偏移量数据 */
   const mindMapView = ref<MindMapView>()
   /**
    * # 其他 mindMap 实例化和可以 updateConfig 的配置
-   * # 实例化或者更新时 -> 解构
+   * # 实例化或者更新时
    */
   const mindMapConfig = ref<MindMapConfig>({
     isZenMode: false,
@@ -46,7 +47,9 @@ export const useAppStore = defineStore('app', () => {
   const isActiveNode = computed(() => {
     if (!activeNodes.value)
       return false
-    if (!activeNodes.value.length)
+    if (!activeNodes.value.length < 0)
+      return false
+    if (!activeNode.value)
       return false
     return true
   })
@@ -60,6 +63,7 @@ export const useAppStore = defineStore('app', () => {
     mindMapRoot,
     mindMapTheme,
     mindMapThemeConfig,
+    mindMapThemeCustomConfig,
     mindMapView,
     mindMapConfig,
     mindMapLayout,

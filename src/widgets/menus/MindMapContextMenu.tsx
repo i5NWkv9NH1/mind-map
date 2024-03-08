@@ -176,7 +176,7 @@ export const MindMapContextMenu = defineComponent({
                 }
               })}
             </VList>
-          )
+            )
           : <div />}
       </VScrollYTransition>
     )

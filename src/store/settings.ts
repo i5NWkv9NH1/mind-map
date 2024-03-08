@@ -1,6 +1,6 @@
 import { useDark } from '@vueuse/core'
 import { defineStore } from 'pinia'
-import { computed, ref, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { useTheme } from 'vuetify/lib/framework.mjs'
 
 export type Message = 'default' | 'info' | 'success' | 'error' | 'warning'
@@ -47,13 +47,14 @@ export const useSettingsStore = defineStore('settings', () => {
     loading.value.status = value
   }
 
-  const panel = ref<{ status: null | number, title: string }>({
+  const panel = reactive<{ status: null | number, title: string }>({
     status: null,
     title: '',
   })
+  const getPanelStatus = computed(() => !!panel.status)
   function togglePanel(status: null | number = null, title = '') {
-    panel.value.status = status
-    panel.value.title = title
+    panel.status = status
+    panel.title = title
   }
 
   return {
@@ -66,5 +67,6 @@ export const useSettingsStore = defineStore('settings', () => {
     toggleMessage,
     toggleLoading,
     togglePanel,
+    getPanelStatus,
   }
 }, { persist: { enabled: true } })

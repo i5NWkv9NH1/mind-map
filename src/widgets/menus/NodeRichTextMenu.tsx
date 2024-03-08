@@ -400,6 +400,8 @@ export const NodeRichTextMenu = defineComponent({
           // @ts-ignore // * 必有的字段
           currentFormat.value.bgColor = formatInfo?.background ?? ''
           position.value = rect
+
+          console.log(`${position.value.left + position.value.width / 2}px`)
         }
         isShow.value = hasRange
       })

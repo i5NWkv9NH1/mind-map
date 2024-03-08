@@ -1,4 +1,5 @@
 import type { ThemeDefinition } from '@/@types'
+
 // 经典6
 export default {
   backgroundColor: 'rgb(255, 255, 255)',

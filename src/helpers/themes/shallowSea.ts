@@ -1,4 +1,5 @@
 import type { ThemeDefinition } from '@/@types'
+
 // 浅海
 export default {
   backgroundColor: 'rgb(187, 241, 250)',

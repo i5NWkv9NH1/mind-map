@@ -1,4 +1,5 @@
 import type { ThemeDefinition } from '@/@types'
+
 // 玫瑰
 export default {
   backgroundColor: 'rgb(255, 251, 231)',

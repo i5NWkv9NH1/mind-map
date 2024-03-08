@@ -69,7 +69,7 @@ const keys = ref([
         color="surface"
         variant="flat"
         icon
-        @click="togglePanel(null)"
+        @click="() => togglePanel(null)"
       >
         <VIcon>{{ mdiCloseCircle }}</VIcon>
       </VBtn>

@@ -5,14 +5,19 @@
 import { mdiCloseCircle } from '@mdi/js'
 import { storeToRefs } from 'pinia'
 import { v4 as uuid } from 'uuid'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useSettingsStore } from '@/store/settings'
-import { usePresets } from '@/composables'
-import { ColorPicker, DragUpload, PanelContainer } from '@/components'
+import { useMindMap, usePresets } from '@/composables'
+import { ColorPicker, DragUpload, FormSelect, PanelContainer } from '@/components'
+import { useAppStore } from '@/store/app'
 
 // # background
 const { isDark } = storeToRefs(useSettingsStore())
+const { mindMapThemeConfig, mindMapTheme } = storeToRefs(useAppStore())
 const { togglePanel } = useSettingsStore()
+const { mindMap, activeNodes } = useMindMap()
+
+// # 数据
 const {
   usedColorItems,
   fontFamilyItems,
@@ -26,55 +31,45 @@ const {
   backgroundRepeatItems,
   backgroundSizeItems,
 } = usePresets()
+const backgroundTab = ref(0)
 const backgroundTabItems = ref([
   { id: uuid(), name: '颜色', value: 0 },
   { id: uuid(), name: '图片', value: 1 },
 ])
-const backgroundTab = ref(0)
-const paddingTabItems = ref([
-  { id: uuid(), name: '二级节点', value: 0 },
-  { id: uuid(), name: '三级以下节点', value: 1 },
+const marginTab = ref('')
+const marginTabItems = ref([
+  { id: uuid(), name: '二级节点', value: 'second' },
+  { id: uuid(), name: '三级以下节点', value: 'node' },
 ])
-// # background
-const backgroundColor = ref('#fafafa')
-const backgroundImage = ref('')
-const backgroundPosition = ref('0% 0%')
-const backgroundRepeat = ref('no-repeat')
-const backgroundSize = ref('auto')
-function onBackgroundColorConfirm() { }
-// # lines
-const lineColor = ref('#fafafa')
-const lineWidth = ref(2)
-const lineStyle = ref('none')
-const isShowArrow = ref(false)
-// # summary
-const summaryLineColor = ref('#fafafa')
-const summaryLineWidth = ref(2)
-// # 关联线
-const relateLineColor = ref('#fafafa')
-const relateLineWidth = ref(2)
-const relateLineActiveColor = ref('#fafafa')
-const relateLineActiveWidth = ref(8)
-// # 关联线文字
-const relateLineFontFamily = ref('微软雅黑, Microsoft YaHei')
-const relateLineFontColor = ref('#fafafa')
-const relateLineFontSize = ref(14)
-// # 节点边框
-const useBottomBorderNodeStyle = ref(false)
-// # 节点内边距
-const paddingHor = ref(15)
-const paddingVer = ref(0)
-// # 图片
-const imageMaxWidth = ref(100)
-const imageMaxHeight = ref(100)
-// # 图标
-const iconSize = ref(12)
-// # 节点外边距
-const currentPadding = ref(0)
-const twoLevelNodePaddingHor = ref(100)
-const twoLevelNodePaddingVer = ref(40)
-const childNodePaddingHor = ref(50)
-const childNodePaddingVer = ref(0)
+
+// * 切换 tab 时获取不同的数据 [root, second, node]
+watch(marginTab, () => {
+  marginTabItems.value.forEach((item) => {
+    const key = item.value
+    mindMapThemeConfig.value[key].marginX = mindMap.value?.getThemeConfig()[marginTab.value].marginX
+    mindMapThemeConfig.value[key].marginY = mindMap.value?.getThemeConfig()[marginTab.value].marginY
+  })
+  // Object.keys(marginTabItems.value).forEach((key: string) => {
+  //   mindMapThemeConfig.value[key] = mindMap.value?.getThemeConfig()[marginTab.value][key]
+  // })
+})
+
+function onUpdate(key: string, value: string) {
+  console.log('BaseStyles', 'key: ', key, 'value', value)
+  mindMapThemeConfig.value[key] = value
+  mindMap.value?.setThemeConfig(mindMapThemeConfig.value)
+}
+function onUpdateMargin(key: string, value: string) {
+  mindMapThemeConfig.value[marginTab.value][key] = value
+  mindMap.value?.setThemeConfig(mindMapThemeConfig.value)
+}
+
+// ! 不要监听整个主题样式，只修改某个值
+// ! 避免切换主题的时候把整个原来的主题配置（无UI）一直给替换掉
+// watch(mindMapThemeConfig, () => {
+//   mindMap.value?.setThemeConfig(mindMapThemeConfig.value)
+// }, { deep: true })
+
 // # 水印
 const isShowWaterMarker = ref(false)
 // # 其他配置
@@ -93,7 +88,7 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
         color="surface"
         variant="flat"
         icon
-        @click="togglePanel(null)"
+        @click="() => togglePanel(null)"
       >
         <VIcon>{{ mdiCloseCircle }}</VIcon>
       </VBtn>
@@ -124,15 +119,17 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
             >
               <VWindowItem value="颜色">
                 <ColorPicker
-                  v-model:color="backgroundColor"
+                  :color="mindMapThemeConfig.backgroundColor"
                   :items="usedColorItems"
-                  @confirm="onBackgroundColorConfirm"
+                  @update:color="(value) => {
+                    onUpdate('backgroundColor', value)
+                  }"
                 >
                   <template #activator="activator">
                     <div class="pa-2">
                       <VBtn
                         v-bind="activator.props"
-                        :color="backgroundColor"
+                        :color="mindMapThemeConfig.backgroundColor"
                         rounded="lg"
                         size="large"
                         class="mr-2"
@@ -145,88 +142,46 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               <VWindowItem value="图片">
                 <div class="pa-2">
                   <DragUpload
-                    v-model:src="backgroundImage"
+                    :src="mindMapThemeConfig.backgroundImage"
                     name=""
+                    @update:src="(value) => {
+                      onUpdate('backgroundImage', value)
+                    }"
                   />
                   <VRow>
                     <VCol>
-                      <VSelect
-                        v-model="backgroundPosition"
-                        label="图片位置"
+                      <FormSelect
+                        :model-value="mindMapThemeConfig.backgroundPosition"
                         :items="backgroundPositionItems"
-                        item-title="name"
-                        item-value="value"
-                        :variant="isDark ? 'outlined' : 'solo'"
-                        hide-details
-                      >
-                        <template #item="{ item, props }">
-                          <VList
-                            density="compact"
-                            nav
-                          >
-                            <VListItem
-                              v-bind="props"
-                              :value="item.value"
-                              :title="item.title"
-                              :active="backgroundPosition === item.value"
-                            />
-                          </VList>
-                        </template>
-                      </VSelect>
+                        label="图片位置"
+                        @update:model-value="(value) => {
+                          onUpdate('backgroundPosition', value)
+                        }"
+                      />
                     </VCol>
                   </VRow>
                   <VRow>
                     <VCol>
-                      <VSelect
-                        v-model="backgroundRepeat"
+                      <FormSelect
+                        :model-value="mindMapThemeConfig.backgroundRepeat"
                         label="图片重复"
                         :items="backgroundRepeatItems"
-                        item-title="name"
-                        item-value="value"
-                        :variant="isDark ? 'outlined' : 'solo'"
-                        hide-details
-                      >
-                        <template #item="{ item, props }">
-                          <VList
-                            density="compact"
-                            nav
-                          >
-                            <VListItem
-                              v-bind="props"
-                              :value="item.value"
-                              :title="item.title"
-                              :active="backgroundRepeat === item.value"
-                            />
-                          </VList>
-                        </template>
-                      </VSelect>
+                        @update:model-value="(value) => {
+                          onUpdate('backgroundRepeat', value)
+                        }"
+                      />
                     </VCol>
                   </VRow>
                   <VRow>
                     <VCol>
-                      <VSelect
-                        v-model="backgroundSize"
+                      <FormSelect
+                        :model-value="mindMapThemeConfig.backgroundSize"
                         label="图片大小"
                         :items="backgroundSizeItems"
-                        item-title="name"
-                        item-value="value"
-                        :variant="isDark ? 'outlined' : 'solo'"
-                        hide-details
-                      >
-                        <template #item="{ item, props }">
-                          <VList
-                            density="compact"
-                            nav
-                          >
-                            <VListItem
-                              v-bind="props"
-                              :value="item.value"
-                              :title="item.title"
-                              :active="backgroundSize === item.value"
-                            />
-                          </VList>
-                        </template>
-                      </VSelect>
+                        @update:model-value="(value) => {
+                          onUpdate('backgroundSize', value)
+                        }"
+                      />
                     </VCol>
                   </VRow>
                 </div>
@@ -246,14 +201,18 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               颜色
             </VLabel>
             <ColorPicker
-              v-model:color="lineColor"
+              :color="mindMapThemeConfig.lineColor"
               location="left center"
+              :items="usedColorItems"
+              @update:color="(value) => {
+                onUpdate('lineColor', value)
+              }"
             >
               <template #activator="activator">
                 <VBtn
                   v-bind="activator.props"
                   class="d-block"
-                  :color="lineColor"
+                  :color="mindMapThemeConfig.lineColor"
                   elevation="4"
                   block
                 />
@@ -261,102 +220,81 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
             </ColorPicker>
           </VCol>
           <VCol>
-            <VLabel class="text-subtitle-2 mb-1">
-              粗细
-            </VLabel>
-            <VSelect
-              v-model="lineWidth"
+            <FormSelect
+              :model-value="mindMapThemeConfig.lineWidth"
               :items="lineWidthSizeItems"
-              item-title="name"
-              item-value="value"
-              density="compact"
-              :variant="isDark ? 'outlined' : 'solo'"
-              hide-details
+              label="粗细"
+              @update:model-value="(value) => {
+                onUpdate('lineWidth', value)
+              }"
             >
-              <template #item="{ item, props }">
-                <VList
-                  density="compact"
-                  nav
-                >
-                  <VListItem
-                    v-bind="props"
-                    :value="item.value"
-                    :active="lineWidth === item.value"
-                  >
-                    <template v-if="!item.value" />
-                    <template v-else>
-                      <svg
-                        width="100"
-                        height="20"
-                      >
-                        <line
-                          x1="0"
-                          y1="0"
-                          x2="100"
-                          y2="0"
-                          stroke-dasharray="none"
-                          :stroke="lineWidth === item.value ? '#409eff' : isDark ? '#fff' : '#000'"
-                          :stroke-width="item.value"
-                        />
-                      </svg>
-                    </template>
-                  </vlistitem>
-                </VList>
-              </template>
-            </VSelect>
-          </VCol>
-        </VRow>
-        <VRow align="center">
-          <VCol cols="6">
-            <VLabel class="text-subtitle-2 mb-1">
-              风格
-            </VLabel>
-            <VSelect
-              v-model="lineStyle"
-              :items="lineStyleItems"
-              item-title="name"
-              item-value="value"
-              density="compact"
-              :variant="isDark ? 'outlined' : 'solo'"
-              hide-details
-            >
-              <template #item="{ item, props }">
-                <VList
-                  density="compact"
-                  nav
-                >
-                  <VListItem
-                    v-bind="props"
-                    :value="item.value"
-                    :active="lineStyle === item.value"
-                  >
+              <template #default="{ item }">
+                <VListItemTitle>
+                  <p>{{ item.title }}</p>
+                  <template v-if="!item.value" />
+                  <template v-else>
                     <svg
                       width="100"
                       height="20"
                     >
                       <line
-                        x1="10"
-                        y1="17"
-                        x2="110"
-                        y2="17"
-                        stroke-width="2"
-                        :stroke="lineStyle === item.value ? '#409eff' : isDark ? '#fff' : '#000'"
-                        :stroke-dasharray="item.value"
+                        x1="0"
+                        y1="0"
+                        x2="100"
+                        y2="0"
+                        stroke-dasharray="none"
+                        :stroke="mindMapThemeConfig.lineWidth === item.value ? '#409eff' : isDark ? '#fff' : '#000'"
+                        :stroke-width="item.value"
                       />
                     </svg>
-                  </VListItem>
-                </VList>
+                  </template>
+                </VListItemTitle>
               </template>
-            </VSelect>
+            </FormSelect>
+          </VCol>
+        </VRow>
+        <VRow align="center">
+          <VCol cols="6">
+            <FormSelect
+              :model-value="mindMapThemeConfig.lineStyle"
+              :items="lineStyleItems"
+              label="风格"
+              @update:model-value="(value) => {
+                onUpdate('lineStyle', value)
+              }"
+            >
+              <template #default="{ item }">
+                <VListItemTitle>
+                  <p>{{ item.title }}</p>
+                  <svg
+                    width="100"
+                    height="20"
+                  >
+                    <line
+                      x1="10"
+                      y1="17"
+                      x2="110"
+                      y2="17"
+                      stroke-width="2"
+                      :stroke="mindMapThemeConfig.lineStyle === item.value ? '#409eff' : isDark ? '#fff' : '#000'"
+                      :stroke-dasharray="item.value"
+                    />
+                  </svg>
+                </VListItemTitle>
+              </template>
+            </FormSelect>
           </VCol>
         </VRow>
         <VRow>
           <VCol>
             <VCheckbox
-              v-model="isShowArrow"
+              :model-value="mindMapThemeConfig.showLineMarker"
               label="是否显示箭头"
               density="compact"
               hide-details
+              @update:model-value="(value) => {
+                onUpdate('showLineMarker', value)
+              }"
             />
           </VCol>
         </VRow>
@@ -371,12 +309,17 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
             <VLabel class="text-subtitle-2 mb-1">
               颜色
             </VLabel>
-            <ColorPicker v-model:color="summaryLineColor">
+            <ColorPicker
+              :color="mindMapThemeConfig.generalizationLineColor" :items="usedColorItems"
+              @update:color="(value) => {
+                onUpdate('generalizationLineColor', value)
+              }"
+            >
               <template #activator="activator">
                 <VBtn
                   v-bind="activator.props"
                   class="d-block"
-                  :color="summaryLineColor"
+                  :color="mindMapThemeConfig.generalizationLineColor"
                   elevation="4"
                   block
                 />
@@ -384,49 +327,34 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
             </ColorPicker>
           </VCol>
           <VCol>
-            <VLabel class="text-subtitle-2 mb-1">
-              粗细
-            </VLabel>
-            <VSelect
-              v-model="summaryLineWidth"
-              :items="lineWidthSizeItems"
-              item-title="name"
-              item-value="value"
-              density="compact"
-              :variant="isDark ? 'outlined' : 'solo'"
-              hide-details
+            <FormSelect
+              :model-value="mindMapThemeConfig.generalizationLineWidth"
+              label="粗细"
+              @update:model-value="(value) => { onUpdate('generalizationLineWidth', value) }"
             >
-              <template #item="{ item, props }">
-                <VList
-                  density="compact"
-                  nav
-                >
-                  <VListItem
-                    v-bind="props"
-                    :value="item.value"
-                    :active="summaryLineWidth === item.value"
-                  >
-                    <template v-if="!item.value" />
-                    <template v-else>
-                      <svg
-                        width="100"
-                        height="20"
-                      >
-                        <line
-                          x1="0"
-                          y1="0"
-                          x2="100"
-                          y2="0"
-                          stroke-dasharray="none"
-                          :stroke="summaryLineWidth === item.value ? '#409eff' : isDark ? '#fff' : '#000'"
-                          :stroke-width="item.value"
-                        />
-                      </svg>
-                    </template>
-                  </VListItem>
-                </VList>
+              <template #default="{ item }">
+                <VListItemTitle>
+                  <p>{{ item.title }}</p>
+                  <template v-if="!item.value" />
+                  <template v-else>
+                    <svg
+                      width="100"
+                      height="20"
+                    >
+                      <line
+                        x1="0"
+                        y1="0"
+                        x2="100"
+                        y2="0"
+                        stroke-dasharray="none"
+                        :stroke="mindMapThemeConfig.summaryLineWidth === item.value ? '#409eff' : isDark ? '#fff' : '#000'"
+                        :stroke-width="item.value"
+                      />
+                    </svg>
+                  </template>
+                </VListItemTitle>
               </template>
-            </VSelect>
+            </FormSelect>
           </VCol>
         </VRow>
       </VSheet>
@@ -440,12 +368,17 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
             <VLabel class="text-subtitle-2 mb-1">
               颜色
             </VLabel>
-            <ColorPicker v-model:color="relateLineColor">
+            <ColorPicker
+              :color="mindMapThemeConfig.associativeLineColor"
+              mode="rgb"
+              :items="usedColorItems"
+              @update:color="(value) => { onUpdate('associativeLineColor', value) }"
+            >
               <template #activator="args">
                 <VBtn
                   v-bind="args.props"
                   class="d-block"
-                  :color="relateLineColor"
+                  :color="mindMapThemeConfig.associativeLineColor"
                   elevation="4"
                   block
                 />
@@ -453,49 +386,37 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
             </ColorPicker>
           </VCol>
           <VCol>
-            <VLabel class="text-subtitle-2 mb-1">
-              粗细
-            </VLabel>
-            <VSelect
-              v-model="relateLineWidth"
+            <FormSelect
+              label="粗细"
+              :model-value="mindMapThemeConfig.associativeLineWidth"
               :items="lineWidthSizeItems"
-              item-title="name"
-              item-value="value"
-              density="compact"
-              :variant="isDark ? 'outlined' : 'solo'"
-              hide-details
+              @update:model-value="(value) => {
+                onUpdate('associativeLineWidth', value)
+              }"
             >
-              <template #item="{ item, props }">
-                <VList
-                  density="compact"
-                  nav
-                >
-                  <VListItem
-                    v-bind="props"
-                    :value="item.value"
-                    :active="relateLineWidth === item.value"
-                  >
-                    <template v-if="!item.value" />
-                    <template v-else>
-                      <svg
-                        width="100"
-                        height="20"
-                      >
-                        <line
-                          x1="0"
-                          y1="0"
-                          x2="100"
-                          y2="0"
-                          stroke-dasharray="none"
-                          :stroke="relateLineWidth === item.value ? '#409eff' : isDark ? '#fff' : '#000'"
-                          :stroke-width="item.value"
-                        />
-                      </svg>
-                    </template>
-                  </VListItem>
-                </VList>
+              <template #default="{ item }">
+                <VListItemTitle>
+                  <p>{{ item.title }}</p>
+                  <template v-if="!item.value" />
+                  <template v-else>
+                    <svg
+                      width="100"
+                      height="20"
+                    >
+                      <line
+                        x1="0"
+                        y1="0"
+                        x2="100"
+                        y2="0"
+                        stroke-dasharray="none"
+                        :stroke="mindMapThemeConfig.associativeLineWidth === item.value ? '#409eff' : isDark ? '#fff' : '#000'"
+                        :stroke-width="item.value"
+                      />
+                    </svg>
+                  </template>
+                </VListItemTitle>
               </template>
-            </VSelect>
+            </FormSelect>
           </VCol>
         </VRow>
         <VRow>
@@ -503,12 +424,18 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
             <VLabel class="text-subtitle-2 mb-1">
               激活颜色
             </VLabel>
-            <ColorPicker v-model:color="relateLineActiveColor">
+            <ColorPicker
+              :color="mindMapThemeConfig.associativeLineActiveColor"
+              :items="usedColorItems"
+              @update:color="(value) => {
+                onUpdate('associativeLineActiveColor', value)
+              }"
+            >
               <template #activator="args">
                 <VBtn
                   v-bind="args.props"
                   class="d-block"
-                  :color="relateLineActiveColor"
+                  :color="mindMapThemeConfig.associativeLineActiveColor"
                   elevation="4"
                   block
                 />
@@ -516,49 +443,36 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
             </ColorPicker>
           </VCol>
           <VCol>
-            <VLabel class="text-subtitle-2 mb-1">
-              粗细
-            </VLabel>
-            <VSelect
-              v-model="relateLineActiveWidth"
+            <FormSelect
+              label="粗细" :model-value="mindMapThemeConfig.associativeLineActiveWidth"
               :items="lineWidthSizeItems"
-              item-title="name"
-              item-value="value"
-              density="compact"
-              :variant="isDark ? 'outlined' : 'solo'"
-              hide-details
+              @update:model-value="(value) => {
+                onUpdate('associativeLineActiveWidth', value)
+              }"
             >
-              <template #item="{ item, props }">
-                <VList
-                  density="compact"
-                  nav
-                >
-                  <VListItem
-                    v-bind="props"
-                    :value="item.value"
-                    :active="relateLineActiveWidth === item.value"
-                  >
-                    <template v-if="!item.value" />
-                    <template v-else>
-                      <svg
-                        width="100"
-                        height="20"
-                      >
-                        <line
-                          x1="0"
-                          y1="0"
-                          x2="100"
-                          y2="0"
-                          stroke-dasharray="none"
-                          :stroke="relateLineActiveWidth === item.value ? '#409eff' : isDark ? '#fff' : '#000'"
-                          :stroke-width="item.value"
-                        />
-                      </svg>
-                    </template>
-                  </VListItem>
-                </VList>
+              <template #default="{ item }">
+                <VListItemTitle>
+                  <p>{{ item.title }}</p>
+                  <template v-if="!item.value" />
+                  <template v-else>
+                    <svg
+                      width="100"
+                      height="20"
+                    >
+                      <line
+                        x1="0"
+                        y1="0"
+                        x2="100"
+                        y2="0"
+                        stroke-dasharray="none"
+                        :stroke="mindMapThemeConfig.associativeLineActiveWidth === item.value ? '#409eff' : isDark ? '#fff' : '#000'"
+                        :stroke-width="item.value"
+                      />
+                    </svg>
+                  </template>
+                </VListItemTitle>
               </template>
-            </VSelect>
+            </FormSelect>
           </VCol>
         </VRow>
       </VSheet>
@@ -569,32 +483,14 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
         </div>
         <VRow>
           <VCol>
-            <VLabel class="text-subtitle-2 mb-1">
-              字体
-            </VLabel>
-            <VSelect
-              v-model="relateLineFontFamily"
+            <FormSelect
+              label="字体"
+              :model-value="mindMapThemeConfig.associativeLineTextFontFamily"
               :items="fontFamilyItems"
-              item-title="name"
-              item-value="value"
-              density="compact"
-              :variant="isDark ? 'outlined' : 'solo'"
-              hide-details
-            >
-              <template #item="{ item, props }">
-                <VList
-                  density="compact"
-                  nav
-                >
-                  <VListItem
-                    v-bind="props"
-                    :value="item.value"
-                    :title="item.title"
-                    :active="relateLineFontFamily === item.value"
-                  />
-                </VList>
-              </template>
-            </VSelect>
+              @update:model-value="value => {
+                onUpdate('associativeLineTextFontFamily', value)
+              }"
+            />
           </VCol>
         </VRow>
         <VRow>
@@ -602,12 +498,18 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
             <VLabel class="text-subtitle-2 mb-1">
               颜色
             </VLabel>
-            <ColorPicker v-model:color="relateLineFontColor">
+            <ColorPicker
+              :color="mindMapThemeConfig.associativeLineTextColor"
+              :items="usedColorItems"
+              @update:color="(value) => {
+                onUpdate('associativeLineTextColor', value)
+              }"
+            >
               <template #activator="args">
                 <VBtn
                   v-bind="args.props"
                   class="d-block"
-                  :color="relateLineFontColor"
+                  :color="mindMapThemeConfig.associativeLineTextColor"
                   elevation="4"
                   block
                 />
@@ -615,32 +517,14 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
             </ColorPicker>
           </VCol>
           <VCol>
-            <VLabel class="text-subtitle-2 mb-1">
-              字号
-            </VLabel>
-            <VSelect
-              v-model="relateLineFontSize"
+            <FormSelect
+              label="字号"
+              :model-value="mindMapThemeConfig.associativeLineTextFontSize"
               :items="fontSizeItems"
-              item-title="name"
-              item-value="value"
-              density="compact"
-              :variant="isDark ? 'outlined' : 'solo'"
-              hide-details
-            >
-              <template #item="{ item, props }">
-                <VList
-                  density="compact"
-                  nav
-                >
-                  <VListItem
-                    v-bind="props"
-                    :value="item.value"
-                    :title="item.title"
-                    :active="fontSizeItems === item.value"
-                  />
-                </VList>
-              </template>
-            </VSelect>
+              @update:model-value="value => {
+                onUpdate('associativeLineTextFontSize', value)
+              }"
+            />
           </VCol>
         </VRow>
       </VSheet>
@@ -652,15 +536,19 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
         <VRow>
           <VCol>
             <VCheckbox
-              v-model="useBottomBorderNodeStyle"
+              :model-value="mindMapThemeConfig.nodeUseLineStyle"
               label="是否使用只有底边框的风格"
               density="compact"
               hide-details
+              @update:model-value="(value) => {
+                onUpdate('nodeUseLineStyle', value)
+              }"
             />
           </VCol>
         </VRow>
       </VSheet>
       <VDivider />
+
       <VSheet class="my-4">
         <div class="text-body-1 mb-3">
           节点内边距
@@ -668,27 +556,33 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
         <VRow>
           <VCol cols="12">
             <VSlider
-              v-model="paddingHor"
+              :model-value="mindMapThemeConfig.paddingX"
               :max="100"
               :min="0"
               :step="1"
               thumb-label
               hide-details
+              @update:model-value="(value) => {
+                onUpdate('paddingX', value)
+              }"
             >
               <template #prepend>
                 <span>水平</span>
               </template>
             </VSlider>
             <VSlider
-              v-model="paddingVer"
+              :model-value="mindMapThemeConfig.paddingY"
               :max="100"
               :min="0"
               :step="1"
               thumb-label
               hide-details
+              @update:model-value="(value) => {
+                onUpdate('paddingY', value)
+              }"
             >
               <template #prepend>
-                <span>水平</span>
+                <span>垂直</span>
               </template>
             </VSlider>
           </VCol>
@@ -702,27 +596,33 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
         <VRow>
           <VCol cols="12">
             <VSlider
-              v-model="imageMaxWidth"
+              :model-value="mindMapThemeConfig.imageMaxWidth"
               :max="100"
               :min="0"
               :step="1"
               thumb-label
               hide-details
+              @update:model-value="(value) => {
+                onUpdate('imageMaxWidth', value)
+              }"
             >
               <template #prepend>
-                <span>水平</span>
+                <span>显示的最大宽度</span>
               </template>
             </VSlider>
             <VSlider
-              v-model="imageMaxHeight"
+              :model-value="mindMapThemeConfig.imageMaxHeight"
               :max="100"
               :min="0"
               :step="1"
               thumb-label
               hide-details
+              @update:model-value="(value) => {
+                onUpdate('imageMaxHeight', value)
+              }"
             >
               <template #prepend>
-                <span>水平</span>
+                <span>显示的最大高度</span>
               </template>
             </VSlider>
           </VCol>
@@ -736,12 +636,15 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
         <VRow>
           <VCol cols="12">
             <VSlider
-              v-model="iconSize"
+              :model-value="mindMapThemeConfig.iconSize"
               :max="50"
               :min="12"
               :step="1"
               thumb-label
               hide-details
+              @update:model-value="(value) => {
+                onUpdate('iconSize', value)
+              }"
             >
               <template #prepend>
                 <span>大小</span>
@@ -751,6 +654,7 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
         </VRow>
       </VSheet>
       <VDivider />
+
       <VSheet class="my-4">
         <div class="text-body-1 mb-3">
           节点外边距
@@ -758,11 +662,12 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
         <VRow>
           <VCol>
             <VTabs
-              v-model="currentPadding"
+              v-model="marginTab"
               density="compact"
+              mandatory="force"
             >
               <VTab
-                v-for="tab in paddingTabItems"
+                v-for="tab in marginTabItems"
                 :key="tab.id"
                 :text="tab.name"
                 :value="tab.value"
@@ -770,58 +675,71 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               />
             </VTabs>
             <VWindow
-              v-model="currentPadding"
-              class="mt-4"
+              v-model="marginTab"
+              mandatory="force"
+              class="pt-8"
             >
-              <VWindowItem :value="0">
+              <VWindowItem value="second">
                 <VSlider
-                  v-model="twoLevelNodePaddingHor"
+                  :model-value="mindMapThemeConfig.second.marginX"
                   :max="100"
                   :min="0"
                   :step="1"
                   thumb-label
                   hide-details
+                  @update:model-value="(value) => {
+                    onUpdateMargin('marginX', value)
+                  }"
                 >
                   <template #prepend>
                     <span>水平</span>
                   </template>
                 </VSlider>
                 <VSlider
-                  v-model="twoLevelNodePaddingVer"
+                  :model-value="mindMapThemeConfig.second.marginY"
                   :max="100"
                   :min="0"
                   :step="1"
                   thumb-label
                   hide-details
+                  @update:model-value="(value) => {
+                    onUpdateMargin('marginY', value)
+                  }"
                 >
                   <template #prepend>
-                    <span>水平</span>
+                    <span>垂直</span>
                   </template>
                 </VSlider>
               </VWindowItem>
-              <VWindowItem :value="1">
+              <VWindowItem value="node">
                 <VSlider
-                  v-model="childNodePaddingHor"
+                  v-model="mindMapThemeConfig.node.marginX"
                   :max="100"
                   :min="0"
                   :step="1"
                   thumb-label
                   hide-details
+                  @update:model-value="(value) => {
+                    onUpdateMargin('marginX', value)
+                  }"
                 >
                   <template #prepend>
                     <span>水平</span>
                   </template>
                 </VSlider>
                 <VSlider
-                  v-model="childNodePaddingVer"
+                  v-model="mindMapThemeConfig.node.marginY"
                   :max="100"
                   :min="0"
                   :step="1"
                   thumb-label
                   hide-details
+                  @update:model-value="(value) => {
+                    onUpdateMargin('marginY', value)
+                  }"
                 >
                   <template #prepend>
-                    <span>水平</span>
+                    <span>垂直</span>
                   </template>
                 </VSlider>
               </VWindowItem>
@@ -829,7 +747,9 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
           </VCol>
         </VRow>
       </VSheet>
+
       <VDivider />
+
       <VSheet class="my-4">
         <div class="text-body-1 mb-3">
           水印

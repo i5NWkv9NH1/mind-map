@@ -21,20 +21,20 @@ export type ShapeMap = 'rectangle' | 'diamond' | 'parallelogram' | 'roundedRecta
 export interface DefaultArrayType<T = number | string> { id: string, name: string, value: T }
 export type UsedColor = string
 export type FontFamily = DefaultArrayType<string>
-export type TextUnderlineStyle = DefaultArrayType<number>
+export type TextUnderlineStyle = DefaultArrayType<string>
 export type BorderStyle = DefaultArrayType<string>
 export type BorderWidth = DefaultArrayType
 export type BorderRedius = DefaultArrayType
 export type Shape = DefaultArrayType<ShapeMap>
 export type LineStyle = DefaultArrayType
-export type LineWidth = DefaultArrayType
+export type LineWidth = DefaultArrayType<number>
 export type LineArrowPosition = DefaultArrayType
 export type MouseBehavior = DefaultArrayType<'zoom' | 'move'>
 export type MouseScrollScale = DefaultArrayType<boolean>
 export type CreateNodeBehavior = DefaultArrayType
 export type BackgroundPosition = DefaultArrayType
 export type BackgroundRepeat = DefaultArrayType
-export type BackgroundSize = DefaultArrayType
+export type BackgroundSize = DefaultArrayType<string>
 export type LayoutStructure = DefaultArrayType<string>
 
 export function usePresets() {
@@ -97,10 +97,10 @@ export function usePresets() {
   const fontSizeItems = ref<number[]>([10, 12, 14, 16, 18, 24, 32, 48])
   const fontLineHeightItems = ref<number[]>([1, 1.5, 2, 2.5, 3])
   const textUnderlineStyleItems = ref<TextUnderlineStyle[]>([
-    { id: uuid(), name: '无', value: 0 },
-    { id: uuid(), name: '下划线', value: 1 },
-    { id: uuid(), name: '中划线', value: 2 },
-    { id: uuid(), name: '上划线', value: 3 },
+    { id: uuid(), name: '无', value: 'none' },
+    { id: uuid(), name: '下划线', value: 'textDecoration' },
+    { id: uuid(), name: '中划线', value: 'line-through' },
+    { id: uuid(), name: '上划线', value: 'overline' },
   ])
   const borderStyleItems = ref<BorderStyle[]>([
     { id: uuid(), name: '实线', value: 'none' },

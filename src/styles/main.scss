@@ -23,3 +23,31 @@ body>div:nth-child(5) {
   width: max-content;
   height: max-content
 }
+
+
+.tree {
+  font-family: Arial, sans-serif;
+}
+
+.tree-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.node {
+  background-color: #eee;
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.children {
+  margin-left: 20px;
+}
+
+input {
+  margin-right: 8px;
+}

@@ -11,10 +11,12 @@ declare module 'vue' {
     ColorPicker: typeof import('./src/components/ColorPicker.vue')['default']
     DraggleUpload: typeof import('./src/components/DraggleUpload.vue')['default']
     DragUpload: typeof import('./src/components/DragUpload.vue')['default']
-    MenuSelect: typeof import('./src/components/MenuSelect.vue')['default']
+    FormSelect: typeof import('./src/components/FormSelect.vue')['default']
+    MenuSelect: typeof import('./src/components/SelectableMenu.vue')['default']
     PanelContainer: typeof import('./src/components/PanelContainer.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SelectableMenu: typeof import('./src/components/SelectableMenu.vue')['default']
     TreeView: typeof import('./src/components/TreeView.vue')['default']
   }
 }
