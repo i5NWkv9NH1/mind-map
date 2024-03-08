@@ -4,19 +4,19 @@
 >
 import { v4 as uuid } from 'uuid'
 import { computed, ref } from 'vue'
-import { mdiAutoFix, mdiKeyboardOutline, mdiSitemapOutline, mdiStarShootingOutline, mdiTshirtCrewOutline } from '@mdi/js'
+import { mdiAutoFix, mdiKeyboardOutline, mdiSitemapOutline, mdiStarShootingOutline } from '@mdi/js'
 import { VSlideXReverseTransition } from 'vuetify/lib/components/index.mjs'
 import { storeToRefs } from 'pinia'
 import { MapShortKeys, MapStructures, NodeStyles } from '../panels'
 import { useSettingsStore } from '@/store/settings'
-import { BaseStyles, MapThemes } from '@/widgets'
+import { BaseStyles } from '@/widgets'
 
 const { togglePanel } = useSettingsStore()
 const { getPanelStatus, panel } = storeToRefs(useSettingsStore())
 const items = ref([
   { id: uuid(), name: '节点样式', color: 'primary', icon: mdiStarShootingOutline, value: 1 },
   { id: uuid(), name: '基础样式', color: 'primary', icon: mdiAutoFix, value: 2 },
-  { id: uuid(), name: '主题', color: 'primary', icon: mdiTshirtCrewOutline, value: 3 },
+  // { id: uuid(), name: '主题', color: 'primary', icon: mdiTshirtCrewOutline, value: 3 },
   { id: uuid(), name: '结构', color: 'primary', icon: mdiSitemapOutline, value: 4 },
   { id: uuid(), name: '快捷键', color: 'primary', icon: mdiKeyboardOutline, value: 5 },
 ])
@@ -24,7 +24,7 @@ const component = computed(() => {
   switch (panel.value.status) {
     case 1: return NodeStyles
     case 2: return BaseStyles
-    case 3: return MapThemes
+    // case 3: return MapThemes
     case 4: return MapStructures
     case 5: return MapShortKeys
     default: return NodeStyles

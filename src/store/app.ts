@@ -25,6 +25,11 @@ export const useAppStore = defineStore('app', () => {
   const mindMapConfig = ref<MindMapConfig>({
     isZenMode: false,
     useLeftKeySelectionRightKeyDrag: false,
+    enableFreeDrag: false,
+    enableNodeRichText: true,
+    mousewheelAction: 'move',
+    mousewheelZoomActionReverse: false,
+    createNewNodeBehavior: 'default',
     maxTag: 10,
     readonly: false,
   })
@@ -58,6 +63,10 @@ export const useAppStore = defineStore('app', () => {
   const canUnod = ref(true)
   const canRedo = ref(true)
 
+  function updateThemeConfig(config: Record<string, any>) {
+    mindMapThemeConfig.value = config
+  }
+
   return {
     // # Core
     mindMapRoot,
@@ -73,6 +82,7 @@ export const useAppStore = defineStore('app', () => {
     hasGeneralization,
     canUnod,
     canRedo,
+    updateThemeConfig,
   }
   // })
 }, { persist: { enabled: true } })

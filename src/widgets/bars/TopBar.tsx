@@ -48,7 +48,7 @@ export const TopBar = defineComponent({
       { id: uuid(), component: <NodeSummary /> },
       { id: uuid(), component: <NodeRelativeLine /> },
       { id: uuid(), component: <NodeMath /> },
-      { id: uuid(), component: <MindMapOutline /> },
+      // { id: uuid(), component: <MindMapOutline /> },
     ])
     const _extendActions = ref([
       { id: uuid(), component: <Folder /> },

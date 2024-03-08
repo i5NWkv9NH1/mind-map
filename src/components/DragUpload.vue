@@ -24,6 +24,7 @@ const src = defineModel<string, string>('src', {
 const name = defineModel<string, string>('name', {
   required: true,
 })
+src.value = ''
 // # els
 const fileEl = ref<HTMLInputElement>()
 const dragover = ref(false) // # emit status
@@ -118,7 +119,7 @@ watch(files, () => {
     @click="fileEl && fileEl.click()"
   >
     <VExpandTransition>
-      <template v-if="!src || dragover">
+      <template v-if="src === 'none' || !src || dragover">
         <VCardText
           @drop.prevent="onDrop"
           @dragover.prevent="dragover = true"

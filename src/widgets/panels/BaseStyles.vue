@@ -5,7 +5,7 @@
 import { mdiCloseCircle } from '@mdi/js'
 import { storeToRefs } from 'pinia'
 import { v4 as uuid } from 'uuid'
-import { ref, watch } from 'vue'
+import { ref, watch, watchEffect } from 'vue'
 import { useSettingsStore } from '@/store/settings'
 import { useMindMap, usePresets } from '@/composables'
 import { ColorPicker, DragUpload, FormSelect, PanelContainer } from '@/components'
@@ -13,9 +13,9 @@ import { useAppStore } from '@/store/app'
 
 // # background
 const { isDark } = storeToRefs(useSettingsStore())
-const { mindMapThemeConfig, mindMapTheme } = storeToRefs(useAppStore())
+const { mindMapThemeConfig, mindMapWaterConfig, mindMapConfig } = storeToRefs(useAppStore())
 const { togglePanel } = useSettingsStore()
-const { mindMap, activeNodes } = useMindMap()
+const { mindMap } = useMindMap()
 
 // # 数据
 const {
@@ -23,6 +23,10 @@ const {
   fontFamilyItems,
   fontSizeItems,
   lineStyleItems,
+  lineStyleMap,
+  lineRadiusItems,
+  rootLineStyleItems,
+  rootLineStartPositionItems,
   mouseBehaviorItems,
   mouseScrollScaleItems,
   createNodeBehaviorItems,
@@ -43,16 +47,16 @@ const marginTabItems = ref([
 ])
 
 // * 切换 tab 时获取不同的数据 [root, second, node]
-watch(marginTab, () => {
-  marginTabItems.value.forEach((item) => {
-    const key = item.value
-    mindMapThemeConfig.value[key].marginX = mindMap.value?.getThemeConfig()[marginTab.value].marginX
-    mindMapThemeConfig.value[key].marginY = mindMap.value?.getThemeConfig()[marginTab.value].marginY
-  })
-  // Object.keys(marginTabItems.value).forEach((key: string) => {
-  //   mindMapThemeConfig.value[key] = mindMap.value?.getThemeConfig()[marginTab.value][key]
-  // })
-})
+// watch(marginTab, () => {
+//   marginTabItems.value.forEach((item) => {
+//     const key = item.value
+//     mindMapThemeConfig.value[key].marginX = mindMap.value?.getThemeConfig()[marginTab.value].marginX
+//     mindMapThemeConfig.value[key].marginY = mindMap.value?.getThemeConfig()[marginTab.value].marginY
+//   })
+//   // Object.keys(marginTabItems.value).forEach((key: string) => {
+//   //   mindMapThemeConfig.value[key] = mindMap.value?.getThemeConfig()[marginTab.value][key]
+//   // })
+// })
 
 function onUpdate(key: string, value: string) {
   console.log('BaseStyles', 'key: ', key, 'value', value)
@@ -60,6 +64,7 @@ function onUpdate(key: string, value: string) {
   mindMap.value?.setThemeConfig(mindMapThemeConfig.value)
 }
 function onUpdateMargin(key: string, value: string) {
+  console.log(marginTab.value, key, value)
   mindMapThemeConfig.value[marginTab.value][key] = value
   mindMap.value?.setThemeConfig(mindMapThemeConfig.value)
 }
@@ -72,12 +77,23 @@ function onUpdateMargin(key: string, value: string) {
 
 // # 水印
 const isShowWaterMarker = ref(false)
-// # 其他配置
-const isUseFreeDragOnNode = ref(false)
-const isUseRichTextonNode = ref(false)
-const mouseBehavior = ref<'zoom' | 'move'>('zoom')
-const mouseScrollScale = ref(false)
-const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default')
+
+watch(mindMapWaterConfig, () => {
+  if (isShowWaterMarker.value) {
+    mindMap.value?.watermark.updateWatermark({ ...mindMapWaterConfig.value })
+  }
+  else {
+    mindMapWaterConfig.value.text = ''
+    mindMap.value?.watermark.updateWatermark({ ...mindMapWaterConfig.value })
+  }
+}, { deep: true, immediate: true })
+watchEffect(() => {
+  if (!isShowWaterMarker.value)
+    mindMapWaterConfig.value.text = ''
+})
+watch(mindMapConfig, () => {
+  mindMap.value?.updateConfig({ ...mindMapConfig.value })
+}, { deep: true })
 </script>
 
 <template>
@@ -266,23 +282,39 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               <template #default="{ item }">
                 <VListItemTitle>
                   <p>{{ item.title }}</p>
-                  <svg
-                    width="100"
-                    height="20"
-                  >
-                    <line
-                      x1="10"
-                      y1="17"
-                      x2="110"
-                      y2="17"
-                      stroke-width="2"
-                      :stroke="mindMapThemeConfig.lineStyle === item.value ? '#409eff' : isDark ? '#fff' : '#000'"
-                      :stroke-dasharray="item.value"
-                    />
-                  </svg>
+                  <svg width="60" height="30" :style="{ backgroundColor: isDark ? 'white' : '' }" v-html="lineStyleMap[item.value]" />
                 </VListItemTitle>
               </template>
             </FormSelect>
+          </VCol>
+          <VCol cols="6">
+            <template
+              v-if="mindMapThemeConfig.lineStyle === 'straight'"
+            >
+              <FormSelect
+                label="圆角大小" :items="lineRadiusItems" :model-value="mindMapThemeConfig.lineRadius" @update:model-value="value => {
+                  onUpdate('lineRadius', value)
+                }"
+              />
+            </template>
+            <template
+              v-if="mindMapThemeConfig.lineStyle === 'curve'"
+            >
+              <FormSelect
+                label="根节点" :items="rootLineStyleItems" :model-value="mindMapThemeConfig.rootLineKeepSameInCurve" @update:model-value="value => {
+                  onUpdate('rootLineKeepSameInCurve', value)
+                }"
+              />
+            </template>
+          </VCol>
+        </VRow>
+        <VRow v-if="mindMapThemeConfig.lineStyle === 'curve'">
+          <VCol cols="6">
+            <FormSelect
+              label="根节点连线起始位置" :items="rootLineStartPositionItems" :model-value="mindMapThemeConfig.rootLineStartPositionKeepSameInCurve" @update:model-value="value => {
+                onUpdate('rootLineStartPositionKeepSameInCurve', value)
+              }"
+            />
           </VCol>
         </VRow>
         <VRow>
@@ -328,6 +360,7 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
           </VCol>
           <VCol>
             <FormSelect
+              :items="lineWidthSizeItems"
               :model-value="mindMapThemeConfig.generalizationLineWidth"
               label="粗细"
               @update:model-value="(value) => { onUpdate('generalizationLineWidth', value) }"
@@ -347,7 +380,7 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
                         x2="100"
                         y2="0"
                         stroke-dasharray="none"
-                        :stroke="mindMapThemeConfig.summaryLineWidth === item.value ? '#409eff' : isDark ? '#fff' : '#000'"
+                        :stroke="mindMapThemeConfig.generalizationLineWidth === item.value ? '#409eff' : isDark ? '#fff' : '#000'"
                         :stroke-width="item.value"
                       />
                     </svg>
@@ -567,7 +600,7 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               }"
             >
               <template #prepend>
-                <span>水平</span>
+                <span class="text-subtitle-2">水平</span>
               </template>
             </VSlider>
             <VSlider
@@ -582,7 +615,7 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               }"
             >
               <template #prepend>
-                <span>垂直</span>
+                <span class="text-subtitle-2">垂直</span>
               </template>
             </VSlider>
           </VCol>
@@ -607,7 +640,7 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               }"
             >
               <template #prepend>
-                <span>显示的最大宽度</span>
+                <span class="text-subtitle-2">显示的最大宽度</span>
               </template>
             </VSlider>
             <VSlider
@@ -622,7 +655,7 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               }"
             >
               <template #prepend>
-                <span>显示的最大高度</span>
+                <span class="text-subtitle-2">显示的最大高度</span>
               </template>
             </VSlider>
           </VCol>
@@ -647,7 +680,7 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
               }"
             >
               <template #prepend>
-                <span>大小</span>
+                <span class="text-subtitle-2">大小</span>
               </template>
             </VSlider>
           </VCol>
@@ -692,7 +725,7 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
                   }"
                 >
                   <template #prepend>
-                    <span>水平</span>
+                    <span class="text-subtitle-2">水平</span>
                   </template>
                 </VSlider>
                 <VSlider
@@ -707,7 +740,7 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
                   }"
                 >
                   <template #prepend>
-                    <span>垂直</span>
+                    <span class="text-subtitle-2">垂直</span>
                   </template>
                 </VSlider>
               </VWindowItem>
@@ -724,7 +757,7 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
                   }"
                 >
                   <template #prepend>
-                    <span>水平</span>
+                    <span class="text-subtitle-2">水平</span>
                   </template>
                 </VSlider>
                 <VSlider
@@ -739,7 +772,7 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
                   }"
                 >
                   <template #prepend>
-                    <span>垂直</span>
+                    <span class="text-subtitle-2">垂直</span>
                   </template>
                 </VSlider>
               </VWindowItem>
@@ -764,6 +797,121 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
             />
           </VCol>
         </VRow>
+        <VSlideYTransition>
+          <div v-if="isShowWaterMarker">
+            <VRow>
+              <VCol>
+                <VCheckbox
+                  v-model="mindMapWaterConfig.onlyExport"
+                  label="是否仅在导出时显示"
+                  density="compact"
+                  hide-details
+                />
+              </VCol>
+            </VRow>
+            <VRow>
+              <VCol>
+                <VLabel text="水印文字" />
+                <VTextField
+                  v-model="mindMapWaterConfig.text"
+                  density="compact"
+                  hide-details
+                  :variant="isDark ? 'outlined' : 'solo'"
+                />
+              </VCol>
+            </VRow>
+            <VRow class="mb-4">
+              <VCol>
+                <VLabel text="文字颜色" class="text-subtitle-2 mb-1" />
+                <ColorPicker v-model:color="mindMapWaterConfig.textStyle.color" :items="usedColorItems">
+                  <template #activator="{ props }">
+                    <VBtn v-bind="props" :color="mindMapWaterConfig.textStyle.color" class="d-block" size="large" />
+                  </template>
+                </ColorPicker>
+              </VCol>
+            </VRow>
+            <VRow no-gutters>
+              <VCol>
+                <VSlider
+                  :model-value="mindMapWaterConfig.textStyle.opacity"
+                  :max="1"
+                  :min="0"
+                  :step="0.1"
+                  thumb-label
+                  hide-details
+                >
+                  <template #prepend>
+                    <span class="text-subtitle-2">文字透明度</span>
+                  </template>
+                </VSlider>
+              </VCol>
+            </VRow>
+            <VRow no-gutters>
+              <VCol>
+                <VSlider
+                  v-model="mindMapWaterConfig.textStyle.fontSize"
+                  :max="100"
+                  :min="1"
+                  :step="1"
+                  thumb-label
+                  hide-details
+                >
+                  <template #prepend>
+                    <span class="text-subtitle-2">文字字号</span>
+                  </template>
+                </VSlider>
+              </VCol>
+            </VRow>
+            <VRow no-gutters>
+              <VCol>
+                <VSlider
+                  v-model="mindMapWaterConfig.angle"
+                  :max="90"
+                  :min="0"
+                  :step="10"
+                  thumb-label
+                  hide-details
+                >
+                  <template #prepend>
+                    <span class="text-subtitle-2">旋转角度</span>
+                  </template>
+                </VSlider>
+              </VCol>
+            </VRow>
+            <VRow no-gutters>
+              <VCol>
+                <VSlider
+                  v-model="mindMapWaterConfig.lineSpacing"
+                  :max="200"
+                  :min="0"
+                  :step="1"
+                  thumb-label
+                  hide-details
+                >
+                  <template #prepend>
+                    <span class="text-subtitle-2">水印行间距</span>
+                  </template>
+                </VSlider>
+              </VCol>
+            </VRow>
+            <VRow no-gutters>
+              <VCol>
+                <VSlider
+                  v-model="mindMapWaterConfig.textSpacing"
+                  :max="200"
+                  :min="0"
+                  :step="1"
+                  thumb-label
+                  hide-details
+                >
+                  <template #prepend>
+                    <span class="text-subtitle-2">水印文字间距</span>
+                  </template>
+                </VSlider>
+              </VCol>
+            </VRow>
+          </div>
+        </VSlideYTransition>
       </VSheet>
       <VDivider />
       <VSheet class="my-4">
@@ -773,106 +921,48 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
         <VRow align="center">
           <VCol>
             <VCheckbox
-              v-model="isUseFreeDragOnNode"
+              v-model="mindMapConfig.enableFreeDrag"
               label="是否开启节点自由拖拽"
               density="compact"
+              disabled
               hide-details
             />
             <VCheckbox
-              v-model="isUseRichTextonNode"
+              v-model="mindMapConfig.enableNodeRichText"
               label="是否开启节点富文本编辑"
               density="compact"
+              disabled
               hide-details
             />
           </VCol>
         </VRow>
         <VRow>
           <VCol>
-            <VLabel class="text-subtitle-2 mb-1">
-              鼠标滚动行为
-            </VLabel>
-            <VSelect
-              v-model="mouseBehavior"
+            <FormSelect
+              v-model="mindMapConfig.mousewheelAction"
               :items="mouseBehaviorItems"
-              :variant="isDark ? 'outlined' : 'solo'"
-              item-title="name"
-              density="compact"
-              hide-details
-            >
-              <template #item="{ item, props }">
-                <VList
-                  density="compact"
-                  nav
-                >
-                  <VListItem
-                    v-bind="props"
-                    :value="item.value"
-                    :title="item.title"
-                    :active="mouseBehavior === item.value"
-                  />
-                </VList>
-              </template>
-            </VSelect>
+              label="鼠标滚动行为"
+            />
           </VCol>
         </VRow>
         <VExpandTransition>
-          <VRow v-if="mouseBehavior === 'zoom'">
+          <VRow v-if="mindMapConfig.mousewheelAction === 'zoom'">
             <VCol>
-              <VLabel class="text-subtitle-2 mb-1">
-                鼠标滚轮缩放
-              </VLabel>
-              <VSelect
-                v-model="mouseScrollScale"
+              <FormSelect
+                v-model="mindMapConfig.mousewheelZoomActionReverse"
                 :items="mouseScrollScaleItems"
-                :variant="isDark ? 'outlined' : 'solo'"
-                item-title="name"
-                density="compact"
-                hide-details
-              >
-                <template #item="{ item, props }">
-                  <VList
-                    density="compact"
-                    nav
-                  >
-                    <VListItem
-                      v-bind="props"
-                      :value="item.value"
-                      :title="item.title"
-                      :active="mouseScrollScale === item.value"
-                    />
-                  </VList>
-                </template>
-              </VSelect>
+                label="鼠标滚轮缩放"
+              />
             </VCol>
           </VRow>
         </VExpandTransition>
         <VRow>
           <VCol>
-            <VLabel class="text-subtitle-2 mb-1">
-              创建新节点的行为
-            </VLabel>
-            <VSelect
-              v-model="createNodeBehavior"
+            <FormSelect
+              v-model="mindMapConfig.createNewNodeBehavior"
+              label="创建新节点的行为"
               :items="createNodeBehaviorItems"
-              :variant="isDark ? 'outlined' : 'solo'"
-              item-title="name"
-              density="compact"
-              hide-details
-            >
-              <template #item="{ item, props }">
-                <VList
-                  density="compact"
-                  nav
-                >
-                  <VListItem
-                    v-bind="props"
-                    :value="item.value"
-                    :title="item.title"
-                    :active="createNodeBehavior === item.value"
-                  />
-                </VList>
-              </template>
-            </VSelect>
+            />
           </VCol>
         </VRow>
         <VRow>
@@ -880,6 +970,7 @@ const createNodeBehavior = ref<'default' | 'notActive' | 'activeOnly'>('default'
             <VCheckbox
               label="是否显示滚动条"
               density="compact"
+              disabled
               hide-details
             />
             <VCheckbox

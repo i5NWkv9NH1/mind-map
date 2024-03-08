@@ -4,9 +4,8 @@
 >
 import { mdiCloseCircle, mdiCloseCircleOutline, mdiContentSaveOutline } from '@mdi/js'
 import { v4 as uuid } from 'uuid'
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { isEmpty } from 'lodash'
 import type { MindMapTheme } from '@/@types/mind-map'
 import { PanelContainer } from '@/components'
 import { useMindMap, usePresets } from '@/composables'
@@ -18,6 +17,7 @@ const { getClassicThemes, getDarkThemes, getSimpleThemes, mindMapThemes } = useP
 const { isDark } = storeToRefs(useSettingsStore())
 const { mindMapTheme, mindMapThemeConfig } = storeToRefs(useAppStore())
 const { togglePanel } = useSettingsStore()
+const { updateThemeConfig } = useAppStore()
 
 const current = ref(0)
 const themeStyles = ref([
@@ -36,48 +36,52 @@ const themes = computed<MindMapTheme[]>(() => {
   }
 })
 
-watch(mindMapTheme, () => {
-  mindMap.value?.setTheme(mindMapTheme.value)
+function onSwitchTheme(theme: string) {
+  mindMapTheme.value = theme
+  mindMap.value?.setThemeConfig({}, true)
+  mindMap.value?.setTheme(mindMapTheme.value, true)
+  const config = mindMap.value?.getThemeConfig()
+  const customConfig = mindMap.value?.getCustomThemeConfig()
+  console.log(config)
+  // mindMapThemeConfig.value = mindMap.value?.getThemeConfig()
+  // updateThemeConfig(config)
   const target = mindMapThemes.value.find(item => item.value === mindMapTheme.value)
   isDark.value = target.dark
-})
-
-function onSwitchTheme(theme: string) {
-  if (theme === mindMapTheme.value)
-    return
-  mindMapTheme.value = theme
-  const customThemeConfig = mindMap.value?.getCustomThemeConfig()
-  // # 是否存在配置
-  if (!isEmpty(customThemeConfig)) {
-    console.log('存在主题配置', customThemeConfig)
-    confirmDialog.value = true
-  }
-  else {
-    console.log('不存在主题配置', customThemeConfig)
-    mindMap.value?.setTheme(mindMapTheme.value, true)
-    mindMap.value?.setThemeConfig({}, true)
-  }
-}
-function onNotSaveThemeConfig() {
-  mindMap.value?.setTheme(mindMapTheme.value)
-  mindMap.value?.setThemeConfig({}, true)
-  mindMapThemeConfig.value = mindMap.value?.getThemeConfig()
-  confirmDialog.value = false
-}
-function onOverWriteTheme() {
-  mindMap.value?.setTheme(mindMapTheme.value)
-  // TODO: 设置主题后替换原来保存的自定义配置
-  // TODO: 目前自定义设置的对象数据中还包括原来主题的...
-  mindMap.value?.setThemeConfig(mindMapThemeConfig.value, true)
-  confirmDialog.value = false
 }
 
-onMounted(() => {
-  mindMapTheme.value = mindMap.value?.getTheme() || 'default'
-  mindMap.value?.on('view_theme_change', () => {
-    mindMapThemeConfig.value = mindMap.value?.getThemeConfig()
-  })
-})
+// function onSwitchTheme(theme: string) {
+//   if (theme === mindMapTheme.value)
+//     return
+//   mindMapTheme.value = theme
+//   const customThemeConfig = mindMap.value?.getCustomThemeConfig()
+//   // # 是否存在配置
+//   if (!isEmpty(customThemeConfig)) {
+//     confirmDialog.value = true
+//   }
+//   else {
+//     mindMap.value?.setThemeConfig({}, true)
+//     mindMapThemeConfig.value = mindMap.value?.getThemeConfig()
+//   }
+// }
+// function onNotSaveThemeConfig() {
+//   mindMap.value?.setThemeConfig({}, true)
+//   mindMapThemeConfig.value = mindMap.value?.getThemeConfig()
+//   confirmDialog.value = false
+// }
+// function onOverWriteTheme() {
+//   mindMap.value?.setTheme(mindMapTheme.value)
+//   // TODO: 设置主题后替换原来保存的自定义配置
+//   // TODO: 目前自定义设置的对象数据中还包括原来主题的...
+//   mindMap.value?.setThemeConfig(mindMapThemeConfig.value, true)
+//   confirmDialog.value = false
+// }
+
+// onMounted(() => {
+//   mindMapTheme.value = mindMap.value?.getTheme() || 'default'
+//   mindMap.value?.on('view_theme_change', () => {
+//     mindMapThemeConfig.value = mindMap.value?.getThemeConfig()
+//   })
+// })
 </script>
 
 <template>

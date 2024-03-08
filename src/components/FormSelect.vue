@@ -30,7 +30,7 @@ const props = withDefaults(defineProps<Props>(), {
   nav: true,
 })
 
-const modelValue = defineModel<string | number>({
+const modelValue = defineModel<string | number | boolean>({
   required: true,
 })
 const { isDark } = storeToRefs(useSettingsStore())
@@ -57,7 +57,11 @@ const { isDark } = storeToRefs(useSettingsStore())
           :key="arg.index"
           :active="modelValue === arg.item.value"
           @click="() => {
-            modelValue = arg.item.value
+            // ! 不绑定 props
+            // ! 自定义插槽内容
+            // modelValue = arg.item.value
+            // console.log(arg)
+            arg.props.onClick()
           }"
         >
           <slot name="default" v-bind="arg">

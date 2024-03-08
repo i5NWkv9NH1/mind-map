@@ -3,7 +3,7 @@
  */
 import { themeList } from 'simple-mind-map/src/constants/constant'
 import { v4 as uuid } from 'uuid'
-import { computed, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 
 // @ts-ignore
 import simpleMapExampleData from 'simple-mind-map/example/exampleData'
@@ -26,7 +26,7 @@ export type BorderStyle = DefaultArrayType<string>
 export type BorderWidth = DefaultArrayType
 export type BorderRedius = DefaultArrayType
 export type Shape = DefaultArrayType<ShapeMap>
-export type LineStyle = DefaultArrayType
+export type LineStyle = DefaultArrayType<string>
 export type LineWidth = DefaultArrayType<number>
 export type LineArrowPosition = DefaultArrayType
 export type MouseBehavior = DefaultArrayType<'zoom' | 'move'>
@@ -137,7 +137,35 @@ export function usePresets() {
     ellipse: 'M 4 12 A 26 9 0, 1, 0 30 3 A 26 9 0, 0, 0 4 12 Z',
     circle: 'M 21 12 A 9 9 0, 1, 0 30 3 A 9 9 0, 0, 0 21 12 Z',
   })
-  const lineStyleItems = ref<LineStyle[]>(borderStyleItems.value)
+  const lineStyleItems = ref<LineStyle[]>([
+    { id: uuid(), name: '直线', value: 'straight' },
+    { id: uuid(), name: '曲线', value: 'curve' },
+    { id: uuid(), name: '直连', value: 'direct' },
+  ])
+  const lineStyleMap = reactive<Record<'straight' | 'curve' | 'direct', string>>({
+    straight: `<path d="M18,14L30,14L30,5L42,5" fill="none" stroke="#000" stroke-width="2"></path><path d="M18,14L30,14L30,23L42,23" fill="none" stroke="#000" stroke-width="2"></path>`,
+    curve: `<path d="M18,14L30,14A12,-9 0 0 1 42,5" fill="none" stroke="#000" stroke-width="2"></path><path d="M18,14L30,14A12,9 0 0 0 42,23" fill="none" stroke="#000" stroke-width="2"></path>`,
+    direct: `<path d="M18,14L30,14L42,5" fill="none" stroke="#000" stroke-width="2"></path><path d="M18,14L30,14L42,23" fill="none" stroke="#000" stroke-width="2"></path>`,
+  })
+  const lineRadiusItems = ref<DefaultArrayType<number>[]>([
+    { id: uuid(), name: '0', value: 0 },
+    { id: uuid(), name: '2', value: 2 },
+    { id: uuid(), name: '5', value: 5 },
+    { id: uuid(), name: '7', value: 7 },
+    { id: uuid(), name: '10', value: 10 },
+    { id: uuid(), name: '12', value: 12 },
+    { id: uuid(), name: '15', value: 15 },
+  ])
+  // if linestyle === 'curve'
+  const rootLineStyleItems = ref<DefaultArrayType<boolean>[]>([
+    { id: uuid(), name: '括号', value: false },
+    { id: uuid(), name: '大括号', value: true },
+  ])
+  // if linestyle === 'curve'
+  const rootLineStartPositionItems = ref<DefaultArrayType<boolean>[]>([
+    { id: uuid(), name: '中心', value: false },
+    { id: uuid(), name: '右侧', value: true },
+  ])
   const lineWidthSizeItems = ref<LineWidth[]>([
     { id: uuid(), name: '0', value: 0 },
     { id: uuid(), name: '1', value: 1 },
@@ -430,6 +458,10 @@ export function usePresets() {
     shapeItems,
     shapeMapItems,
     lineStyleItems,
+    rootLineStyleItems,
+    rootLineStartPositionItems,
+    lineRadiusItems,
+    lineStyleMap,
     lineArrowPositionItems,
     mouseBehaviorItems,
     mouseScrollScaleItems,
