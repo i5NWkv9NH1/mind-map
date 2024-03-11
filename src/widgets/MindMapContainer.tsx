@@ -85,6 +85,7 @@ export const MindMapContainer = defineComponent({
 
       if (MindMapEl.value) {
         // TODO: 添加 store 配置
+        // @ts-ignore
         mindMap.value = new MindMap({
         	/// @ts-ignore
           el: MindMapEl.value,
