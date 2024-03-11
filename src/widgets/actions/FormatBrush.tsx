@@ -31,6 +31,7 @@ export const FormatBrush = defineComponent({
         color={isPainting.value ? 'primary' : 'default'}
         {...withEventModifiers({
           onclick: () => {
+          // @ts-ignore
             mindMap.value?.painter.startPainter()
           },
         }, ['stop'])}

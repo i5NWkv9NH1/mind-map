@@ -17,6 +17,7 @@ export const NodeRelativeLine = defineComponent({
         disabled={!isActiveNode.value || hasGeneralization.value}
       // @ts-ignore
         onClick={() => {
+        // @ts-ignore
           mindMap.value?.associativeLine.createLineFromActiveNode()
         }}
       >
