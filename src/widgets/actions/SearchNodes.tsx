@@ -60,14 +60,19 @@ export const SearchNodes = defineComponent({
       // ! 调用 mindmap 查找, 当 mindmap 查找到时会强制激活对用的节点
       // ! 此时无法使用回车键继续查找
       // ! 需要在回调中强制聚焦输入框
+      // @ts-ignore
       mindMap.value?.search.search(searchText.value, () => {
         // ! 当 mindmap 查找完毕后会 emit search_info_change 和回调函数 onSearchChange
       })
     }
-    const replace = () => {
+    // @ts-ignore
+    const replace = (
+    ) => {
+    // @ts-ignore
       mindMap.value?.search.replace(replaceText.value, true)
     }
     const replaceAll = () => {
+    	// @ts-ignore
       mindMap.value?.search.replaceAll(replaceText.value)
     }
     const onSearchClose = () => {
@@ -78,6 +83,7 @@ export const SearchNodes = defineComponent({
       showSearchResult.value = false
       currentIndex.value = 0
       total.value = 0
+      // @ts-ignore
       mindMap.value?.search.endSearch()
     }
 

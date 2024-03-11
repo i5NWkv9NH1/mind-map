@@ -38,6 +38,7 @@ export const ShowMiniMap = defineComponent({
 
     const drawMiniMapUI = () => {
       const { width, height } = toRefs(_miniMapStyles)
+      // @ts-ignore
       const { getImgUrl, viewBoxStyle, miniMapBoxScale, miniMapBoxLeft, miniMapBoxTop } = mindMap.value?.miniMap.calculationMiniMap(width.value, height.value)
 
       getImgUrl((img: string) => miniMapImage.value = img)
@@ -84,11 +85,14 @@ export const ShowMiniMap = defineComponent({
       }, 500)
     }
     const onMousedown = (e: MouseEvent) => {
+    // @ts-ignore
       mindMap.value?.miniMap.onMousemove(e)
     }
+    // @ts-ignore
     const onMouseup = (e: MouseEvent) => {
       mindMap.value?.miniMap.onMousemove(e)
     }
+    // @ts-ignore
     const onMouseMove = (e: MouseEvent) => {
       mindMap.value?.miniMap.onMousemove(e)
     }

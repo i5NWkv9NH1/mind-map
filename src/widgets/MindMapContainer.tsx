@@ -86,6 +86,7 @@ export const MindMapContainer = defineComponent({
       if (MindMapEl.value) {
         // TODO: 添加 store 配置
         mindMap.value = new MindMap({
+        	/// @ts-ignore
           el: MindMapEl.value,
           // @ts-ignore
           data: mindMapRoot.value,
@@ -119,6 +120,7 @@ export const MindMapContainer = defineComponent({
         // ! 初始化，如果本地的主题自定义设置为空，则为 mind map 的主题配置
         // ! 更新时，只更新 UI 上提供的配置
         if (isEmpty(mindMapThemeConfig.value))
+        												// @ts-ignore
           mindMapThemeConfig.value = mindMap.value?.getThemeConfig()
 
         // # 注册完毕
