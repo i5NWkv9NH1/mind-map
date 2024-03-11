@@ -301,6 +301,7 @@ export const NodeRichTextMenu = defineComponent({
           location="bottom"
           closeOnContentClick={false}
           color={currentFormat.value.color}
+          // @ts-ignore
           showActions={false}
           onUpdate:color={(value: string) => {
             currentFormat.value.color = value
@@ -344,7 +345,7 @@ export const NodeRichTextMenu = defineComponent({
           location="bottom"
           closeOnContentClick={false}
           color={currentFormat.value.bgColor}
-          showActions={false}
+          // @ts-ignore
           onUpdate:color={(value: string) => {
             currentFormat.value.bgColor = value
             mindMap.value?.richText.formatText({
@@ -400,8 +401,6 @@ export const NodeRichTextMenu = defineComponent({
           // @ts-ignore // * 必有的字段
           currentFormat.value.bgColor = formatInfo?.background ?? ''
           position.value = rect
-
-          console.log(`${position.value.left + position.value.width / 2}px`)
         }
         isShow.value = hasRange
       })

@@ -7,6 +7,7 @@ export default defineComponent({
   name: 'Test',
   setup() {
     const generateRandomData = (depth = 6, maxChildren = 6) => {
+	// @ts-ignore
       const generateNode = (id, level) => ({
         id,
         name: `Node ${id}`,
@@ -28,6 +29,7 @@ export default defineComponent({
       setup(props) {
         const isOpen = ref(false)
         const isEditing = ref(false)
+        // @ts-ignore
         const editedText = ref(props.node.name)
 
         const toggleNode = () => {
@@ -39,6 +41,7 @@ export default defineComponent({
         }
 
         const saveEdit = () => {
+        // @ts-ignore
           props.node.name = editedText.value
           isEditing.value = false
         }
@@ -49,6 +52,7 @@ export default defineComponent({
         }
 
         return () => (
+        {/* @ts-ignore */}
           <div class="tree-item" style={{ paddingLeft: `${props.node.level * 20}px` }}>
             <div class="node">
               {isEditing.value

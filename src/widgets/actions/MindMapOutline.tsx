@@ -22,7 +22,10 @@ export const MindMapOutline = defineComponent({
         >
           <VCard>
             <VCardText>
-              <TreeView tree={mindMapRoot.value} />
+              <TreeView
+                // @ts-ignore
+                tree={mindMapRoot.value}
+              />
             </VCardText>
           </VCard>
         </VDialog>

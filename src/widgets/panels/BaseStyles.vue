@@ -58,12 +58,12 @@ const marginTabItems = ref([
 //   // })
 // })
 
-function onUpdate(key: string, value: string) {
+function onUpdate(key: string, value: string | number | any) {
   console.log('BaseStyles', 'key: ', key, 'value', value)
   mindMapThemeConfig.value[key] = value
   mindMap.value?.setThemeConfig(mindMapThemeConfig.value)
 }
-function onUpdateMargin(key: string, value: string) {
+function onUpdateMargin(key: string, value: string | number | any) {
   console.log(marginTab.value, key, value)
   mindMapThemeConfig.value[marginTab.value][key] = value
   mindMap.value?.setThemeConfig(mindMapThemeConfig.value)
@@ -80,10 +80,12 @@ const isShowWaterMarker = ref(false)
 
 watch(mindMapWaterConfig, () => {
   if (isShowWaterMarker.value) {
+  	// @ts-ignore
     mindMap.value?.watermark.updateWatermark({ ...mindMapWaterConfig.value })
   }
   else {
     mindMapWaterConfig.value.text = ''
+    // @ts-ignore
     mindMap.value?.watermark.updateWatermark({ ...mindMapWaterConfig.value })
   }
 }, { deep: true, immediate: true })
@@ -137,7 +139,7 @@ watch(mindMapConfig, () => {
                 <ColorPicker
                   :color="mindMapThemeConfig.backgroundColor"
                   :items="usedColorItems"
-                  @update:color="(value) => {
+                  @update:color="(value: string) => {
                     onUpdate('backgroundColor', value)
                   }"
                 >
@@ -220,7 +222,7 @@ watch(mindMapConfig, () => {
               :color="mindMapThemeConfig.lineColor"
               location="left center"
               :items="usedColorItems"
-              @update:color="(value) => {
+              @update:color="(value: string) => {
                 onUpdate('lineColor', value)
               }"
             >
@@ -279,7 +281,7 @@ watch(mindMapConfig, () => {
                 onUpdate('lineStyle', value)
               }"
             >
-              <template #default="{ item }">
+              <template #default="{ item }: { item: { value: 'straight' | 'curve' | 'direct'; [index: string] : any }}">
                 <VListItemTitle>
                   <p>{{ item.title }}</p>
                   <svg width="60" height="30" :style="{ backgroundColor: isDark ? 'white' : '' }" v-html="lineStyleMap[item.value]" />
@@ -343,7 +345,7 @@ watch(mindMapConfig, () => {
             </VLabel>
             <ColorPicker
               :color="mindMapThemeConfig.generalizationLineColor" :items="usedColorItems"
-              @update:color="(value) => {
+              @update:color="(value: string) => {
                 onUpdate('generalizationLineColor', value)
               }"
             >
@@ -405,7 +407,7 @@ watch(mindMapConfig, () => {
               :color="mindMapThemeConfig.associativeLineColor"
               mode="rgb"
               :items="usedColorItems"
-              @update:color="(value) => { onUpdate('associativeLineColor', value) }"
+              @update:color="(value: string) => { onUpdate('associativeLineColor', value) }"
             >
               <template #activator="args">
                 <VBtn
@@ -460,7 +462,7 @@ watch(mindMapConfig, () => {
             <ColorPicker
               :color="mindMapThemeConfig.associativeLineActiveColor"
               :items="usedColorItems"
-              @update:color="(value) => {
+              @update:color="(value: string) => {
                 onUpdate('associativeLineActiveColor', value)
               }"
             >
@@ -534,7 +536,7 @@ watch(mindMapConfig, () => {
             <ColorPicker
               :color="mindMapThemeConfig.associativeLineTextColor"
               :items="usedColorItems"
-              @update:color="(value) => {
+              @update:color="(value: string) => {
                 onUpdate('associativeLineTextColor', value)
               }"
             >
@@ -553,7 +555,7 @@ watch(mindMapConfig, () => {
             <FormSelect
               label="字号"
               :model-value="mindMapThemeConfig.associativeLineTextFontSize"
-              :items="fontSizeItems"
+              :items="(fontSizeItems as any)"
               @update:model-value="value => {
                 onUpdate('associativeLineTextFontSize', value)
               }"
@@ -928,7 +930,7 @@ watch(mindMapConfig, () => {
               hide-details
             />
             <VCheckbox
-              v-model="mindMapConfig.enableNodeRichText"
+              v-model="mindMapConfig.enableNodeRichText!"
               label="是否开启节点富文本编辑"
               density="compact"
               disabled
@@ -939,7 +941,7 @@ watch(mindMapConfig, () => {
         <VRow>
           <VCol>
             <FormSelect
-              v-model="mindMapConfig.mousewheelAction"
+              v-model="mindMapConfig.mousewheelAction!"
               :items="mouseBehaviorItems"
               label="鼠标滚动行为"
             />
@@ -949,7 +951,7 @@ watch(mindMapConfig, () => {
           <VRow v-if="mindMapConfig.mousewheelAction === 'zoom'">
             <VCol>
               <FormSelect
-                v-model="mindMapConfig.mousewheelZoomActionReverse"
+                v-model="mindMapConfig.mousewheelZoomActionReverse!"
                 :items="mouseScrollScaleItems"
                 label="鼠标滚轮缩放"
               />
@@ -959,7 +961,7 @@ watch(mindMapConfig, () => {
         <VRow>
           <VCol>
             <FormSelect
-              v-model="mindMapConfig.createNewNodeBehavior"
+              v-model="mindMapConfig.createNewNodeBehavior!"
               label="创建新节点的行为"
               :items="createNodeBehaviorItems"
             />

@@ -2,7 +2,7 @@
   setup
   lang="ts"
 >
-import { mdiCloseCircle, mdiCloseCircleOutline, mdiContentSaveOutline } from '@mdi/js'
+import { mdiCloseCircle } from '@mdi/js'
 import { v4 as uuid } from 'uuid'
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
@@ -85,7 +85,7 @@ function onSwitchTheme(theme: string) {
 </script>
 
 <template>
-  <VDialog
+  <!-- <VDialog
     v-model="confirmDialog"
     persistent
   >
@@ -130,7 +130,7 @@ function onSwitchTheme(theme: string) {
         </VCol>
       </VRow>
     </VContainer>
-  </VDialog>
+  </VDialog> -->
   <PanelContainer>
     <template #title>
       <p>主题</p>
