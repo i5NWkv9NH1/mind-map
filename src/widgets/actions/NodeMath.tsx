@@ -11,7 +11,7 @@ import katex from 'katex'
 // import { useSettingsStore } from '@/store/settings'
 import { useMindMap, usePresets } from '@/composables'
 import { useAppStore } from '@/store/app'
-import 'katex/dist/katex.min.css'
+// import 'katex/dist/katex.min.css'
 import { withEventModifiers } from '@/directives'
 
 export const NodeMath = defineComponent({
