@@ -138,6 +138,7 @@ export interface MindMapThemeConfig extends ThemeDefinition { }
 // ! 不包括插件数据
 // #region
 export interface MindMapConfig {
+  enableNodeRichText: boolean
   /**
    * @description 聚焦模式
    * @default false

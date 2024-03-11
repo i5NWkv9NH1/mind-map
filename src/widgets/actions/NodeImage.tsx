@@ -87,7 +87,9 @@ export const NodeImage = defineComponent({
                 <DragUpload
                   src={fileSrc.value}
                   name={fileName.value}
+                  // @ts-ignore
                   onUpdate:name={name => fileName.value = name}
+				  // @ts-ignore
                   onUpdate:src={(src) => {
                     fileSrc.value = src
                   }}

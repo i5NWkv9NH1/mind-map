@@ -12,7 +12,7 @@ import {
   mdiVectorLine,
 } from '@mdi/js'
 import { storeToRefs } from 'pinia'
-import { ref, watch } from 'vue'
+import { ref, watch, watchEffect } from 'vue'
 import { ColorPicker, FormSelect, MenuSelect, PanelContainer } from '@/components'
 import { useMindMap, usePresets } from '@/composables'
 import { useSettingsStore } from '@/store/settings'
@@ -179,14 +179,14 @@ watchEffect(() => {
               <VCol>
                 <FormSelect
                   v-model="styles.fontSize"
-                  :items="fontSizeItems"
+                  :items="(fontSizeItems as any)"
                   label="字号"
                 />
               </VCol>
               <VCol>
                 <FormSelect
                   v-model="styles.lineHeight"
-                  :items="fontLineHeightItems"
+                  :items="(fontLineHeightItems as any)"
                   label="行高"
                 />
               </VCol>

@@ -52,7 +52,7 @@ export const useAppStore = defineStore('app', () => {
   const isActiveNode = computed(() => {
     if (!activeNodes.value)
       return false
-    if (!activeNodes.value.length < 0)
+    if (activeNodes.value.length < 0)
       return false
     if (!activeNode.value)
       return false

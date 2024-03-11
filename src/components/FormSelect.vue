@@ -61,7 +61,8 @@ const { isDark } = storeToRefs(useSettingsStore())
             // ! 自定义插槽内容
             // modelValue = arg.item.value
             // console.log(arg)
-            arg.props.onClick()
+            // @ts-igrore
+            (arg.props as any).onClick()
           }"
         >
           <slot name="default" v-bind="arg">

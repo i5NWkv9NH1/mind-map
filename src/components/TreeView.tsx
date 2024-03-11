@@ -1,8 +1,8 @@
-import type { PropType } from 'vue'
-import { ref, watch } from 'vue'
-import { VList, VListItem, VListItemTitle, VTextField } from 'vuetify/components'
 import { computed } from '@vue/reactivity'
 import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
+import { defineComponent, ref, watch } from 'vue'
+import { VList, VListItem, VListItemTitle, VTextField } from 'vuetify/components'
+import type { PropType } from 'vue'
 import type { MindMapRoot } from '@/@types'
 import { generateRandomData } from '@/helpers'
 
@@ -14,34 +14,34 @@ export const TreeView = defineComponent({
       required: true,
     },
   },
-  setup(props) {
-    function TreeItem({ node }) {
+  setup(props: any) {
+    function TreeItem({ node }: { node: any }) {
       const isOpen = ref(false)
       const isEditing = ref(false)
       const text = ref(node.data.text)
 
       const onToggleNode = () => isOpen.value = !isOpen.value
-      const onStartEdit = () => isEditing.value = true
-      const onSaveEdit = () => {
-        node.data.text = text.value
-        isEditing.value = false
-      }
-      const onCalcenEdit = () => {
-        text.value = node.data.text
-        isEditing.value = false
-      }
+      // const onStartEdit = () => isEditing.value = true
+      // const onSaveEdit = () => {
+      //   node.data.text = text.value
+      //   isEditing.value = false
+      // }
+      // const onCalcenEdit = () => {
+      //   text.value = node.data.text
+      //   isEditing.value = false
+      // }
 
       const isHasChild = computed(() => node.children && node.children.length > 0)
 
       return (
         <VList
           // value={node.name}
-          id="tree-item"
           style={{ paddingLeft: `${node.level * 20}px` }}
           v-slots={{
             default: () => (
               <>
-                <VListItem id="node" onClick={() => { onToggleNode() }} prependIcon={isHasChild.value ? (isOpen.value ? mdiChevronDown : mdiChevronRight) : ''}>
+                {/* @ts-ignre */}
+                <VListItem onClick={() => { onToggleNode() }} prependIcon={isHasChild.value ? (isOpen.value ? mdiChevronDown : mdiChevronRight) : ''}>
                   <VListItemTitle>
                     {isEditing.value
                       ? (
@@ -56,8 +56,8 @@ export const TreeView = defineComponent({
                 {isHasChild.value && (
                   <>
                     {isOpen.value && (
-                      <VListItem id="children">
-                        {node.children.map((child) => {
+                      <VListItem>
+                        {node.children.map((child: any) => {
                           return <TreeItem node={child} />
                         })}
                       </VListItem>
