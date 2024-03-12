@@ -6,11 +6,10 @@ import { storeToRefs } from 'pinia'
 
 // @ts-ignore
 
-import katex from 'katex'
-
 // import { useSettingsStore } from '@/store/settings'
 import { useMindMap, usePresets } from '@/composables'
 import { useAppStore } from '@/store/app'
+
 // import 'katex/dist/katex.min.css'
 import { withEventModifiers } from '@/directives'
 
@@ -30,7 +29,7 @@ export const NodeMath = defineComponent({
 
     watchEffect(() => {
       if (text.value)
-        preview.value = katex.renderToString(text.value)
+        preview.value = window.katex.renderToString(text.value)
     })
 
     const onReset = () => {
@@ -76,7 +75,7 @@ export const NodeMath = defineComponent({
                       />
                       <div class="d-flex flex-wrap gap-2">
                         {usedFormluaItems.value.map(item => (
-                          <VListItem v-html={katex.renderToString(item)} onClick={() => { text.value += item }} />
+                          <VListItem v-html={window.katex.renderToString(item)} onClick={() => { text.value += item }} />
                         ))}
                       </div>
                       <VSheet ref={previewEl} v-html={preview.value} maxHeight={200} class="overflow-y pa-4" />
