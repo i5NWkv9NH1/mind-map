@@ -41,8 +41,9 @@ async function onSwitchTheme(theme: string) {
   // * 所以为了防止样式混乱，特先清空
   // mindMap.value?.setThemeConfig({}, false)
   // TODO: 设置主题后并未更新对应的配置
-  await mindMap.value?.setTheme(mindMapTheme.value)
-  const target = mindMapThemes.value.find(item => item.value === mindMapTheme.value)
+  await mindMap.value?.setThemeConfig({}, false)
+	await mindMap.value?.setTheme(mindMapTheme.value)
+	const target = mindMapThemes.value.find(item => item.value === mindMapTheme.value)
   isDark.value = target.dark
   mindMapThemeConfig.value = await mindMap.value?.getThemeConfig()
   // TODO: 添加自定义配置 覆盖 / 保留
