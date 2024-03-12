@@ -30,14 +30,18 @@ const props = withDefaults(defineProps<Props>(), {
   nav: true,
 })
 
-const modelValue = defineModel<string | number | boolean>({
+const modelValue = defineModel<any>({
   required: true,
 })
 const { isDark } = storeToRefs(useSettingsStore())
 </script>
 
 <template>
-  <VLabel v-if="props.label" class="text-subtitle-2 mb-2" :text="props.label" />
+  <VLabel
+    v-if="props.label"
+    class="text-subtitle-2 mb-2"
+    :text="props.label"
+  />
   <VSelect
     v-model="modelValue"
     :items="props.items"
@@ -50,22 +54,28 @@ const { isDark } = storeToRefs(useSettingsStore())
     <!--    # slot -->
     <!--    # arg = { item, index, props } -->
     <template #item="arg">
-      <VList :density="props.listDensity" :nav="props.nav">
+      <VList
+        :density="props.listDensity"
+        :nav="props.nav"
+      >
         <!--          v-bind="args.props" -->
         <!--          :value="args.item.value" -->
         <VListItem
           :key="arg.index"
           :active="modelValue === arg.item.value"
           @click="() => {
-            // ! 不绑定 props
-            // ! 自定义插槽内容
-            // modelValue = arg.item.value
-            // console.log(arg)
-            // @ts-igrore
-            (arg.props as any).onClick()
-          }"
+      // ! 不绑定 props
+      // ! 自定义插槽内容
+      // modelValue = arg.item.value
+      // console.log(arg)
+      // @ts-igrore
+      (arg.props as any).onClick()
+    }"
         >
-          <slot name="default" v-bind="arg">
+          <slot
+            name="default"
+            v-bind="arg"
+          >
             <VListItemTitle>{{ arg.item.title }}</VListItemTitle>
           </slot>
         </VListItem>

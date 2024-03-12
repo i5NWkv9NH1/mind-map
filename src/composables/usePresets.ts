@@ -98,7 +98,7 @@ export function usePresets() {
   const fontLineHeightItems = ref<number[]>([1, 1.5, 2, 2.5, 3])
   const textUnderlineStyleItems = ref<TextUnderlineStyle[]>([
     { id: uuid(), name: '无', value: 'none' },
-    { id: uuid(), name: '下划线', value: 'textDecoration' },
+    { id: uuid(), name: '下划线', value: 'underline' },
     { id: uuid(), name: '中划线', value: 'line-through' },
     { id: uuid(), name: '上划线', value: 'overline' },
   ])

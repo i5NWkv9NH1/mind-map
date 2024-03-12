@@ -1,4 +1,4 @@
-// TODO: 待更新节点数据获取
+<!-- TODO: 优化 -->
 <script
   setup
   lang="ts"
@@ -12,7 +12,7 @@ import {
   mdiVectorLine,
 } from '@mdi/js'
 import { storeToRefs } from 'pinia'
-import { ref, watch, watchEffect } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { ColorPicker, FormSelect, MenuSelect, PanelContainer } from '@/components'
 import { useMindMap, usePresets } from '@/composables'
 import { useSettingsStore } from '@/store/settings'
@@ -21,7 +21,7 @@ import type { MindMapNode } from '@/@types'
 
 const { togglePanel } = useSettingsStore()
 const { isDark } = storeToRefs(useSettingsStore())
-const { mindMap, activeNodes } = useMindMap()
+const { mindMap } = useMindMap()
 const {
   usedColorItems,
   textUnderlineStyleItems,
@@ -61,88 +61,84 @@ const styles = ref<Record<string, any>>({
   textDecoration: '',
 })
 
-watch(styles, () => {
-  if (activeNodes.value && activeNodes.value.length !== 0) {
-    activeNodes.value.forEach((node: MindMapNode) => {
-      Object.keys(styles.value).forEach((key: string) => {
-        node.setStyle(key, styles.value[key])
-      })
-    })
-  }
-}, { deep: true })
+const _activeNodes = ref<MindMapNode[]>()
+const _activeNode = ref<MindMapNode>()
 
-watchEffect(() => {
-  if (activeNodes.value && activeNodes.value.length !== 0) {
-    // 获取样式的逻辑
-    // eslint-disable-next-line
-    console.log('获取节点样式')
-    Object.keys(styles.value).forEach((key: string) => {
+// watchEffect(() => {
+//   console.info('watch effect')
+//   if (activeNodes.value && activeNodes.value.length !== 0) {
+//     // eslint-disable-next-line
+//     console.log('获取节点样式')
+//     Object.keys(styles.value).forEach((key: string) => {
+//       if (key.includes('olor')) {
+//         const value = activeNodes.value![0].getStyle(key, false)
+//         if (value === 'transparent')
+//           styles.value[key] = 'rgba(0, 0, 0, 0)'
+//         else
+//           styles.value[key] = value
+//         return
+//       }
+//       styles.value[key] = activeNodes.value![0].getStyle(key, false)
+//     })
+//   }
+// })
+function updateNodeStyles(key: string, value: any) {
+  styles.value[key] = value
+  console.log(`更新节点样式`, key, value)
+  _activeNodes.value?.forEach((node) => {
+    node.setStyle(key, styles.value[key])
+  })
+  console.log(`获取节点样式`, _activeNodes.value![0].getStyle(key))
+}
+// TODO: updated
+function getNodeStyles(_node: MindMapNode, _nodes: MindMapNode[]) {
+  if (_nodes.length <= 0)
+    return
+  _activeNode.value = _node
+  _activeNodes.value = _nodes
+  nextTick(() => {
+    [
+      'borderColor',
+      'borderDasharray',
+      'borderRadius',
+      'borderWidth',
+      'color',
+      'endColor',
+      'fillColor',
+      'fontFamily',
+      'fontSize',
+      'fontStyle',
+      'fontWeight',
+      'gradientStyle',
+      'lineColor',
+      'lineDasharray',
+      'lineHeight',
+      'lineMarkerDir',
+      'lineWidth',
+      'paddingX',
+      'paddingY',
+      'shape',
+      'startColor',
+      'textDecoration',
+    ].forEach((key: string) => {
       if (key.includes('olor')) {
-        const value = activeNodes.value![0].getStyle(key, false)
+        const value = _activeNodes.value![0].getStyle(key, false)
         if (value === 'transparent')
           styles.value[key] = 'rgba(0, 0, 0, 0)'
         else
           styles.value[key] = value
         return
       }
-      styles.value[key] = activeNodes.value![0].getStyle(key, false)
+      styles.value[key] = _activeNodes.value![0].getStyle(key, false)
     })
-  }
+  })
+}
+onMounted(() => {
+  mindMap.value?.on('node_active', getNodeStyles)
 })
-
-// TODO: updated
-// onMounted(() => {
-//   mindMap.value?.on('node_active', (_node: MindMapNode, nodes: MindMapNode[]) => {
-//     activeNodes.value = nodes
-//     if (!activeNodes.value)
-//       return
-//     if (activeNodes.value.length <= 0)
-//       return
-//     nextTick(() => {
-//       if (activeNodes.value && activeNodes.value.length !== 0) {
-//         [
-//           'borderColor',
-//           'borderDasharray',
-//           'borderRadius',
-//           'borderWidth',
-//           'color',
-//           'endColor',
-//           'fillColor',
-//           'fontFamily',
-//           'fontSize',
-//           'fontStyle',
-//           'fontWeight',
-//           'gradientStyle',
-//           'lineColor',
-//           'lineDasharray',
-//           'lineHeight',
-//           'lineMarkerDir',
-//           'lineWidth',
-//           'paddingX',
-//           'paddingY',
-//           'shape',
-//           'startColor',
-//           'textDecoration',
-//         ].forEach((key: string) => {
-//           if (key.includes('olor')) {
-//             const value = activeNodes.value![0].getStyle(key, false)
-//             if (value === 'transparent')
-//               styles.value[key] = 'rgba(0, 0, 0, 0)'
-//             else
-//               styles.value[key] = value
-//             return
-//           }
-//           styles.value[key] = activeNodes.value![0].getStyle(key, false)
-//         })
-//         // console.log(styles.value)
-//       }
-//     }).then((_) => {
-//       // eslint-disable-next-line no-console
-//       console.log('from next ticker', styles.value)
-//     })
-//     console.log('next ticker outside', styles.value)
-//   })
-// })
+onBeforeUnmount(() => {
+  mindMap.value?.off('node_active', getNodeStyles)
+})
 </script>
 
 <template>
@@ -161,7 +157,8 @@ watchEffect(() => {
 
     <template #content>
       <VScrollXTransition group>
-        <template v-if="activeNodes && activeNodes.length !== 0">
+        <!-- <template v-if="_activeNodes"> -->
+        <template v-if="_activeNodes && _activeNodes.length > 0">
           <VSheet class="my-4">
             <div class="text-body-1 mb-3">
               文字
@@ -169,35 +166,39 @@ watchEffect(() => {
             <VRow>
               <VCol>
                 <FormSelect
-                  v-model="styles.fontFamily"
+                  :model-value="styles.fontFamily"
                   :items="fontFamilyItems"
                   label="字体"
+                  @update:model-value="(value) => updateNodeStyles('fontFamily', value)"
                 />
               </VCol>
             </VRow>
             <VRow>
               <VCol>
                 <FormSelect
-                  v-model="styles.fontSize"
+                  :model-value="styles.fontSize"
                   :items="(fontSizeItems as any)"
                   label="字号"
+                  @update:model-value="(value) => updateNodeStyles('fontSize', value)"
                 />
               </VCol>
               <VCol>
                 <FormSelect
-                  v-model="styles.lineHeight"
+                  :model-value="styles.lineHeight"
                   :items="(fontLineHeightItems as any)"
                   label="行高"
+                  @update:model-value="(value) => updateNodeStyles('lineHeight', value)"
                 />
               </VCol>
             </VRow>
             <VRow align="center">
               <VCol>
                 <ColorPicker
-                  v-model:color="styles.color"
+                  :color="styles.color"
                   :items="usedColorItems"
                   :icon="mdiFormatColorText"
                   tip="字体颜色"
+                  @update:color="(value) => updateNodeStyles('color', value)"
                 />
               </VCol>
               <VCol>
@@ -217,9 +218,9 @@ watchEffect(() => {
                       size="small"
                       icon
                       @click="() => {
-                        if (styles.fontWeight === 'bold') styles.fontWeight = 'normal'
-                        else styles.fontWeight = 'bold'
-                      }"
+          if (styles.fontWeight === 'bold') updateNodeStyles('fontWeight', 'normal')
+          else updateNodeStyles('fontWeight', 'bold')
+        }"
                     >
                       <VIcon>{{ mdiFormatBold }}</VIcon>
                     </VBtn>
@@ -244,9 +245,9 @@ watchEffect(() => {
                       size="small"
                       icon
                       @click="() => {
-                        if (styles.fontStyle === 'italic') styles.fontStyle = 'normal'
-                        else styles.fontStyle = 'italic'
-                      }"
+          if (styles.fontStyle === 'italic') updateNodeStyles('fontStyle', 'normal')
+          else updateNodeStyles('fontStyle', 'italic')
+        }"
                     >
                       <VIcon>{{ mdiFormatItalic }}</VIcon>
                     </VBtn>
@@ -256,9 +257,10 @@ watchEffect(() => {
               </VCol>
               <VCol>
                 <MenuSelect
-                  v-model="styles.textDecoration"
+                  :model-value="styles.textDecoration"
                   :items="textUnderlineStyleItems"
                   :close-on-content-click="true"
+                  @update:model-value="(value) => updateNodeStyles('textDecoration', value)"
                 >
                   <template #activator="menu">
                     <VTooltip
@@ -298,8 +300,9 @@ watchEffect(() => {
                   颜色
                 </VLabel>
                 <ColorPicker
-                  v-model:color="styles.borderColor"
+                  :color="styles.borderColor"
                   :items="usedColorItems"
+                  @update:color="(value: string) => updateNodeStyles('borderColor', value)"
                 >
                   <template #activator="args">
                     <VBtn
@@ -314,11 +317,12 @@ watchEffect(() => {
               </VCol>
               <VCol>
                 <FormSelect
-                  v-model="styles.borderDasharray"
+                  :model-value="styles.borderDasharray"
                   :items="borderStyleItems"
                   label="样式"
+                  @update:model-value="(value: string) => updateNodeStyles('borderDasharray', value)"
                 >
-                  <template #default="{ item, index }">
+                  <template #default="{ item }">
                     <VListItemTitle>
                       <p>{{ item.title }}</p>
                       <svg
@@ -343,9 +347,10 @@ watchEffect(() => {
             <VRow>
               <VCol>
                 <FormSelect
-                  v-model="styles.borderWidth"
+                  :model-value="styles.borderWidth"
                   :items="lineWidthSizeItems"
                   label="宽度"
+                  @update:model-value="(value: string) => updateNodeStyles('borderWidth', value)"
                 >
                   <template #default="{ item }">
                     <VListItemTitle>
@@ -373,9 +378,10 @@ watchEffect(() => {
               </VCol>
               <VCol>
                 <FormSelect
-                  v-model="styles.borderRadius"
+                  :model-value="styles.borderRadius"
                   :items="radiusSizeItems"
                   label="圆角"
+                  @update:model-value="(value: string) => updateNodeStyles('borderRadius', value)"
                 />
               </VCol>
             </VRow>
@@ -388,8 +394,9 @@ watchEffect(() => {
             <VRow>
               <VCol cols="6">
                 <ColorPicker
-                  v-model:color="styles.fillColor"
+                  :color="styles.fillColor"
                   :items="usedColorItems"
+                  @update:color="(value: string) => updateNodeStyles('fillColor', value)"
                 >
                   <template #activator="activator">
                     <VBtn
@@ -397,8 +404,8 @@ watchEffect(() => {
                       :color="activator.color"
                       :disabled="styles.gradientStyle"
                       :class="[
-                        styles.gradientStyle ? 'pointer-cursor' : 'pointer-not-allowed',
-                      ]"
+          styles.gradientStyle ? 'pointer-cursor' : 'pointer-not-allowed',
+        ]"
                       block
                     />
                   </template>
@@ -411,16 +418,18 @@ watchEffect(() => {
             >
               <VCol>
                 <VCheckbox
-                  v-model="styles.gradientStyle"
+                  :model-value="styles.gradientStyle"
                   label="渐变"
                   hide-details
+                  @update:model-value="(value: boolean) => updateNodeStyles('gradientStyle', value)"
                 />
               </VCol>
               <VSlideYTransition group>
                 <VCol v-if="styles.gradientStyle">
                   <ColorPicker
-                    v-model:color="styles.startColor"
+                    :color="styles.startColor"
                     :items="usedColorItems"
+                    @update:color="(value: string) => updateNodeStyles('startColor', value)"
                   >
                     <template #activator="activator">
                       <VBtn
@@ -435,8 +444,9 @@ watchEffect(() => {
                 </VCol>
                 <VCol v-if="styles.gradientStyle">
                   <ColorPicker
-                    v-model:color="styles.endColor"
+                    :color="styles.endColor"
                     :items="usedColorItems"
+                    @update:color="(value: string) => updateNodeStyles('endColor', value)"
                   >
                     <template #activator="activator">
                       <VBtn
@@ -461,8 +471,9 @@ watchEffect(() => {
               <VCol cols="8">
                 <!-- * 自定义 svg 内容 -->
                 <FormSelect
-                  v-model="styles.shape"
+                  :model-value="styles.shape"
                   :items="shapeItems"
+                  @update:model-value="(value) => updateNodeStyles('shape', value)"
                 >
                   <template #default="{ item, index }">
                     <VListItemTitle>
@@ -496,8 +507,9 @@ watchEffect(() => {
                   颜色
                 </VLabel>
                 <ColorPicker
-                  v-model:color="styles.lineColor"
+                  :color="styles.lineColor"
                   :items="usedColorItems"
+                  @update:color="(value) => updateNodeStyles('lineColor', value)"
                 >
                   <template #activator="args">
                     <VBtn
@@ -512,11 +524,12 @@ watchEffect(() => {
               <VCol>
                 <!-- * 自定义 svg 内容 -->
                 <FormSelect
-                  v-model="styles.lineDasharray"
                   :items="lineStyleItems"
+                  :model-value="styles.lineDasharray"
                   label="样式"
+                  @update:model-value="(value) => updateNodeStyles('lineDasharray', value)"
                 >
-                  <template #default="{ item, index }">
+                  <template #default="{ item }">
                     <VListItemTitle>
                       <p>{{ item.title }}</p>
                       <svg
@@ -542,11 +555,12 @@ watchEffect(() => {
               <VCol>
                 <!-- * 自定义 svg 内容 -->
                 <FormSelect
-                  v-model="styles.lineWidth"
                   :items="lineWidthSizeItems"
+                  :model-value="styles.lineWidth"
                   label="宽度"
+                  @update:model-value="(value) => updateNodeStyles('lineWidth', value)"
                 >
-                  <template #default="{ item, index }">
+                  <template #default="{ item }">
                     <VListItemTitle>
                       <p>{{ item.title }}</p>
                       <template v-if="!item.value" />
@@ -572,9 +586,10 @@ watchEffect(() => {
               </VCol>
               <VCol>
                 <FormSelect
-                  v-model="styles.lineMarkerDir"
                   :items="lineArrowPositionItems"
+                  :model-value="styles.lineMarkerDir"
                   label="箭头位置"
+                  @update:model-value="(value) => updateNodeStyles('lineMarkerDir', value)"
                 />
               </VCol>
             </VRow>
@@ -587,12 +602,13 @@ watchEffect(() => {
             <VRow>
               <VCol cols="12">
                 <VSlider
-                  v-model="styles.paddingX"
+                  :model-value="styles.paddingX"
                   :max="100"
                   :min="0"
                   :step="1"
                   thumb-label
                   hide-details
+                  @update:model-value="(value) => updateNodeStyles('paddingX', value)"
                 >
                   <template #prepend>
                     <span>水平</span>
@@ -601,13 +617,14 @@ watchEffect(() => {
               </VCol>
               <VCol cols="12">
                 <VSlider
-                  v-model="styles.paddingY"
+                  :model-value="styles.paddingY"
                   density="compact"
                   :max="100"
                   :min="0"
                   :step="1"
                   thumb-label
                   hide-details
+                  @update:model-value="(value) => updateNodeStyles('paddingY', value)"
                 >
                   <template #prepend>
                     <span>垂直</span>

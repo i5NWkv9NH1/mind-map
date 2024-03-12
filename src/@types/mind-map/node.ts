@@ -30,7 +30,7 @@ export interface MindMapNode<T = any> {
   getStyle: (key: string, noRerender?: boolean) => string | number | boolean | object | any
 }
 
-export interface SetImage { url: string, title?: string, width: number, height: number }
+export interface SetImage { url: string | ArrayBuffer, title?: string, width: number, height: number }
 export type SetIcon = string[]
 export type GetDataType = 'image' | 'imageTitle' | 'icon' | 'hyperlink' | 'hyperlinkTitle' | 'note' | 'tag'
 export type StyleName = `shape` | string

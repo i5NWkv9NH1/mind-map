@@ -1,7 +1,8 @@
 // TODO: support multiple nodes seleceted
+// TODO: update web url support
 import { mdiCloseCircleOutline, mdiContentSaveOutline, mdiImagePlusOutline } from '@mdi/js'
-import { defineComponent, ref, watch } from 'vue'
-import { VBtn, VCard, VCardActions, VCardText, VCardTitle, VContainer, VDialog, VIcon } from 'vuetify/components'
+import { defineComponent, onBeforeMount, onMounted, ref } from 'vue'
+import { VBtn, VCard, VCardActions, VCardText, VCardTitle, VCol, VContainer, VDialog, VIcon, VRow } from 'vuetify/components'
 import { storeToRefs } from 'pinia'
 import { isEmpty } from 'lodash'
 
@@ -13,17 +14,18 @@ import { DragUpload } from '@/components'
 // import { useMindMap } from '@/composables'
 import { useAppStore } from '@/store/app'
 import { useMindMap } from '@/composables'
+import type { MindMapNode } from '@/@types'
 
 export const NodeImage = defineComponent({
   name: 'NodeImage',
   setup() {
-    const { activeNodes } = useMindMap()
+    const { activeNodes, mindMap } = useMindMap()
     // const { toggleMessage } = useSettingsStore()
     const { isActiveNode } = storeToRefs(useAppStore())
 
     const _tab = ref(0)
     const dialog = ref(false)
-    const fileSrc = ref('')
+    const fileSrc = ref<string | ArrayBuffer>('')
 
     const fileName = ref('')
     const _webUrl = ref('')
@@ -62,15 +64,34 @@ export const NodeImage = defineComponent({
       dialog.value = false
     }
 
-    watch(isActiveNode, () => {
-      if (isActiveNode.value) {
-        const image = activeNodes.value![0].getData('image') as string || ''
-        const imageTitle = activeNodes.value![0].getData('imageTitle') || ''
-        // ! 判断是哪种类型的图片
-        fileSrc.value = image
-        fileName.value = imageTitle
-      }
-    }, { immediate: true })
+    // watch(activeNodes, () => {
+    //   if (activeNodes.value) {
+    //     const image = activeNodes.value![0].getData('image') as string || ''
+    //     const imageTitle = activeNodes.value![0].getData('imageTitle') || ''
+    //     // ! 判断是哪种类型的图片
+    //     fileSrc.value = image
+    //     fileName.value = imageTitle
+    //   }
+    // }, { immediate: true })
+
+    function getNodeImage(_node: MindMapNode, _nodes: MindMapNode[]) {
+      if (!_nodes)
+        return
+      if (_nodes.length <= 0)
+        return
+      if (!_nodes[0])
+        return
+      const image = _nodes[0].getData('image')
+      fileSrc.value = image
+    }
+
+    onMounted(() => {
+      mindMap.value?.on('node_active', getNodeImage)
+    })
+
+    onBeforeMount(() => {
+      mindMap.value?.off('node_active', getNodeImage)
+    })
 
     return () => (
       <>
@@ -80,39 +101,43 @@ export const NodeImage = defineComponent({
           transition="slide-y-transition"
           persistent
         >
-          <VContainer>
-            <VCard maxWidth={400} class="mx-auto">
-              <VCardTitle>添加图片</VCardTitle>
-              <VCardText>
-                <DragUpload
-                  src={fileSrc.value}
-                  name={fileName.value}
-                  // @ts-ignore
-                  onUpdate:name={name => fileName.value = name}
-				  // @ts-ignore
-                  onUpdate:src={(src) => {
-                    fileSrc.value = src
-                  }}
-                />
-              </VCardText>
-              <VCardActions>
-                <VBtn
-                  // @ts-ignore
-                  onClick={onAbort}
-                >
-                  <VIcon start>{mdiCloseCircleOutline}</VIcon>
-                  <span>取消</span>
-                </VBtn>
-                <VBtn
-                  // @ts-ignore
-                  onClick={onConfirm}
-                  color="primary"
-                >
-                  <VIcon start>{mdiContentSaveOutline}</VIcon>
-                  <span>确定</span>
-                </VBtn>
-              </VCardActions>
-            </VCard>
+          <VContainer class="fill-height">
+            <VRow class="fill-height" justify="center" align="center">
+              <VCol cols={12} lg={6} md={8} sm={8}>
+                <VCard>
+                  <VCardTitle>添加图片</VCardTitle>
+                  <VCardText>
+                    <DragUpload
+                      src={fileSrc.value}
+                      name={fileName.value}
+                      // @ts-ignore
+                      onUpdate:name={name => fileName.value = name}
+                      // @ts-ignore
+                      onUpdate:src={(src) => {
+                        fileSrc.value = src
+                      }}
+                    />
+                  </VCardText>
+                  <VCardActions>
+                    <VBtn
+                      // @ts-ignore
+                      onClick={onAbort}
+                    >
+                      <VIcon start>{mdiCloseCircleOutline}</VIcon>
+                      <span>取消</span>
+                    </VBtn>
+                    <VBtn
+                      // @ts-ignore
+                      onClick={onConfirm}
+                      color="primary"
+                    >
+                      <VIcon start>{mdiContentSaveOutline}</VIcon>
+                      <span>确定</span>
+                    </VBtn>
+                  </VCardActions>
+                </VCard>
+              </VCol>
+            </VRow>
           </VContainer>
         </VDialog>
         <VBtn

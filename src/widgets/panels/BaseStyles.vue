@@ -1,3 +1,4 @@
+<!-- @ts-nocheck -->
 <script
   setup
   lang="ts"
@@ -5,7 +6,9 @@
 import { mdiCloseCircle } from '@mdi/js'
 import { storeToRefs } from 'pinia'
 import { v4 as uuid } from 'uuid'
-import { ref, watch, watchEffect } from 'vue'
+
+// @ts-nocheck
+import { onMounted, ref } from 'vue'
 import { useSettingsStore } from '@/store/settings'
 import { useMindMap, usePresets } from '@/composables'
 import { ColorPicker, DragUpload, FormSelect, PanelContainer } from '@/components'
@@ -13,7 +16,7 @@ import { useAppStore } from '@/store/app'
 
 // # background
 const { isDark } = storeToRefs(useSettingsStore())
-const { mindMapThemeConfig, mindMapWaterConfig, mindMapConfig } = storeToRefs(useAppStore())
+const { mindMapWaterConfig, mindMapConfig, mindMapThemeConfig } = storeToRefs(useAppStore())
 const { togglePanel } = useSettingsStore()
 const { mindMap } = useMindMap()
 
@@ -57,18 +60,16 @@ const marginTabItems = ref([
 //   //   mindMapThemeConfig.value[key] = mindMap.value?.getThemeConfig()[marginTab.value][key]
 //   // })
 // })
-
 function onUpdate(key: string, value: string | number | any) {
-  console.log('BaseStyles', 'key: ', key, 'value', value)
+  // TODO: 保存到本地
   mindMapThemeConfig.value[key] = value
   mindMap.value?.setThemeConfig(mindMapThemeConfig.value)
 }
 function onUpdateMargin(key: string, value: string | number | any) {
-  console.log(marginTab.value, key, value)
+  // TODO: 保存到本地
   mindMapThemeConfig.value[marginTab.value][key] = value
   mindMap.value?.setThemeConfig(mindMapThemeConfig.value)
 }
-
 // ! 不要监听整个主题样式，只修改某个值
 // ! 避免切换主题的时候把整个原来的主题配置（无UI）一直给替换掉
 // watch(mindMapThemeConfig, () => {
@@ -77,25 +78,28 @@ function onUpdateMargin(key: string, value: string | number | any) {
 
 // # 水印
 const isShowWaterMarker = ref(false)
-
-watch(mindMapWaterConfig, () => {
-  if (isShowWaterMarker.value) {
-  	// @ts-ignore
-    mindMap.value?.watermark.updateWatermark({ ...mindMapWaterConfig.value })
-  }
-  else {
-    mindMapWaterConfig.value.text = ''
-    // @ts-ignore
-    mindMap.value?.watermark.updateWatermark({ ...mindMapWaterConfig.value })
-  }
-}, { deep: true, immediate: true })
-watchEffect(() => {
-  if (!isShowWaterMarker.value)
-    mindMapWaterConfig.value.text = ''
+// watch(mindMapWaterConfig, () => {
+//   if (isShowWaterMarker.value) {
+//     // @ts-ignore
+//     mindMap.value?.watermark.updateWatermark({ ...mindMapWaterConfig.value })
+//   }
+//   else {
+//     mindMapWaterConfig.value.text = ''
+//     // @ts-ignore
+//     mindMap.value?.watermark.updateWatermark({ ...mindMapWaterConfig.value })
+//   }
+// }, { deep: true, immediate: true })
+// watchEffect(() => {
+//   if (!isShowWaterMarker.value)
+//     mindMapWaterConfig.value.text = ''
+// })
+// watch(mindMapConfig, () => {
+//   mindMap.value?.updateConfig({ ...mindMapConfig.value })
+// }, { deep: true })
+onMounted(() => {
+  // TODO: 提取到 store
+  // mindMapThemeConfig.value = mindMap.value?.getThemeConfig()
 })
-watch(mindMapConfig, () => {
-  mindMap.value?.updateConfig({ ...mindMapConfig.value })
-}, { deep: true })
 </script>
 
 <template>
@@ -140,8 +144,8 @@ watch(mindMapConfig, () => {
                   :color="mindMapThemeConfig.backgroundColor"
                   :items="usedColorItems"
                   @update:color="(value: string) => {
-                    onUpdate('backgroundColor', value)
-                  }"
+          onUpdate('backgroundColor', value)
+        }"
                 >
                   <template #activator="activator">
                     <div class="pa-2">
@@ -163,8 +167,8 @@ watch(mindMapConfig, () => {
                     :src="mindMapThemeConfig.backgroundImage"
                     name=""
                     @update:src="(value) => {
-                      onUpdate('backgroundImage', value)
-                    }"
+          onUpdate('backgroundImage', value)
+        }"
                   />
                   <VRow>
                     <VCol>
@@ -173,8 +177,8 @@ watch(mindMapConfig, () => {
                         :items="backgroundPositionItems"
                         label="图片位置"
                         @update:model-value="(value) => {
-                          onUpdate('backgroundPosition', value)
-                        }"
+          onUpdate('backgroundPosition', value)
+        }"
                       />
                     </VCol>
                   </VRow>
@@ -185,8 +189,8 @@ watch(mindMapConfig, () => {
                         label="图片重复"
                         :items="backgroundRepeatItems"
                         @update:model-value="(value) => {
-                          onUpdate('backgroundRepeat', value)
-                        }"
+          onUpdate('backgroundRepeat', value)
+        }"
                       />
                     </VCol>
                   </VRow>
@@ -197,8 +201,8 @@ watch(mindMapConfig, () => {
                         label="图片大小"
                         :items="backgroundSizeItems"
                         @update:model-value="(value) => {
-                          onUpdate('backgroundSize', value)
-                        }"
+          onUpdate('backgroundSize', value)
+        }"
                       />
                     </VCol>
                   </VRow>
@@ -223,8 +227,8 @@ watch(mindMapConfig, () => {
               location="left center"
               :items="usedColorItems"
               @update:color="(value: string) => {
-                onUpdate('lineColor', value)
-              }"
+          onUpdate('lineColor', value)
+        }"
             >
               <template #activator="activator">
                 <VBtn
@@ -243,8 +247,8 @@ watch(mindMapConfig, () => {
               :items="lineWidthSizeItems"
               label="粗细"
               @update:model-value="(value) => {
-                onUpdate('lineWidth', value)
-              }"
+          onUpdate('lineWidth', value)
+        }"
             >
               <template #default="{ item }">
                 <VListItemTitle>
@@ -278,34 +282,41 @@ watch(mindMapConfig, () => {
               :items="lineStyleItems"
               label="风格"
               @update:model-value="(value) => {
-                onUpdate('lineStyle', value)
-              }"
+          onUpdate('lineStyle', value)
+        }"
             >
-              <template #default="{ item }: { item: { value: 'straight' | 'curve' | 'direct'; [index: string] : any }}">
+              <template #default="{ item }: { item: { value: 'straight' | 'curve' | 'direct';[index: string]: any } }">
                 <VListItemTitle>
                   <p>{{ item.title }}</p>
-                  <svg width="60" height="30" :style="{ backgroundColor: isDark ? 'white' : '' }" v-html="lineStyleMap[item.value]" />
+                  <svg
+                    width="60"
+                    height="30"
+                    :style="{ backgroundColor: isDark ? 'white' : '' }"
+                    v-html="lineStyleMap[item.value]"
+                  />
                 </VListItemTitle>
               </template>
             </FormSelect>
           </VCol>
           <VCol cols="6">
-            <template
-              v-if="mindMapThemeConfig.lineStyle === 'straight'"
-            >
+            <template v-if="mindMapThemeConfig.lineStyle === 'straight'">
               <FormSelect
-                label="圆角大小" :items="lineRadiusItems" :model-value="mindMapThemeConfig.lineRadius" @update:model-value="value => {
-                  onUpdate('lineRadius', value)
-                }"
+                label="圆角大小"
+                :items="lineRadiusItems"
+                :model-value="mindMapThemeConfig.lineRadius"
+                @update:model-value="value => {
+          onUpdate('lineRadius', value)
+        }"
               />
             </template>
-            <template
-              v-if="mindMapThemeConfig.lineStyle === 'curve'"
-            >
+            <template v-if="mindMapThemeConfig.lineStyle === 'curve'">
               <FormSelect
-                label="根节点" :items="rootLineStyleItems" :model-value="mindMapThemeConfig.rootLineKeepSameInCurve" @update:model-value="value => {
-                  onUpdate('rootLineKeepSameInCurve', value)
-                }"
+                label="根节点"
+                :items="rootLineStyleItems"
+                :model-value="mindMapThemeConfig.rootLineKeepSameInCurve"
+                @update:model-value="value => {
+          onUpdate('rootLineKeepSameInCurve', value)
+        }"
               />
             </template>
           </VCol>
@@ -313,9 +324,12 @@ watch(mindMapConfig, () => {
         <VRow v-if="mindMapThemeConfig.lineStyle === 'curve'">
           <VCol cols="6">
             <FormSelect
-              label="根节点连线起始位置" :items="rootLineStartPositionItems" :model-value="mindMapThemeConfig.rootLineStartPositionKeepSameInCurve" @update:model-value="value => {
-                onUpdate('rootLineStartPositionKeepSameInCurve', value)
-              }"
+              label="根节点连线起始位置"
+              :items="rootLineStartPositionItems"
+              :model-value="mindMapThemeConfig.rootLineStartPositionKeepSameInCurve"
+              @update:model-value="value => {
+          onUpdate('rootLineStartPositionKeepSameInCurve', value)
+        }"
             />
           </VCol>
         </VRow>
@@ -327,8 +341,8 @@ watch(mindMapConfig, () => {
               density="compact"
               hide-details
               @update:model-value="(value) => {
-                onUpdate('showLineMarker', value)
-              }"
+          onUpdate('showLineMarker', value)
+        }"
             />
           </VCol>
         </VRow>
@@ -344,10 +358,11 @@ watch(mindMapConfig, () => {
               颜色
             </VLabel>
             <ColorPicker
-              :color="mindMapThemeConfig.generalizationLineColor" :items="usedColorItems"
+              :color="mindMapThemeConfig.generalizationLineColor"
+              :items="usedColorItems"
               @update:color="(value: string) => {
-                onUpdate('generalizationLineColor', value)
-              }"
+          onUpdate('generalizationLineColor', value)
+        }"
             >
               <template #activator="activator">
                 <VBtn
@@ -426,8 +441,8 @@ watch(mindMapConfig, () => {
               :model-value="mindMapThemeConfig.associativeLineWidth"
               :items="lineWidthSizeItems"
               @update:model-value="(value) => {
-                onUpdate('associativeLineWidth', value)
-              }"
+          onUpdate('associativeLineWidth', value)
+        }"
             >
               <template #default="{ item }">
                 <VListItemTitle>
@@ -463,8 +478,8 @@ watch(mindMapConfig, () => {
               :color="mindMapThemeConfig.associativeLineActiveColor"
               :items="usedColorItems"
               @update:color="(value: string) => {
-                onUpdate('associativeLineActiveColor', value)
-              }"
+          onUpdate('associativeLineActiveColor', value)
+        }"
             >
               <template #activator="args">
                 <VBtn
@@ -479,11 +494,12 @@ watch(mindMapConfig, () => {
           </VCol>
           <VCol>
             <FormSelect
-              label="粗细" :model-value="mindMapThemeConfig.associativeLineActiveWidth"
+              label="粗细"
+              :model-value="mindMapThemeConfig.associativeLineActiveWidth"
               :items="lineWidthSizeItems"
               @update:model-value="(value) => {
-                onUpdate('associativeLineActiveWidth', value)
-              }"
+          onUpdate('associativeLineActiveWidth', value)
+        }"
             >
               <template #default="{ item }">
                 <VListItemTitle>
@@ -523,8 +539,8 @@ watch(mindMapConfig, () => {
               :model-value="mindMapThemeConfig.associativeLineTextFontFamily"
               :items="fontFamilyItems"
               @update:model-value="value => {
-                onUpdate('associativeLineTextFontFamily', value)
-              }"
+          onUpdate('associativeLineTextFontFamily', value)
+        }"
             />
           </VCol>
         </VRow>
@@ -537,8 +553,8 @@ watch(mindMapConfig, () => {
               :color="mindMapThemeConfig.associativeLineTextColor"
               :items="usedColorItems"
               @update:color="(value: string) => {
-                onUpdate('associativeLineTextColor', value)
-              }"
+          onUpdate('associativeLineTextColor', value)
+        }"
             >
               <template #activator="args">
                 <VBtn
@@ -557,8 +573,8 @@ watch(mindMapConfig, () => {
               :model-value="mindMapThemeConfig.associativeLineTextFontSize"
               :items="(fontSizeItems as any)"
               @update:model-value="value => {
-                onUpdate('associativeLineTextFontSize', value)
-              }"
+          onUpdate('associativeLineTextFontSize', value)
+        }"
             />
           </VCol>
         </VRow>
@@ -576,8 +592,8 @@ watch(mindMapConfig, () => {
               density="compact"
               hide-details
               @update:model-value="(value) => {
-                onUpdate('nodeUseLineStyle', value)
-              }"
+          onUpdate('nodeUseLineStyle', value)
+        }"
             />
           </VCol>
         </VRow>
@@ -598,8 +614,8 @@ watch(mindMapConfig, () => {
               thumb-label
               hide-details
               @update:model-value="(value) => {
-                onUpdate('paddingX', value)
-              }"
+          onUpdate('paddingX', value)
+        }"
             >
               <template #prepend>
                 <span class="text-subtitle-2">水平</span>
@@ -613,8 +629,8 @@ watch(mindMapConfig, () => {
               thumb-label
               hide-details
               @update:model-value="(value) => {
-                onUpdate('paddingY', value)
-              }"
+          onUpdate('paddingY', value)
+        }"
             >
               <template #prepend>
                 <span class="text-subtitle-2">垂直</span>
@@ -638,8 +654,8 @@ watch(mindMapConfig, () => {
               thumb-label
               hide-details
               @update:model-value="(value) => {
-                onUpdate('imageMaxWidth', value)
-              }"
+          onUpdate('imageMaxWidth', value)
+        }"
             >
               <template #prepend>
                 <span class="text-subtitle-2">显示的最大宽度</span>
@@ -653,8 +669,8 @@ watch(mindMapConfig, () => {
               thumb-label
               hide-details
               @update:model-value="(value) => {
-                onUpdate('imageMaxHeight', value)
-              }"
+          onUpdate('imageMaxHeight', value)
+        }"
             >
               <template #prepend>
                 <span class="text-subtitle-2">显示的最大高度</span>
@@ -678,8 +694,8 @@ watch(mindMapConfig, () => {
               thumb-label
               hide-details
               @update:model-value="(value) => {
-                onUpdate('iconSize', value)
-              }"
+          onUpdate('iconSize', value)
+        }"
             >
               <template #prepend>
                 <span class="text-subtitle-2">大小</span>
@@ -723,8 +739,8 @@ watch(mindMapConfig, () => {
                   thumb-label
                   hide-details
                   @update:model-value="(value) => {
-                    onUpdateMargin('marginX', value)
-                  }"
+          onUpdateMargin('marginX', value)
+        }"
                 >
                   <template #prepend>
                     <span class="text-subtitle-2">水平</span>
@@ -738,8 +754,8 @@ watch(mindMapConfig, () => {
                   thumb-label
                   hide-details
                   @update:model-value="(value) => {
-                    onUpdateMargin('marginY', value)
-                  }"
+          onUpdateMargin('marginY', value)
+        }"
                 >
                   <template #prepend>
                     <span class="text-subtitle-2">垂直</span>
@@ -755,8 +771,8 @@ watch(mindMapConfig, () => {
                   thumb-label
                   hide-details
                   @update:model-value="(value) => {
-                    onUpdateMargin('marginX', value)
-                  }"
+          onUpdateMargin('marginX', value)
+        }"
                 >
                   <template #prepend>
                     <span class="text-subtitle-2">水平</span>
@@ -770,8 +786,8 @@ watch(mindMapConfig, () => {
                   thumb-label
                   hide-details
                   @update:model-value="(value) => {
-                    onUpdateMargin('marginY', value)
-                  }"
+          onUpdateMargin('marginY', value)
+        }"
                 >
                   <template #prepend>
                     <span class="text-subtitle-2">垂直</span>
@@ -793,8 +809,9 @@ watch(mindMapConfig, () => {
           <VCol>
             <VCheckbox
               v-model="isShowWaterMarker"
-              label="是否显示水印"
+              label="是否显示水印 (WIP)"
               density="compact"
+              disabled
               hide-details
             />
           </VCol>
@@ -824,10 +841,21 @@ watch(mindMapConfig, () => {
             </VRow>
             <VRow class="mb-4">
               <VCol>
-                <VLabel text="文字颜色" class="text-subtitle-2 mb-1" />
-                <ColorPicker v-model:color="mindMapWaterConfig.textStyle.color" :items="usedColorItems">
+                <VLabel
+                  text="文字颜色"
+                  class="text-subtitle-2 mb-1"
+                />
+                <ColorPicker
+                  v-model:color="mindMapWaterConfig.textStyle.color"
+                  :items="usedColorItems"
+                >
                   <template #activator="{ props }">
-                    <VBtn v-bind="props" :color="mindMapWaterConfig.textStyle.color" class="d-block" size="large" />
+                    <VBtn
+                      v-bind="props"
+                      :color="mindMapWaterConfig.textStyle.color"
+                      class="d-block"
+                      size="large"
+                    />
                   </template>
                 </ColorPicker>
               </VCol>

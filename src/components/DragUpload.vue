@@ -3,7 +3,6 @@
   lang="ts"
 >
 import { mdiClose, mdiCloudUpload } from '@mdi/js'
-import { isEmpty } from 'lodash'
 import { ref, watch } from 'vue'
 
 interface Props {
@@ -18,13 +17,13 @@ const props = withDefaults(defineProps<Props>(), {
   closeIcon: mdiClose,
 })
 // # models
-const src = defineModel<string, string>('src', {
+// ! supported base64
+const src = defineModel<string | ArrayBuffer>('src', {
   required: true,
 })
-const name = defineModel<string, string>('name', {
+const name = defineModel<string>('name', {
   required: true,
 })
-src.value = ''
 // # els
 const fileEl = ref<HTMLInputElement>()
 const dragover = ref(false) // # emit status
@@ -40,15 +39,22 @@ function onDrop(e: DragEvent) {
     return
   files.value = [file]
 }
-watch(files, () => {
+watch(files, async () => {
   // ! file input onUpdate:modelValue will set value empty
   // ! if we not select image
-  if (isEmpty(files.value))
+  if (!files.value)
     return
-  const blob = URL.createObjectURL(files.value![0])
-  src.value = blob
+  if (!files.value[0])
+    return
+  // const blob = URL.createObjectURL(files.value![0])
+  const reader = new FileReader()
+  reader.readAsDataURL(files.value[0])
+  reader.onload = (e: ProgressEvent<FileReader>) => {
+    if (e.target)
+      src.value = e.target.result!
+  }
   name.value = files.value![0].name
-}, { deep: true })
+}, { deep: true, immediate: true })
 </script>
 
 <template>
@@ -142,14 +148,16 @@ watch(files, () => {
             v-slot="hoverArgs"
             v-model="isHover"
           >
-            <VImg
+            <VAvatar
               v-bind="hoverArgs.props"
-              class="position-relative"
-              :src="src"
               :rounded="props.rounded"
-              :height="props.height"
               :alt="name"
+              class="position-relative fill-height fill-width"
             >
+              <img
+                :src="(src as any)"
+                :alt="name"
+              >
               <VOverlay
                 :model-value="hoverArgs.isHovering"
                 contained
@@ -164,7 +172,7 @@ watch(files, () => {
                   <VIcon>{{ props.closeIcon || mdiClose }}</VIcon>
                 </VBtn>
               </VOverlay>
-            </VImg>
+            </VAvatar>
           </VHover>
         </div>
       </template>
@@ -180,5 +188,11 @@ watch(files, () => {
   position: absolute;
   right: .5rem;
   top: .5rem;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 </style>

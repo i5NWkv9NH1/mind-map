@@ -17,7 +17,6 @@ const { getClassicThemes, getDarkThemes, getSimpleThemes, mindMapThemes } = useP
 const { isDark } = storeToRefs(useSettingsStore())
 const { mindMapTheme, mindMapThemeConfig } = storeToRefs(useAppStore())
 const { togglePanel } = useSettingsStore()
-const { updateThemeConfig } = useAppStore()
 
 const current = ref(0)
 const themeStyles = ref([
@@ -26,7 +25,6 @@ const themeStyles = ref([
   { id: uuid(), name: '朴素', value: 2 },
 ])
 
-const confirmDialog = ref(false)
 const themes = computed<MindMapTheme[]>(() => {
   switch (current.value) {
     case 0: return getClassicThemes.value
@@ -39,10 +37,16 @@ const themes = computed<MindMapTheme[]>(() => {
 function onSwitchTheme(theme: string) {
   mindMapTheme.value = theme
   mindMap.value?.setThemeConfig({}, true)
-  mindMap.value?.setTheme(mindMapTheme.value, true)
+  mindMap.value?.setTheme(mindMapTheme.value)
+  // TODO: 添加自定义配置 覆盖 / 保留
+  // TODO: 先直接覆盖掉主题配置
+  // TODO: 判断本地是否有自定义配置
+
+  // # 获取更新主题后的主题配置
   const config = mindMap.value?.getThemeConfig()
-  const customConfig = mindMap.value?.getCustomThemeConfig()
-  console.log(config)
+  // # 更新
+  mindMapThemeConfig.value = config
+  // const customConfig = mindMap.value?.getCustomThemeConfig()
   // mindMapThemeConfig.value = mindMap.value?.getThemeConfig()
   // updateThemeConfig(config)
   const target = mindMapThemes.value.find(item => item.value === mindMapTheme.value)
