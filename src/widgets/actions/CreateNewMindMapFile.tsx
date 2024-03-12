@@ -18,9 +18,9 @@ export const CreateNewMindMapFile = defineComponent({
       try {
         fileHandle.value = await window.showSaveFilePicker({
           types: [
-            { description: '', accept: { 'application/json': ['.smm'] } },
+            { description: '', accept: { 'application/json': ['.mmd'] } },
           ],
-          suggestedName: `${`${dayjs(new Date()).format('YYYY-MM-DD-HH:mm')}-默认思维导图`}`,
+          suggestedName: `${`${dayjs(new Date()).format('YYYY-MM-DD-HH:mm')}-思维导图`}`,
         })
         // * 创建失败, 或许是没有权限?
         // TODO: updated

@@ -22,7 +22,7 @@ export const ContentSaveAs = defineComponent({
           types: [
             {
               description: '',
-              accept: { 'application/json': ['.smm'] },
+              accept: { 'application/json': ['.mmd'] },
             },
           ],
           suggestedName: `${`${dayjs(new Date()).format('YYYY-MM-DD-HH:mm')}-思维导图`}`,
@@ -46,7 +46,7 @@ export const ContentSaveAs = defineComponent({
         const errorString = error.toString() as string
         const isUserAbort = errorString.includes('aborted')
         if (isUserAbort) {
-          toggleMessage('warning', { title: '消息', text: '您已取消保存文件' })
+          // toggleMessage('warning', { title: '消息', text: '您已取消保存文件' })
           return
         }
         toggleMessage('error', { title: '未知错误', text: `${error}` })

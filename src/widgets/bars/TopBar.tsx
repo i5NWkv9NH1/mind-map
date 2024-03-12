@@ -5,11 +5,7 @@ import { VSlideYTransition, VToolbar } from 'vuetify/components'
 import {
   ChildNode,
   ContentSaveAs,
-  CreateNewMindMapFile,
-  ExportFile,
-  Folder,
   FormatBrush,
-  ImportFile,
   MindMapOutline,
   NodeHyperLink,
   NodeIcons,
@@ -51,12 +47,12 @@ export const TopBar = defineComponent({
       { id: uuid(), component: <MindMapOutline /> },
     ])
     const _extendActions = ref([
-      { id: uuid(), component: <Folder /> },
-      { id: uuid(), component: <CreateNewMindMapFile /> },
+      // { id: uuid(), component: <Folder /> },
+      // { id: uuid(), component: <CreateNewMindMapFile /> },
       { id: uuid(), component: <OpenMindMapFile /> },
       { id: uuid(), component: <ContentSaveAs /> },
-      { id: uuid(), component: <ImportFile /> },
-      { id: uuid(), component: <ExportFile /> },
+      // { id: uuid(), component: <ImportFile /> },
+      // { id: uuid(), component: <ExportFile /> },
     ])
 
     return () => (
@@ -72,7 +68,7 @@ export const TopBar = defineComponent({
                 default: () => (
                   <>
                     {defaultActions.value.map(item => item.component)}
-                    {/* {extendActions.value.map(item => item.component)} */}
+                    {_extendActions.value.map(item => item.component)}
                   </>
                 ),
               }}
