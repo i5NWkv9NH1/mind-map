@@ -86,7 +86,7 @@ export const OpenMindMapFile = defineComponent({
               <span>打开</span>
             </VBtn>
           ),
-          default: () => <p>打开本地的 SM 文件</p>,
+          default: () => <p>打开本地的 mmd 文件</p>,
         }}
       />
     )
