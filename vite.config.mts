@@ -14,7 +14,7 @@ import { defineConfig } from 'vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '',
+  base: '/mind-map/',
   plugins: [
     VueRouter({ extensions: ['.vue', '.tsx'] }),
     Layouts(),
