@@ -34,23 +34,25 @@ const themes = computed<MindMapTheme[]>(() => {
   }
 })
 
-function onSwitchTheme(theme: string) {
+async function onSwitchTheme(theme: string) {
   mindMapTheme.value = theme
-  mindMap.value?.setThemeConfig({}, true)
-  mindMap.value?.setTheme(mindMapTheme.value)
+  // ? 将原先主题的配置清空
+  // * 因为有一些主题的配置可能没有一些特定的字段值，比如 background Color
+  // * 所以为了防止样式混乱，特先清空
+  // mindMap.value?.setThemeConfig({}, false)
+  // TODO: 设置主题后并未更新对应的配置
+  await mindMap.value?.setTheme(mindMapTheme.value)
+  const target = mindMapThemes.value.find(item => item.value === mindMapTheme.value)
+  isDark.value = target.dark
+  mindMapThemeConfig.value = await mindMap.value?.getThemeConfig()
   // TODO: 添加自定义配置 覆盖 / 保留
   // TODO: 先直接覆盖掉主题配置
   // TODO: 判断本地是否有自定义配置
-
   // # 获取更新主题后的主题配置
-  const config = mindMap.value?.getThemeConfig()
   // # 更新
-  mindMapThemeConfig.value = config
+  // mindMapThemeConfig.value = config
   // const customConfig = mindMap.value?.getCustomThemeConfig()
-  // mindMapThemeConfig.value = mindMap.value?.getThemeConfig()
   // updateThemeConfig(config)
-  const target = mindMapThemes.value.find(item => item.value === mindMapTheme.value)
-  isDark.value = target.dark
 }
 
 // function onSwitchTheme(theme: string) {
@@ -79,13 +81,6 @@ function onSwitchTheme(theme: string) {
 //   mindMap.value?.setThemeConfig(mindMapThemeConfig.value, true)
 //   confirmDialog.value = false
 // }
-
-// onMounted(() => {
-//   mindMapTheme.value = mindMap.value?.getTheme() || 'default'
-//   mindMap.value?.on('view_theme_change', () => {
-//     mindMapThemeConfig.value = mindMap.value?.getThemeConfig()
-//   })
-// })
 </script>
 
 <template>
@@ -137,7 +132,10 @@ function onSwitchTheme(theme: string) {
   </VDialog> -->
   <PanelContainer>
     <template #title>
-      <p>主题</p>
+      <p>
+        主题
+      </p>
+
       <VBtn
         color="surface"
         variant="flat"
@@ -175,7 +173,9 @@ function onSwitchTheme(theme: string) {
             :color="theme.value === mindMapTheme ? 'primary' : 'default'"
             elevation="4"
             class="my-4"
-            @click="onSwitchTheme(theme.value)"
+            @click="() => {
+              onSwitchTheme(theme.value)
+            }"
           >
             <VCardText class="text-center">
               <VImg

@@ -8,7 +8,7 @@ import { storeToRefs } from 'pinia'
 import { v4 as uuid } from 'uuid'
 
 // @ts-nocheck
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { useSettingsStore } from '@/store/settings'
 import { useMindMap, usePresets } from '@/composables'
 import { ColorPicker, DragUpload, FormSelect, PanelContainer } from '@/components'
@@ -102,10 +102,6 @@ const isShowWaterMarker = ref(false)
 // watch(mindMapConfig, () => {
 //   mindMap.value?.updateConfig({ ...mindMapConfig.value })
 // }, { deep: true })
-onMounted(() => {
-  // TODO: 提取到 store
-  // mindMapThemeConfig.value = mindMap.value?.getThemeConfig()
-})
 </script>
 
 <template>
