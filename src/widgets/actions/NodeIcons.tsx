@@ -119,7 +119,7 @@ export const NodeIcons = defineComponent({
                   },
                 }, ['stop'])}
               >
-                <img src={`${import.meta.env.BASE_URL}${item.url}`} width={item.width / 2} height={item.height / 2} />
+                <img src={item.url} width={item.width / 2} height={item.height / 2} />
               </VBtn>
             )
           })}
