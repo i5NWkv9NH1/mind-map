@@ -11,11 +11,9 @@ import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 import { defineConfig } from 'vite'
 
 // Utilities
-
 // https://vitejs.dev/config/
 export default defineConfig({
-  // @ts-ignore
-  base: import.meta.env.BASE_URL,
+  base: '/mind-map/',
   plugins: [
     VueRouter({ extensions: ['.vue', '.tsx'] }),
     Layouts(),
