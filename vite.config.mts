@@ -9,12 +9,12 @@ import VueJsx from '@vitejs/plugin-vue-jsx'
 import VueRouter from 'unplugin-vue-router/vite'
 import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 import { defineConfig } from 'vite'
-import './src/vite-env'
 
 // Utilities
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  // @ts-ignore
   base: import.meta.env.BASE_URL,
   plugins: [
     VueRouter({ extensions: ['.vue', '.tsx'] }),
