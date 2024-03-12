@@ -1,10 +1,10 @@
 import type { NodeStickerGroup } from '@/@types'
 
-export default <NodeStickerGroup[]>[
+const items = <NodeStickerGroup[]>[
   {
     name: '商务',
     list: [
-      { url: '/svg/business/-.svg', width: 100, height: 100 },
+      { url: `${import.meta.env.BASE_URL}/svg/business/-.svg`, width: 100, height: 100 },
       { url: '/svg/business/-_1.svg', width: 100, height: 100 },
       { url: '/svg/business/-_10.svg', width: 100, height: 100 },
       { url: '/svg/business/-_11.svg', width: 100, height: 100 },
@@ -243,3 +243,11 @@ export default <NodeStickerGroup[]>[
     ],
   },
 ]
+
+export default items.map(group => ({
+  ...group,
+  list: group.list.map(item => ({
+    ...item,
+    url: import.meta.env.BASE_URL + item.url,
+  })),
+}))
