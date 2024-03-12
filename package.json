@@ -6,7 +6,7 @@
   "author": "sora",
   "scripts": {
     "dev": "cross-env NODE_OPTIONS='--no-warnings' vite",
-    "build": "vite build",
+    "build": "vite build --mode production",
     "preview": "vite preview",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"

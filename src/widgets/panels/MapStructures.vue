@@ -9,6 +9,7 @@ import { PanelContainer } from '@/components'
 import { useMindMap, usePresets } from '@/composables'
 import { useSettingsStore } from '@/store/settings'
 import { useAppStore } from '@/store/app'
+import { resolveAssets } from '@/helpers'
 
 const { mindMap } = useMindMap()
 const { mindMapLayout } = storeToRefs(useAppStore())
@@ -51,7 +52,7 @@ onMounted(() => {
         >
           <VCardText class="text-center">
             <VImg
-              :src="`/img/structures/${item.value}.png`"
+              :src="resolveAssets('img/structures', item.value, 'png')"
               width="100%"
               height="200"
             />

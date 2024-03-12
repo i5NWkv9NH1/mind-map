@@ -8,13 +8,14 @@ import Vue from '@vitejs/plugin-vue'
 import VueJsx from '@vitejs/plugin-vue-jsx'
 import VueRouter from 'unplugin-vue-router/vite'
 import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
+import { defineConfig } from 'vite'
+import './src/vite-env'
 
 // Utilities
-import { defineConfig } from 'vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/mind-map/',
+  base: import.meta.env.BASE_URL,
   plugins: [
     VueRouter({ extensions: ['.vue', '.tsx'] }),
     Layouts(),
