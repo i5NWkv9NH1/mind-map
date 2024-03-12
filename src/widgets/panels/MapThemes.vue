@@ -11,6 +11,7 @@ import { PanelContainer } from '@/components'
 import { useMindMap, usePresets } from '@/composables'
 import { useSettingsStore } from '@/store/settings'
 import { useAppStore } from '@/store/app'
+import { resolveAssets } from '@/helpers'
 
 const { mindMap } = useMindMap()
 const { getClassicThemes, getDarkThemes, getSimpleThemes, mindMapThemes } = usePresets()
@@ -42,8 +43,8 @@ async function onSwitchTheme(theme: string) {
   // mindMap.value?.setThemeConfig({}, false)
   // TODO: 设置主题后并未更新对应的配置
   await mindMap.value?.setThemeConfig({}, false)
-	await mindMap.value?.setTheme(mindMapTheme.value)
-	const target = mindMapThemes.value.find(item => item.value === mindMapTheme.value)
+  await mindMap.value?.setTheme(mindMapTheme.value)
+  const target = mindMapThemes.value.find(item => item.value === mindMapTheme.value)
   isDark.value = target.dark
   mindMapThemeConfig.value = await mindMap.value?.getThemeConfig()
   // TODO: 添加自定义配置 覆盖 / 保留
@@ -175,12 +176,12 @@ async function onSwitchTheme(theme: string) {
             elevation="4"
             class="my-4"
             @click="() => {
-              onSwitchTheme(theme.value)
-            }"
+          onSwitchTheme(theme.value)
+        }"
           >
             <VCardText class="text-center">
               <VImg
-                :src="`/img/themes/${theme.value}.jpg`"
+                :src="resolveAssets('img/themes', theme.value, 'jpg')"
                 width="100%"
                 height="120"
               />
