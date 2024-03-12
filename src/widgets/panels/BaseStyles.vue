@@ -13,6 +13,7 @@ import { useSettingsStore } from '@/store/settings'
 import { useMindMap, usePresets } from '@/composables'
 import { ColorPicker, DragUpload, FormSelect, PanelContainer } from '@/components'
 import { useAppStore } from '@/store/app'
+import type { CreateNewNodeBehavior, MindMapConfig } from '@/@types'
 
 // # background
 const { isDark } = storeToRefs(useSettingsStore())
@@ -60,7 +61,7 @@ const marginTabItems = ref([
 //   //   mindMapThemeConfig.value[key] = mindMap.value?.getThemeConfig()[marginTab.value][key]
 //   // })
 // })
-function onUpdate(key: string, value: string | number | any) {
+function onUpdateTheme(key: string, value: string | number | any) {
   // TODO: 保存到本地
   mindMapThemeConfig.value[key] = value
   mindMap.value?.setThemeConfig(mindMapThemeConfig.value)
@@ -69,6 +70,11 @@ function onUpdateMargin(key: string, value: string | number | any) {
   // TODO: 保存到本地
   mindMapThemeConfig.value[marginTab.value][key] = value
   mindMap.value?.setThemeConfig(mindMapThemeConfig.value)
+}
+function onUpdateConfig(key: keyof MindMapConfig, value: any) {
+  // @ts-ignore
+  (mindMapConfig.value)[key] = value
+  mindMap.value?.updateConfig({ ...mindMapConfig.value })
 }
 // ! 不要监听整个主题样式，只修改某个值
 // ! 避免切换主题的时候把整个原来的主题配置（无UI）一直给替换掉
@@ -144,7 +150,7 @@ onMounted(() => {
                   :color="mindMapThemeConfig.backgroundColor"
                   :items="usedColorItems"
                   @update:color="(value: string) => {
-          onUpdate('backgroundColor', value)
+          onUpdateTheme('backgroundColor', value)
         }"
                 >
                   <template #activator="activator">
@@ -167,7 +173,7 @@ onMounted(() => {
                     :src="mindMapThemeConfig.backgroundImage"
                     name=""
                     @update:src="(value) => {
-          onUpdate('backgroundImage', value)
+          onUpdateTheme('backgroundImage', value)
         }"
                   />
                   <VRow>
@@ -177,7 +183,7 @@ onMounted(() => {
                         :items="backgroundPositionItems"
                         label="图片位置"
                         @update:model-value="(value) => {
-          onUpdate('backgroundPosition', value)
+          onUpdateTheme('backgroundPosition', value)
         }"
                       />
                     </VCol>
@@ -189,7 +195,7 @@ onMounted(() => {
                         label="图片重复"
                         :items="backgroundRepeatItems"
                         @update:model-value="(value) => {
-          onUpdate('backgroundRepeat', value)
+          onUpdateTheme('backgroundRepeat', value)
         }"
                       />
                     </VCol>
@@ -201,7 +207,7 @@ onMounted(() => {
                         label="图片大小"
                         :items="backgroundSizeItems"
                         @update:model-value="(value) => {
-          onUpdate('backgroundSize', value)
+          onUpdateTheme('backgroundSize', value)
         }"
                       />
                     </VCol>
@@ -227,7 +233,7 @@ onMounted(() => {
               location="left center"
               :items="usedColorItems"
               @update:color="(value: string) => {
-          onUpdate('lineColor', value)
+          onUpdateTheme('lineColor', value)
         }"
             >
               <template #activator="activator">
@@ -247,7 +253,7 @@ onMounted(() => {
               :items="lineWidthSizeItems"
               label="粗细"
               @update:model-value="(value) => {
-          onUpdate('lineWidth', value)
+          onUpdateTheme('lineWidth', value)
         }"
             >
               <template #default="{ item }">
@@ -282,7 +288,7 @@ onMounted(() => {
               :items="lineStyleItems"
               label="风格"
               @update:model-value="(value) => {
-          onUpdate('lineStyle', value)
+          onUpdateTheme('lineStyle', value)
         }"
             >
               <template #default="{ item }: { item: { value: 'straight' | 'curve' | 'direct';[index: string]: any } }">
@@ -305,7 +311,7 @@ onMounted(() => {
                 :items="lineRadiusItems"
                 :model-value="mindMapThemeConfig.lineRadius"
                 @update:model-value="value => {
-          onUpdate('lineRadius', value)
+          onUpdateTheme('lineRadius', value)
         }"
               />
             </template>
@@ -315,7 +321,7 @@ onMounted(() => {
                 :items="rootLineStyleItems"
                 :model-value="mindMapThemeConfig.rootLineKeepSameInCurve"
                 @update:model-value="value => {
-          onUpdate('rootLineKeepSameInCurve', value)
+          onUpdateTheme('rootLineKeepSameInCurve', value)
         }"
               />
             </template>
@@ -328,7 +334,7 @@ onMounted(() => {
               :items="rootLineStartPositionItems"
               :model-value="mindMapThemeConfig.rootLineStartPositionKeepSameInCurve"
               @update:model-value="value => {
-          onUpdate('rootLineStartPositionKeepSameInCurve', value)
+          onUpdateTheme('rootLineStartPositionKeepSameInCurve', value)
         }"
             />
           </VCol>
@@ -341,7 +347,7 @@ onMounted(() => {
               density="compact"
               hide-details
               @update:model-value="(value) => {
-          onUpdate('showLineMarker', value)
+          onUpdateTheme('showLineMarker', value)
         }"
             />
           </VCol>
@@ -361,7 +367,7 @@ onMounted(() => {
               :color="mindMapThemeConfig.generalizationLineColor"
               :items="usedColorItems"
               @update:color="(value: string) => {
-          onUpdate('generalizationLineColor', value)
+          onUpdateTheme('generalizationLineColor', value)
         }"
             >
               <template #activator="activator">
@@ -380,7 +386,7 @@ onMounted(() => {
               :items="lineWidthSizeItems"
               :model-value="mindMapThemeConfig.generalizationLineWidth"
               label="粗细"
-              @update:model-value="(value) => { onUpdate('generalizationLineWidth', value) }"
+              @update:model-value="(value) => { onUpdateTheme('generalizationLineWidth', value) }"
             >
               <template #default="{ item }">
                 <VListItemTitle>
@@ -422,7 +428,7 @@ onMounted(() => {
               :color="mindMapThemeConfig.associativeLineColor"
               mode="rgb"
               :items="usedColorItems"
-              @update:color="(value: string) => { onUpdate('associativeLineColor', value) }"
+              @update:color="(value: string) => { onUpdateTheme('associativeLineColor', value) }"
             >
               <template #activator="args">
                 <VBtn
@@ -441,7 +447,7 @@ onMounted(() => {
               :model-value="mindMapThemeConfig.associativeLineWidth"
               :items="lineWidthSizeItems"
               @update:model-value="(value) => {
-          onUpdate('associativeLineWidth', value)
+          onUpdateTheme('associativeLineWidth', value)
         }"
             >
               <template #default="{ item }">
@@ -478,7 +484,7 @@ onMounted(() => {
               :color="mindMapThemeConfig.associativeLineActiveColor"
               :items="usedColorItems"
               @update:color="(value: string) => {
-          onUpdate('associativeLineActiveColor', value)
+          onUpdateTheme('associativeLineActiveColor', value)
         }"
             >
               <template #activator="args">
@@ -498,7 +504,7 @@ onMounted(() => {
               :model-value="mindMapThemeConfig.associativeLineActiveWidth"
               :items="lineWidthSizeItems"
               @update:model-value="(value) => {
-          onUpdate('associativeLineActiveWidth', value)
+          onUpdateTheme('associativeLineActiveWidth', value)
         }"
             >
               <template #default="{ item }">
@@ -539,7 +545,7 @@ onMounted(() => {
               :model-value="mindMapThemeConfig.associativeLineTextFontFamily"
               :items="fontFamilyItems"
               @update:model-value="value => {
-          onUpdate('associativeLineTextFontFamily', value)
+          onUpdateTheme('associativeLineTextFontFamily', value)
         }"
             />
           </VCol>
@@ -553,7 +559,7 @@ onMounted(() => {
               :color="mindMapThemeConfig.associativeLineTextColor"
               :items="usedColorItems"
               @update:color="(value: string) => {
-          onUpdate('associativeLineTextColor', value)
+          onUpdateTheme('associativeLineTextColor', value)
         }"
             >
               <template #activator="args">
@@ -573,7 +579,7 @@ onMounted(() => {
               :model-value="mindMapThemeConfig.associativeLineTextFontSize"
               :items="(fontSizeItems as any)"
               @update:model-value="value => {
-          onUpdate('associativeLineTextFontSize', value)
+          onUpdateTheme('associativeLineTextFontSize', value)
         }"
             />
           </VCol>
@@ -592,7 +598,7 @@ onMounted(() => {
               density="compact"
               hide-details
               @update:model-value="(value) => {
-          onUpdate('nodeUseLineStyle', value)
+          onUpdateTheme('nodeUseLineStyle', value)
         }"
             />
           </VCol>
@@ -614,7 +620,7 @@ onMounted(() => {
               thumb-label
               hide-details
               @update:model-value="(value) => {
-          onUpdate('paddingX', value)
+          onUpdateTheme('paddingX', value)
         }"
             >
               <template #prepend>
@@ -629,7 +635,7 @@ onMounted(() => {
               thumb-label
               hide-details
               @update:model-value="(value) => {
-          onUpdate('paddingY', value)
+          onUpdateTheme('paddingY', value)
         }"
             >
               <template #prepend>
@@ -654,7 +660,7 @@ onMounted(() => {
               thumb-label
               hide-details
               @update:model-value="(value) => {
-          onUpdate('imageMaxWidth', value)
+          onUpdateTheme('imageMaxWidth', value)
         }"
             >
               <template #prepend>
@@ -669,7 +675,7 @@ onMounted(() => {
               thumb-label
               hide-details
               @update:model-value="(value) => {
-          onUpdate('imageMaxHeight', value)
+          onUpdateTheme('imageMaxHeight', value)
         }"
             >
               <template #prepend>
@@ -693,8 +699,8 @@ onMounted(() => {
               :step="1"
               thumb-label
               hide-details
-              @update:model-value="(value) => {
-          onUpdate('iconSize', value)
+              @update:model-value="(value: number) => {
+          onUpdateTheme('iconSize', value)
         }"
             >
               <template #prepend>
@@ -969,9 +975,10 @@ onMounted(() => {
         <VRow>
           <VCol>
             <FormSelect
-              v-model="mindMapConfig.mousewheelAction!"
+              :model-value="mindMapConfig.mousewheelAction!"
               :items="mouseBehaviorItems"
               label="鼠标滚动行为"
+              @update:model-value="(value: 'zoom' | 'move') => onUpdateConfig('mousewheelAction', value)"
             />
           </VCol>
         </VRow>
@@ -979,9 +986,10 @@ onMounted(() => {
           <VRow v-if="mindMapConfig.mousewheelAction === 'zoom'">
             <VCol>
               <FormSelect
-                v-model="mindMapConfig.mousewheelZoomActionReverse!"
+                :model-value="mindMapConfig.mousewheelZoomActionReverse!"
                 :items="mouseScrollScaleItems"
                 label="鼠标滚轮缩放"
+                @update:model-value="(value: boolean) => onUpdateConfig('mousewheelZoomActionReverse', value)"
               />
             </VCol>
           </VRow>
@@ -989,9 +997,10 @@ onMounted(() => {
         <VRow>
           <VCol>
             <FormSelect
-              v-model="mindMapConfig.createNewNodeBehavior!"
+              :model-value="mindMapConfig.createNewNodeBehavior!"
               label="创建新节点的行为"
               :items="createNodeBehaviorItems"
+              @update:model-value="(value: CreateNewNodeBehavior) => onUpdateConfig('createNewNodeBehavior', value)"
             />
           </VCol>
         </VRow>

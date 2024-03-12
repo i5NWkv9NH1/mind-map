@@ -7,6 +7,7 @@ import { v4 as uuid } from 'uuid'
 import { useAppStore } from '@/store/app'
 import type { NodeIcon, NodeIconGroup, NodeSticker, NodeStickerGroup } from '@/@types'
 import { useMindMap, usePresets } from '@/composables'
+import { withEventModifiers } from '@/directives'
 
 export const NodeIcons = defineComponent({
   name: 'NodeIcons',
@@ -77,19 +78,21 @@ export const NodeIcons = defineComponent({
                 variant={iconActived.value ? 'outlined' : 'text'}
                 color={iconActived.value ? 'primary' : 'default'}
                 // @ts-ignore
-                onClick={() => {
-                  setIcon(group, item.name)
-                }}
+                {...withEventModifiers({
+                  onclick: () => {
+                    setIcon(group, item.name)
+                  },
+                }, ['stop'])}
                 data-key={key.value}
                 icon
               >
                 {item.icon.startsWith('<svg')
                   ? (
                     <VIcon v-html={item.icon} size={24} />
-                    )
+                  )
                   : (
                     <img src={item.icon} width={24} height={24} />
-                    )}
+                  )}
               </VBtn>
             )
           })}
@@ -109,11 +112,12 @@ export const NodeIcons = defineComponent({
                 variant={stickerActived.value ? 'outlined' : 'text'}
                 color={stickerActived.value ? 'primary' : 'default'}
                 height={item.height}
-                // @ts-ignore
-                onClick={() => {
-                  currentNodeImage.value = item.url
-                  setImage({ url: currentNodeImage.value, width: item.width, height: item.height })
-                }}
+                {...withEventModifiers({
+                  onclick: () => {
+                    currentNodeImage.value = item.url
+                    setImage({ url: currentNodeImage.value, width: item.width, height: item.height })
+                  },
+                }, ['stop'])}
               >
                 <img src={item.url} width={item.width / 2} height={item.height / 2} />
               </VBtn>
