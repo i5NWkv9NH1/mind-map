@@ -28,7 +28,7 @@ export const useAppStore = defineStore('app', () => {
     enableFreeDrag: false,
     enableNodeRichText: true,
     mousewheelAction: 'move',
-    mousewheelZoomActionReverse: false,
+    mousewheelZoomActionReverse: true,
     createNewNodeBehavior: 'default',
     maxTag: 10,
     readonly: false,
