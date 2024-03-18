@@ -40,6 +40,10 @@ export const BottomBar = defineComponent({
                 default: () => (
                   <>
                     {defaultActions.value.map(item => item.component)}
+                  </>
+                ),
+                extension: () => (
+                  <>
                     {extendActions.value.map(item => item.component)}
                   </>
                 ),

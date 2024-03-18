@@ -35,7 +35,6 @@ export const NodeTags = defineComponent({
     const onAbort = () => {
       if (isActiveNode.value)
         dialog.value = false
-
       else onReset()
     }
     const onConfirm = () => {
