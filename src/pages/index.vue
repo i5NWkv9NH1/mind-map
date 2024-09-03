@@ -1,7 +1,4 @@
-<script
-  setup
-  lang="ts"
->
+<script setup lang="ts">
 import { BottomBar, MindMapContainer, MindMapContextMenu, NodeContextMenu, NodeIconContextMenu, NodeImagePreview, NodeRichTextMenu, SideBar, TopBar }
   from '@/widgets'
 </script>

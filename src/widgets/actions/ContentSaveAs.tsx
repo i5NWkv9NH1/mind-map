@@ -1,12 +1,12 @@
 // TODO: 完善
+import { FileLogger } from '@/helpers'
+import { useAppStore } from '@/store/app'
+import { useSettingsStore } from '@/store/settings'
 import { mdiContentSaveOutline } from '@mdi/js'
 import dayjs from 'dayjs'
 import { storeToRefs } from 'pinia'
 import { defineComponent, ref } from 'vue'
 import { VBtn, VIcon, VTooltip } from 'vuetify/components'
-import { useSettingsStore } from '@/store/settings'
-import { useAppStore } from '@/store/app'
-import { FileLogger } from '@/helpers'
 
 export const ContentSaveAs = defineComponent({
   name: 'ContentSaveAs',
@@ -72,7 +72,7 @@ export const ContentSaveAs = defineComponent({
               <span>另存为</span>
             </VBtn>
           ),
-          default: () => <p>对您编辑的数据保存为文件</p>,
+          default: () => <p>保存为文件</p>,
         }}
       />
     )

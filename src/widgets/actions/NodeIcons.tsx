@@ -1,13 +1,13 @@
 // TODO: support multiple nodes
-import { computed, defineComponent, ref, watchEffect } from 'vue'
-import { VBtn, VCard, VCardText, VCardTitle, VIcon, VList, VListItem, VListItemSubtitle, VMenu, VTab, VTabs, VVirtualScroll, VWindow, VWindowItem } from 'vuetify/components'
-import { mdiEmoticonLolOutline } from '@mdi/js'
-import { storeToRefs } from 'pinia'
-import { v4 as uuid } from 'uuid'
-import { useAppStore } from '@/store/app'
 import type { NodeIcon, NodeIconGroup, NodeSticker, NodeStickerGroup } from '@/@types'
 import { useMindMap, usePresets } from '@/composables'
 import { withEventModifiers } from '@/directives'
+import { useAppStore } from '@/store/app'
+import { mdiEmoticonLolOutline } from '@mdi/js'
+import { storeToRefs } from 'pinia'
+import { v4 as uuid } from 'uuid'
+import { computed, defineComponent, ref, watchEffect } from 'vue'
+import { VBtn, VCard, VCardText, VCardTitle, VIcon, VList, VListItem, VListItemSubtitle, VMenu, VTab, VTabs, VVirtualScroll, VWindow, VWindowItem } from 'vuetify/components'
 
 export const NodeIcons = defineComponent({
   name: 'NodeIcons',
@@ -181,8 +181,6 @@ export const NodeIcons = defineComponent({
               disabled={!isActiveNode.value}
               active={isActive}
               color={isActive ? 'primary' : 'default'}
-              // @ts-ignore
-              onClick={() => { }}
             >
               <VIcon>{mdiEmoticonLolOutline}</VIcon>
               <span>图标</span>

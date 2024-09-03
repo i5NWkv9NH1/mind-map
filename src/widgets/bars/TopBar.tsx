@@ -1,3 +1,4 @@
+import { useAppStore } from '@/store/app'
 import { storeToRefs } from 'pinia'
 import { v4 as uuid } from 'uuid'
 import { defineComponent, ref } from 'vue'
@@ -22,7 +23,6 @@ import {
   RemoveNode,
   Undo,
 } from '../actions'
-import { useAppStore } from '@/store/app'
 import './TopBar.scss'
 
 export const TopBar = defineComponent({
@@ -52,7 +52,7 @@ export const TopBar = defineComponent({
       { id: uuid(), component: <MindMapOutline /> },
       { id: uuid(), component: <OpenMindMapFile /> },
       { id: uuid(), component: <ContentSaveAs /> },
-      { id: uuid(), component: <ContentSaveAs /> },
+      // { id: uuid(), component: <ContentSaveAs /> },
       { id: uuid(), component: <ExportFile /> },
       // { id: uuid(), component: <ImportFile /> },
       // { id: uuid(), component: <ExportFile /> },
@@ -67,6 +67,7 @@ export const TopBar = defineComponent({
               tag="header"
               elevation={8}
               border
+              extended
               v-slots={{
                 default: () => (
                   <>
@@ -77,7 +78,7 @@ export const TopBar = defineComponent({
                   <>
                     {_extendActions.value.map(item => item.component)}
                   </>
-                ),
+                )
               }}
             />
           )

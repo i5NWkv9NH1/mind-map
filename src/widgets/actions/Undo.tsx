@@ -1,9 +1,10 @@
+import { useMindMap } from '@/composables'
+import { withEventModifiers } from '@/directives'
+import { useAppStore } from '@/store/app'
 import { mdiUndo } from '@mdi/js'
 import { storeToRefs } from 'pinia'
 import { defineComponent } from 'vue'
 import { VBtn, VIcon } from 'vuetify/components'
-import { useAppStore } from '@/store/app'
-import { useMindMap } from '@/composables'
 
 export const Undo = defineComponent({
   name: 'Undo',
@@ -15,10 +16,9 @@ export const Undo = defineComponent({
       <VBtn
         stacked
         disabled={canUnod.value || mindMapConfig.value.readonly}
-        // @ts-ignore
-        onClick={() => {
-          mindMap.value?.execCommand('BACK')
-        }}
+        {...withEventModifiers({
+          onclick: () => mindMap.value?.execCommand('BACK')
+        }, ['click'])}
       >
         <VIcon>{mdiUndo}</VIcon>
         <span>撤销</span>

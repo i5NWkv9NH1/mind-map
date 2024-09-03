@@ -1,10 +1,10 @@
 // TODO: 优化
 // TODO: 使用 Teleport 解决 ·专注模式· 下地图隐藏的问题
+import { useMindMap } from '@/composables'
+import { withEventModifiers } from '@/directives'
 import { mdiMapMarkerOffOutline, mdiMapMarkerOutline } from '@mdi/js'
 import { defineComponent, nextTick, onMounted, reactive, ref, toRefs } from 'vue'
 import { VBtn, VCard, VIcon, VSlideXReverseTransition, VTooltip } from 'vuetify/components'
-import { withEventModifiers } from '@/directives'
-import { useMindMap } from '@/composables'
 
 export const ShowMiniMap = defineComponent({
   name: 'ShowMiniMap',
@@ -85,15 +85,15 @@ export const ShowMiniMap = defineComponent({
       }, 500)
     }
     const onMousedown = (e: MouseEvent) => {
-    // @ts-ignore
+      // @ts-ignore
       mindMap.value?.miniMap.onMousemove(e)
     }
-    // @ts-ignore
     const onMouseup = (e: MouseEvent) => {
+      // @ts-ignore
       mindMap.value?.miniMap.onMousemove(e)
     }
-    // @ts-ignore
     const onMouseMove = (e: MouseEvent) => {
+      // @ts-ignore
       mindMap.value?.miniMap.onMousemove(e)
     }
 

@@ -1,8 +1,8 @@
+import { withEventModifiers } from '@/directives'
 import { mdiFreebsd } from '@mdi/js'
 import { useClipboard } from '@vueuse/core'
 import { defineComponent, ref } from 'vue'
 import { VBtn, VTooltip } from 'vuetify/lib/components/index.mjs'
-import { withEventModifiers } from '@/directives'
 
 export const FeedBack = defineComponent({
   name: 'FeedBack',
@@ -32,7 +32,7 @@ export const FeedBack = defineComponent({
           default: () => (
             <>
               <p>{email.value}</p>
-              <p>点我复制邮箱地址</p>
+              <p>点击复制邮箱地址</p>
             </>
           ),
         }}
