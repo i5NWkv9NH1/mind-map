@@ -8,7 +8,6 @@ import {
   ContentSaveAs,
   ExportFile,
   FormatBrush,
-  MindMapOutline,
   NodeHyperLink,
   NodeIcons,
   NodeImage,
@@ -21,7 +20,7 @@ import {
   PeerNode,
   Redo,
   RemoveNode,
-  Undo,
+  Undo
 } from '../actions'
 import './TopBar.scss'
 
@@ -49,7 +48,7 @@ export const TopBar = defineComponent({
       // { id: uuid(), component: <CreateNewMindMapFile /> },
       { id: uuid(), component: <NodeRelativeLine /> },
       { id: uuid(), component: <NodeMath /> },
-      { id: uuid(), component: <MindMapOutline /> },
+      // { id: uuid(), component: <MindMapOutline /> },
       { id: uuid(), component: <OpenMindMapFile /> },
       { id: uuid(), component: <ContentSaveAs /> },
       // { id: uuid(), component: <ContentSaveAs /> },
